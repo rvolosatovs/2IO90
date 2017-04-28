@@ -66,19 +66,18 @@ public class Calculator {
    */
   public static void fileBuilder(String container_height, String rotations_allowed, int number_of_rectangles, 
                                  ArrayList<Integer> rectangle_sizes){
+    
     try{
       System.out.print("Enter the output file name: "); 
       Scanner input = new Scanner(System.in);
       PrintWriter output_file = new PrintWriter(input.nextLine(), "UTF-8");
       
-      System.out.println(container_height);
       /* part 1: requirements */     
       output_file.println("container height: " + container_height);
       output_file.println("rotations allowed: "+ rotations_allowed);
       output_file.println("number of rectangles: " + number_of_rectangles);
       
       /* part 2: rectangle sizes */
-      
       for(int i = 0; i < (2*number_of_rectangles); i = i + 2){ // take two since width + height
         output_file.println(rectangle_sizes.get(i)+ " " + rectangle_sizes.get(i+1));
       }
