@@ -16,3 +16,11 @@
 hs_err_pid*
 
 *.pdf
+.idea/kotlinc.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
+2IO90.iml
+out/production/2IO90/03_01_h20_rn.txt
+out/production/2IO90/test_output.txt
