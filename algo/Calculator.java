@@ -7,10 +7,8 @@ public class Calculator {
   
   /*
    * Reads input file and prints it to console
-   * TODO: store in variables
    */
   public static void fileReader() {
-    
     
     try {
       ArrayList<Integer> rectangle_sizes = new ArrayList<Integer>();
@@ -60,7 +58,6 @@ public class Calculator {
   
   /*
    * Builds txt file using the output rules.
-   * TODO: make variable assignments dynamic
    */
   public static void fileBuilder(String container_height, String rotations_allowed, int number_of_rectangles, 
                                  ArrayList<Integer> rectangle_sizes){
@@ -93,6 +90,5 @@ public class Calculator {
     while (true) {
       fileReader();
     }
-  }
-  
+  } 
 }
