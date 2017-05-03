@@ -1,5 +1,3 @@
-import java.util.List;
-
 /**
  * Created by rvolosatovs on 5/2/17.
  */
