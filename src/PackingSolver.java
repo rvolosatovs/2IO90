@@ -19,7 +19,7 @@ public class PackingSolver{
 
         Solution s = null;
         try {
-            s = solve(c, null);
+            s = solve(c, new StupidPacker());
         }catch (Exception e) {
             log.severe("Failed to solve case: "+ e.getMessage());
             System.exit(-1);

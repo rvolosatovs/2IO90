@@ -1,7 +1,5 @@
 import java.io.InputStream;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by rvolosatovs on 5/1/17.
@@ -11,14 +9,19 @@ public class Case {
     private final int rectangleCount;
     private final boolean rotationsAllowed;
     private final boolean sizeFixed;
-    private final List<Rectangle> rectangles;
+    private final Collection<IndexedRectangle> rectangles;
 
-    public Case(final int containerHeight, final int rectangleCount, final boolean sizeFixed, final boolean rotationsAllowed, final List<Rectangle> rectangles) {
+    public Case(final int containerHeight, final int rectangleCount, final boolean sizeFixed, final boolean rotationsAllowed, final Collection<Rectangle> rectangles) {
         this.containerHeight = containerHeight;
         this.rectangleCount = rectangleCount;
         this.rotationsAllowed = rotationsAllowed;
         this.sizeFixed = sizeFixed;
-        this.rectangles = rectangles;
+        this.rectangles = new LinkedHashSet<>(rectangleCount);
+        int i = 0;
+        for (Rectangle r :rectangles) {
+            this.rectangles.add(new IndexedRectangle(i, r));
+            i++;
+        }
     }
 
     public Case(final InputStream s) {
@@ -42,7 +45,9 @@ public class Case {
         return new Solution(this, p.Pack(this));
     }
 
-    public List<Rectangle> getRectangles() {
+    public Collection<IndexedRectangle> getRectangles() {
+        for (IndexedRectangle r: rectangles) {
+        }
         return new ArrayList<>(rectangles);
     }
 
@@ -60,7 +65,7 @@ public class Case {
 
     public int getSize() throws Exception {
         if (isSizeFixed()) {
-           return containerHeight;
+            return containerHeight;
         }
         throw new Exception("container is free sized");
     }

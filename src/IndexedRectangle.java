@@ -8,6 +8,11 @@ public class IndexedRectangle extends Rectangle {
        this.index = index;
     }
 
+    public IndexedRectangle(final int index, Rectangle rectangle) {
+        super(rectangle);
+        this.index = index;
+    }
+
     public int getIndex() {
         return index;
     }
