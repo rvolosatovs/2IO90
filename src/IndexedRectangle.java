@@ -3,7 +3,7 @@
  */
 public class IndexedRectangle extends Rectangle {
     private int index;
-    public Rectangle(final int width, final int height) {
+    public IndexedRectangle(final int index, final int width, final int height) {
        super(width, height);
        this.index = index;
     }
@@ -12,8 +12,8 @@ public class IndexedRectangle extends Rectangle {
         return index;
     }
 
-    public void toString() {
+    public String toString() {
         //TODO return coords and rotation
-        return "0 0 yes"
+        return "0 0 yes";
     }
 }

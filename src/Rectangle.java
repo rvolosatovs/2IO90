@@ -1,20 +1,14 @@
 /**
  * Created by rvolosatovs on 5/2/17.
  */
-public class Rectangle extends java.awt.Rectangle {
-    private int index;
-    private bool rotated = false;
+public abstract class Rectangle extends java.awt.Rectangle {
+    private boolean rotated = false;
 
-    public Rectangle(final int index, final int width, final int height) {
+    public Rectangle(final int width, final int height) {
        super(width, height);
-       this.index = index;
     }
 
-    public int getIndex() {
-        return index;
-    }
-
-    public bool wasRotated() {
+    public boolean wasRotated() {
         return rotated;
     }
 
@@ -23,8 +17,8 @@ public class Rectangle extends java.awt.Rectangle {
         // TODO shift coords
     }
 
-    public void toString() {
+    public String toString() {
         //TODO return coords and rotation
-        return "0 0 yes"
+        return "0 0 yes";
     }
 }

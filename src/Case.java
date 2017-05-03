@@ -33,13 +33,13 @@ public class Case {
 
         rectangles = new ArrayList<>(rectangleCount);
         for (int i = 0; sc.hasNext(); i++) {
-            rectangles.add(new Rectangle(i, sc.skip("\\n").nextInt(), sc.nextInt()));
+            rectangles.add(new IndexedRectangle(i, sc.skip("\\n").nextInt(), sc.nextInt()));
         }
         sc.close();
     }
 
-    public List<Rectangle> Solve(Solver s){
-        return new Solution(this, s.Solve(this));
+    public Solution Solve(Packer p){
+        return new Solution(this, p.Pack(this));
     }
 
     public List<Rectangle> getRectangles() {
