@@ -1,15 +1,18 @@
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Scanner;
 
 /**
  * Created by rvolosatovs on 5/1/17.
  */
 public class Case {
-    private int containerHeight;
     private final int rectangleCount;
     private final boolean rotationsAllowed;
     private final boolean sizeFixed;
     private final Collection<IndexedRectangle> rectangles;
+    private int containerHeight;
 
     public Case(final int containerHeight, final int rectangleCount, final boolean sizeFixed, final boolean rotationsAllowed, final Collection<Rectangle> rectangles) {
         this.containerHeight = containerHeight;
@@ -18,7 +21,7 @@ public class Case {
         this.sizeFixed = sizeFixed;
         this.rectangles = new LinkedHashSet<>(rectangleCount);
         int i = 0;
-        for (Rectangle r :rectangles) {
+        for (Rectangle r : rectangles) {
             this.rectangles.add(new IndexedRectangle(i, r));
             i++;
         }
@@ -41,12 +44,12 @@ public class Case {
         sc.close();
     }
 
-    public Solution Solve(Packer p){
+    public Solution Solve(Packer p) {
         return new Solution(this, p.Pack(this));
     }
 
     public Collection<IndexedRectangle> getRectangles() {
-        for (IndexedRectangle r: rectangles) {
+        for (IndexedRectangle r : rectangles) {
         }
         return new ArrayList<>(rectangles);
     }

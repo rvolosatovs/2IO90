@@ -7,7 +7,10 @@ public abstract class Rectangle extends java.awt.Rectangle {
     public Rectangle(final int width, final int height) {
         super(width, height);
     }
-    public Rectangle(Rectangle rectangle) {super(rectangle);}
+
+    public Rectangle(Rectangle rectangle) {
+        super(rectangle);
+    }
 
     public boolean wasRotated() {
         return rotated;

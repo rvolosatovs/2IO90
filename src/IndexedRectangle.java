@@ -3,9 +3,10 @@
  */
 public class IndexedRectangle extends Rectangle {
     private int index;
+
     public IndexedRectangle(final int index, final int width, final int height) {
-       super(width, height);
-       this.index = index;
+        super(width, height);
+        this.index = index;
     }
 
     public IndexedRectangle(final int index, Rectangle rectangle) {

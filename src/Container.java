@@ -8,7 +8,7 @@ public class Container extends java.awt.Rectangle {
     private Collection<IndexedRectangle> rectangles;
 
     public Container(Collection<IndexedRectangle> rectangles) {
-       this.rectangles = rectangles;
+        this.rectangles = rectangles;
     }
 
     public Collection<IndexedRectangle> getRectangles() {
