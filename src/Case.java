@@ -92,9 +92,9 @@ public class Case {
                 .append(rectangleCount)
                 .append("\n");
 
-        rectangles.forEach((r)->sb.append(r.x)
+        rectangles.forEach((r)->sb.append(r.width)
                 .append(" ")
-                .append(r.y)
+                .append(r.height)
                 .append("\n")
         );
         return sb.toString();
