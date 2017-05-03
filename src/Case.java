@@ -24,11 +24,11 @@ public class Case {
     public Case(final InputStream s) {
         Scanner sc = new Scanner(s);
 
-        sizeFixed = sc.skip("container height:").next() == "fixed";
+        sizeFixed = sc.skip("container height:").next().equals("fixed");
         if (sizeFixed) {
             containerHeight = sc.nextInt();
         }
-        rotationsAllowed = sc.skip("\\nrotations allowed:").next() == "yes";
+        rotationsAllowed = sc.skip("\\nrotations allowed:").next().equals("yes");
         rectangleCount = sc.skip("\\nnumber of rectangles:").nextInt();
 
         rectangles = new ArrayList<>(rectangleCount);
