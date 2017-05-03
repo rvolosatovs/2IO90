@@ -27,8 +27,7 @@ public abstract class Rectangle extends java.awt.Rectangle {
         sb.append(x)
                 .append(" ")
                 .append(y)
-                .append(" ")
-                .append(wasRotated() ? "yes" : "no");
+                .append(" ");
 
         return sb.toString();
     }

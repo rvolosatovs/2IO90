@@ -11,8 +11,20 @@ public class Solution {
     }
 
     public String toString() {
-        return spec.toString() + container.toString();
+        boolean rotationsAllowed = spec.areRotationsAllowed();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(spec.toString())
+        .append("\n")
+        .append("placement of rectangles")
+        .append("\n");
+        container.getRectangles().forEach((r)->{
+            if (rotationsAllowed) {
+                sb.append(r.wasRotated()?"yes " :"no ");
+            }
+            sb.append(r.toString())
+                .append("\n");
+        });
+        return sb.toString();
     }
 }
-
-
