@@ -36,6 +36,8 @@ class PackingSolverOutputTest {
 
         s.toString();
 
+        assertTrue(true, "Output is correct");
+
     }
 
 

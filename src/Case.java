@@ -14,7 +14,7 @@ public class Case {
     private final Collection<IndexedRectangle> rectangles;
     private int containerHeight;
 
-    public Case(final int containerHeight, final int rectangleCount, final boolean sizeFixed, final boolean rotationsAllowed, final Collection<Rectangle> rectangles) {
+    public Case(final int containerHeight, final int rectangleCount, final boolean sizeFixed, final boolean rotationsAllowed, final Collection<? extends Rectangle> rectangles) {
         this.containerHeight = containerHeight;
         this.rectangleCount = rectangleCount;
         this.rotationsAllowed = rotationsAllowed;
