@@ -20,4 +20,16 @@ public abstract class Rectangle extends java.awt.Rectangle {
         rotated = !rotated;
         // TODO shift coords
     }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(x)
+                .append(" ")
+                .append(y)
+                .append(" ")
+                .append(wasRotated() ? "yes" : "no");
+
+        return sb.toString();
+    }
 }

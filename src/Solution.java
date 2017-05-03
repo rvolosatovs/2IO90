@@ -11,11 +11,7 @@ public class Solution {
     }
 
     public String toString() {
-        // TODO
-        System.out.println(spec.toString());
-        System.out.println("placement of rectangles");
-        //container.forEach((r) -> System.out.println());
-        return "";
+        return spec.toString() + container.toString();
     }
 }
 

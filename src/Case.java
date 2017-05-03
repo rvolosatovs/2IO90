@@ -72,4 +72,31 @@ public class Case {
         }
         throw new Exception("container is free sized");
     }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("container height: ");
+        if (isSizeFixed()) {
+            sb.append("fixed ");
+            sb.append(containerHeight);
+        } else {
+            sb.append("free");
+        }
+        sb.append("\n");
+
+        sb.append("rotations allowed: ")
+                .append(areRotationsAllowed() ? "yes" : "no")
+                .append("\n")
+                .append("number of rectangles: ")
+                .append(rectangleCount)
+                .append("\n");
+
+        rectangles.forEach((r)->sb.append(r.x)
+                .append(" ")
+                .append(r.y)
+                .append("\n")
+        );
+        return sb.toString();
+    }
 }
