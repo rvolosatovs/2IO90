@@ -17,9 +17,4 @@ public class IndexedRectangle extends Rectangle {
     public int getIndex() {
         return index;
     }
-
-    public String toString() {
-        //TODO return coords and rotation
-        return "0 0 yes";
-    }
 }
