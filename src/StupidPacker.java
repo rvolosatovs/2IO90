@@ -1,5 +1,3 @@
-
-
 import java.util.Collection;
 
 /**
@@ -10,11 +8,11 @@ public class StupidPacker implements Packer {
         Collection<IndexedRectangle> rectangles = c.getRectangles();
 
         int x = 0;
-        if (c.isSizeFixed()){
-            for (IndexedRectangle r : rectangles){
+        if (c.isSizeFixed()) {
+            for (IndexedRectangle r : rectangles) {
                 try {
                     if (r.getHeight() > c.getSize()) {
-                        if (c.areRotationsAllowed()){
+                        if (c.areRotationsAllowed()) {
                             r.rotate();
                         }
                     }
@@ -26,7 +24,7 @@ public class StupidPacker implements Packer {
                 x += r.width;
             }
         } else {
-            for (IndexedRectangle r : rectangles){
+            for (IndexedRectangle r : rectangles) {
                 r.setLocation(x, 0);
                 x += r.width;
             }
