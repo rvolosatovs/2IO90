@@ -1,10 +1,13 @@
+import java.awt.*;
+import java.util.AbstractCollection;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashSet;
+import java.util.Iterator;
 
 /**
  * Created by rvolosatovs on 5/2/17.
  */
-public class Container extends java.awt.Rectangle {
+public class Container extends AbstractCollection<IndexedRectangle> implements Rotator {
     private Collection<IndexedRectangle> rectangles;
 
     public Container(Collection<IndexedRectangle> rectangles) {
@@ -12,9 +15,33 @@ public class Container extends java.awt.Rectangle {
     }
 
     public Collection<IndexedRectangle> getRectangles() {
-        return new LinkedHashSet<>(rectangles);
+        return new ArrayList<>(rectangles);
     }
 
+    public Iterator<IndexedRectangle> iterator() {
+        return rectangles.iterator();
+    }
+
+    public int size() {
+        return rectangles.size();
+    }
+
+    public Dimension getDimensions() {
+        // TODO count resulting dimensions
+        return new Dimension(null);
+    }
+
+    public int getArea() {
+        Dimension d = getDimensions();
+        return d.width * d.height;
+    }
+
+    public void rotate() {
+        //TODO implement translation
+        // rectangles.forEach((r) -> {});
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("placement of rectangles:\n");
