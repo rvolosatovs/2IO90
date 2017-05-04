@@ -1,45 +1,39 @@
+import java.awt.*;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.Scanner;
 
 /**
  * Created by rvolosatovs on 5/1/17.
  */
 public class Case {
-    private final int rectangleCount;
     private final boolean rotationsAllowed;
-    private final boolean sizeFixed;
-    private final Collection<IndexedRectangle> rectangles;
+    private final Dimension[] dimensions;
     private int containerHeight;
 
-    public Case(final int containerHeight, final int rectangleCount, final boolean sizeFixed, final boolean rotationsAllowed, final Collection<Rectangle> rectangles) {
-        this.containerHeight = containerHeight;
-        this.rectangleCount = rectangleCount;
+    public Case(final boolean rotationsAllowed, final Dimension[] dimensions) {
         this.rotationsAllowed = rotationsAllowed;
-        this.sizeFixed = sizeFixed;
-        this.rectangles = new LinkedHashSet<>(rectangleCount);
-        int i = 0;
-        for (Rectangle r : rectangles) {
-            this.rectangles.add(new IndexedRectangle(i, r));
-            i++;
-        }
+        this.dimensions = dimensions;
+    }
+
+    public Case(final int containerHeight, final boolean rotationsAllowed, final Dimension[] dimensions) {
+        this.containerHeight = containerHeight;
+        this.rotationsAllowed = rotationsAllowed;
+        this.dimensions = dimensions;
     }
 
     public Case(final InputStream s) {
         Scanner sc = new Scanner(s);
 
-        sizeFixed = sc.skip("container height:").next().equals("fixed");
-        if (sizeFixed) {
+        if (sc.skip("container height:").next().equals("fixed")) {
             containerHeight = sc.nextInt();
         }
         rotationsAllowed = sc.skip("\\Rrotations allowed:").next().equals("yes");
-        rectangleCount = sc.skip("\\Rnumber of rectangles:").nextInt();
 
-        rectangles = new ArrayList<>(rectangleCount);
+        dimensions = new Dimension[sc.skip("\\Rnumber of rectangles:").nextInt()];
         for (int i = 0; sc.hasNext(); i++) {
-            rectangles.add(new IndexedRectangle(i, sc.skip("\\R").nextInt(), sc.nextInt()));
+            dimensions[i] = new Dimension(sc.skip("\\R").nextInt(), sc.nextInt());
         }
         sc.close();
     }
@@ -49,17 +43,15 @@ public class Case {
     }
 
     public Collection<IndexedRectangle> getRectangles() {
-        for (IndexedRectangle r : rectangles) {
+        ArrayList<IndexedRectangle> rectangles = new ArrayList<>(dimensions.length);
+        for (int i = 0; i < dimensions.length; i++) {
+            rectangles.add(i, new IndexedRectangle(i, dimensions[i]));
         }
-        return new ArrayList<>(rectangles);
-    }
-
-    public int getRectangleCount() {
-        return rectangleCount;
+        return rectangles;
     }
 
     public boolean isSizeFixed() {
-        return sizeFixed;
+        return containerHeight > 0;
     }
 
     public boolean areRotationsAllowed() {
@@ -73,6 +65,7 @@ public class Case {
         throw new Exception("container is free sized");
     }
 
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
@@ -89,13 +82,14 @@ public class Case {
                 .append(areRotationsAllowed() ? "yes" : "no")
                 .append("\n")
                 .append("number of rectangles: ")
-                .append(rectangleCount);
+                .append(dimensions.length);
 
-        rectangles.forEach((r) -> sb.append("\n")
-                .append(r.width)
-                .append(" ")
-                .append(r.height)
-        );
+        for (Dimension d : dimensions) {
+            sb.append("\n")
+                    .append(d.width)
+                    .append(" ")
+                    .append(d.height);
+        }
         return sb.toString();
     }
 }
