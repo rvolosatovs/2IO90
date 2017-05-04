@@ -39,16 +39,15 @@ public class StupidPacker implements Packer {
         return container;
     }
 
-    public void rotateRectangle(IndexedRectangle rectangle){
+    public void rotateRectangle(Rectangle rectangle){
         //Make double and int comparable
         Double width = rectangle.getWidth();
+        Double height = rectangle.getHeight();
         int w = width.intValue();
-
-        Double height = rectangle.getWidth();
         int h = height.intValue();
 
-        rectangle.height = h;
-        rectangle.width = w;
+        rectangle.height = w;
+        rectangle.width = h;
     }
 
 }
