@@ -1,3 +1,5 @@
+import java.awt.*;
+
 /**
  * Created by rvolosatovs on 5/2/17.
  */
@@ -11,6 +13,11 @@ public class IndexedRectangle extends Rectangle {
 
     public IndexedRectangle(final int index, Rectangle rectangle) {
         super(rectangle);
+        this.index = index;
+    }
+
+    public IndexedRectangle(final int index, Dimension dimension) {
+        super(dimension);
         this.index = index;
     }
 
