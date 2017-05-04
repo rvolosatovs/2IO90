@@ -23,6 +23,6 @@ public class PackingSolver {
             log.severe("Failed to solve case: " + e.getMessage());
             System.exit(-1);
         }
-        System.out.println(s.toString());
+        System.out.println(s);
     }
 }
