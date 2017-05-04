@@ -17,7 +17,6 @@ public class Solution {
         sb.append(spec.toString())
         .append("\n")
         .append("placement of rectangles")
-        .append("\n");
         container.getRectangles().forEach((r)->{
             if (rotationsAllowed) {
                 sb.append(r.wasRotated()?"yes " :"no ");
