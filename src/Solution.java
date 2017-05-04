@@ -15,7 +15,6 @@ public class Solution {
 
         StringBuilder sb = new StringBuilder();
         sb.append(spec.toString())
-        .append("\n")
         .append("placement of rectangles")
         .append("\n");
         container.getRectangles().forEach((r)->{
