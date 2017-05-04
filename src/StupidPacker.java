@@ -7,36 +7,30 @@ import java.util.Collection;
  */
 public class StupidPacker implements Packer {
     public Container Pack(Case c) {
+        Collection<IndexedRectangle> rectangles = c.getRectangles();
 
-        Collection<IndexedRectangle> collection = c.getRectangles();
-
-        Container container = new Container(collection);
-
-        int placement = 0;
-
+        int x = 0;
         if (c.isSizeFixed()){
-            for (IndexedRectangle rec : collection){
+            for (IndexedRectangle r : rectangles){
                 try {
-                    if (rec.getHeight() > c.getSize()) {
+                    if (r.getHeight() > c.getSize()) {
                         if (c.areRotationsAllowed()){
-                            rec.rotate();
+                            r.rotate();
                         }
                     }
                 } catch (Exception e) {
                     System.err.println("Exception: " + e.getMessage());
                 }
 
-                rec.setLocation(placement, 0);
-                placement += rec.getWidth();
+                r.setLocation(x, 0);
+                x += r.width;
             }
         } else {
-            for (IndexedRectangle rec : collection){
-                rec.setLocation(placement, 0);
-                placement += rec.getWidth();
+            for (IndexedRectangle r : rectangles){
+                r.setLocation(x, 0);
+                x += r.width;
             }
         }
-
-        return container;
+        return new Container(rectangles);
     }
-
 }
