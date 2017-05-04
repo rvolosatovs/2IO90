@@ -26,13 +26,17 @@ public class Container extends AbstractCollection<IndexedRectangle> implements R
         return rectangles.size();
     }
 
-    public Dimension getDimensions() {
+    public Dimension getSize() {
         // TODO count resulting dimensions
         return new Dimension(null);
     }
 
+    public Rectangle getBounds() {
+        return new Rectangle(getSize());
+    }
+
     public int getArea() {
-        Dimension d = getDimensions();
+        Dimension d = getSize();
         return d.width * d.height;
     }
 
