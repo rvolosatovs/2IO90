@@ -15,12 +15,12 @@ public class Solution {
 
         StringBuilder sb = new StringBuilder();
         sb.append(spec.toString())
-            .append("\n")
-            .append("placement of rectangles");
-        container.getRectangles().forEach((r)->{
+                .append("\n")
+                .append("placement of rectangles");
+        container.getRectangles().forEach((r) -> {
             sb.append("\n");
             if (rotationsAllowed) {
-                sb.append(r.wasRotated()?"yes " :"no ");
+                sb.append(r.wasRotated() ? "yes " : "no ");
             }
             sb.append(r.toString());
         });

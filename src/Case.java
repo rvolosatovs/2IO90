@@ -79,23 +79,23 @@ public class Case {
         sb.append("container height: ");
         if (isSizeFixed()) {
             sb.append("fixed ")
-                .append(containerHeight);
+                    .append(containerHeight);
         } else {
             sb.append("free");
         }
 
         sb.append("\n")
-            .append("rotations allowed: ")
-            .append(areRotationsAllowed() ? "yes" : "no")
-            .append("\n")
-            .append("number of rectangles: ")
-            .append(rectangleCount);
+                .append("rotations allowed: ")
+                .append(areRotationsAllowed() ? "yes" : "no")
+                .append("\n")
+                .append("number of rectangles: ")
+                .append(rectangleCount);
 
-        rectangles.forEach((r)->sb.append("\n")
+        rectangles.forEach((r) -> sb.append("\n")
                 .append(r.width)
                 .append(" ")
                 .append(r.height)
-                );
+        );
         return sb.toString();
     }
 }

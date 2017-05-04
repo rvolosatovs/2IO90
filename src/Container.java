@@ -18,7 +18,7 @@ public class Container extends java.awt.Rectangle {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("placement of rectangles:\n");
-        rectangles.forEach((r)-> sb.append(r.toString()).append("\n"));
+        rectangles.forEach((r) -> sb.append(r.toString()).append("\n"));
         return sb.toString();
     }
 }
