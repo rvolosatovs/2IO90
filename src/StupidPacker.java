@@ -19,7 +19,7 @@ public class StupidPacker implements Packer {
                 try {
                     if (rec.getHeight() > c.getSize()) {
                         if (c.areRotationsAllowed()){
-                            rotateRectangle(rec);
+                            rec.rotate();
                         }
                     }
                 } catch (Exception e) {
@@ -37,17 +37,6 @@ public class StupidPacker implements Packer {
         }
 
         return container;
-    }
-
-    public void rotateRectangle(Rectangle rectangle){
-        //Make double and int comparable
-        Double width = rectangle.getWidth();
-        Double height = rectangle.getHeight();
-        int w = width.intValue();
-        int h = height.intValue();
-
-        rectangle.height = w;
-        rectangle.width = h;
     }
 
 }

@@ -24,7 +24,7 @@ public abstract class Rectangle extends java.awt.Rectangle {
 
     public void rotate() {
         rotated = !rotated;
-        // TODO shift coords
+        setBounds(x, y, width, height);
     }
 
     public String toString() {
