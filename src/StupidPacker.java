@@ -14,11 +14,41 @@ public class StupidPacker implements Packer {
 
         int placement = 0;
 
-        for (IndexedRectangle rec : collection){
-            rec.setLocation(placement, 0);
-            placement += rec.getWidth();
+        if (c.isSizeFixed()){
+            for (IndexedRectangle rec : collection){
+                try {
+                    if (rec.getHeight() > c.getSize()) {
+                        if (c.areRotationsAllowed()){
+                            rotateRectangle(rec);
+                        }
+                    }
+                } catch (Exception e) {
+                    System.err.println("Exception: " + e.getMessage());
+                }
+
+                rec.setLocation(placement, 0);
+                placement += rec.getWidth();
+            }
+        } else {
+            for (IndexedRectangle rec : collection){
+                rec.setLocation(placement, 0);
+                placement += rec.getWidth();
+            }
         }
 
         return container;
     }
+
+    public void rotateRectangle(IndexedRectangle rectangle){
+        //Make double and int comparable
+        Double width = rectangle.getWidth();
+        int w = width.intValue();
+
+        Double height = rectangle.getWidth();
+        int h = height.intValue();
+
+        rectangle.height = h;
+        rectangle.width = w;
+    }
+
 }
