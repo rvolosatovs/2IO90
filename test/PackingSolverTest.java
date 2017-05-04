@@ -3,6 +3,11 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,16 +17,23 @@ import static org.junit.jupiter.api.Assertions.*;
 class PackingSolverTest {
 
     @Test
-    void main() {
-        Case c;
-        System.out.println(System.getProperty("user.dir"));
-        try {
-            c = new Case(new FileInputStream("test/cases/03_01_h20_rn.txt"));
-        } catch (FileNotFoundException e) {
-            assertFalse(true, e.toString());
+    void readAllFilesTest() {
+        try (Stream<Path> paths = Files.walk(Paths.get("test/cases"))) {
+            paths.forEach(filePath -> {
+                if (Files.isRegularFile(filePath)) {
+                    try {
+                        Case c = new Case(new FileInputStream(String.valueOf(filePath)));
+                    } catch (FileNotFoundException e) {
+                        assertFalse(true, e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (IOException e) {
             e.printStackTrace();
+            assertFalse(true, e.getMessage());
         }
-        assertTrue(true, "File was read");
+        assertTrue(true, "All files were correctly read and opened as a Case.");
     }
 
 }
