@@ -3,7 +3,7 @@ import java.awt.*;
 /**
  * Created by rvolosatovs on 5/2/17.
  */
-public class IndexedRectangle extends Rectangle implements Rotator {
+public class IndexedRectangle extends Rectangle {
     private final int index;
     private boolean rotated;
 

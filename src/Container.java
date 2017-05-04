@@ -7,7 +7,7 @@ import java.util.Iterator;
 /**
  * Created by rvolosatovs on 5/2/17.
  */
-public class Container extends AbstractCollection<IndexedRectangle> implements Rotator {
+public class Container extends AbstractCollection<IndexedRectangle> {
     private Collection<IndexedRectangle> rectangles;
 
     public Container(Collection<IndexedRectangle> rectangles) {
@@ -38,11 +38,6 @@ public class Container extends AbstractCollection<IndexedRectangle> implements R
     public int getArea() {
         Dimension d = getSize();
         return d.width * d.height;
-    }
-
-    public void rotate() {
-        //TODO implement translation
-        // rectangles.forEach((r) -> {});
     }
 
     @Override
