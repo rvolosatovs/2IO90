@@ -1,0 +1,26 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+
+sourceCompatibility = 1.8
+version = '1.0'
+
+repositories {
+    jcenter()
+}
+
+sourceSets {
+  main {
+    java {
+        srcDir 'src'
+    }
+  }
+  test {
+    java {
+        srcDir 'test'
+    }
+  }
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+}
