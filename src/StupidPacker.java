@@ -29,6 +29,7 @@ public class StupidPacker implements Packer {
                 x += r.width;
             }
         }
+
         return new Container(rectangles);
     }
 }
