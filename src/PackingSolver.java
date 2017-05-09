@@ -1,3 +1,4 @@
+import java.io.FileInputStream;
 import java.util.logging.Logger;
 
 public class PackingSolver {
@@ -10,7 +11,7 @@ public class PackingSolver {
 
         Case c = null;
         try {
-            c = new Case(System.in);
+            c = new Case(new FileInputStream("test/cases/03_03_h12_ry.txt"));
         } catch (Exception e) {
             log.severe("Failed to parse case: " + e.getMessage());
             System.exit(-1);

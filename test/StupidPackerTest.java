@@ -17,5 +17,4 @@ class StupidPackerTest extends PackerTest{
     Packer newPacker() {
         return new StupidPacker();
     }
-
 }

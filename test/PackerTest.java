@@ -1,18 +1,13 @@
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
-
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 /**
  * Created by berrietrippe on 08/05/2017.
  */
 public abstract class PackerTest  {
-
     abstract Packer newPacker();
 
     @Test
@@ -27,11 +22,7 @@ public abstract class PackerTest  {
 
         int height = newPacker().Pack(c).getHeight();
 
-        if (height > containerheight){
-            assertFalse(true, "Packer exceeds allowed container height");
-        } else {
-            assertTrue(true,"Packer does not exceed allowed container height");
-        }
+        assertFalse(height > containerheight,"Packer respects container height" );
     }
 
 }

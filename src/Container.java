@@ -28,34 +28,28 @@ public class Container extends AbstractCollection<IndexedRectangle> {
 
     public Dimension getSize() {
         // TODO count resulting dimensions
-
-
         return new Dimension(null);
     }
 
     public int getWidth() {
-
         int width = 0;
 
-        for (Rectangle r  : rectangles) {
-            if (r.x + r.width > width){
+        for (Rectangle r : rectangles) {
+            if (r.x + r.width > width) {
                 width = r.x + r.width;
             }
         }
-
         return width;
     }
 
     public int getHeight() {
-
         int height = 0;
 
-        for (Rectangle r  : rectangles) {
-            if (r.y + r.height > height){
-               height = r.y + r.height;
+        for (Rectangle r : rectangles) {
+            if (r.y + r.height > height) {
+                height = r.y + r.height;
             }
         }
-
         return height;
     }
 
