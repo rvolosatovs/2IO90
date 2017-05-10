@@ -18,7 +18,7 @@ public class CaseTest {
         try {
             Stream<Path> paths = Files.walk(Paths.get("test/cases"));
             paths.forEach(path -> {
-                if (Files.isRegularFile(path)) {
+                if (Files.isRegularFile(path) && path.toString().toLowerCase().endsWith(".txt")) {
                     try {
                         System.out.println("Parsing " + path.toString());
                         new Case(new FileInputStream(path.toFile()));
