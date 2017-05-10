@@ -22,13 +22,12 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         return rectangles.iterator();
     }
 
-    public int size() {
-        return rectangles.size();
+    public boolean add(IndexedRectangle r) {
+        return rectangles.add(r);
     }
 
-    public Dimension getSize() {
-        // TODO count resulting dimensions
-        return new Dimension(null);
+    public int size() {
+        return rectangles.size();
     }
 
     public int getWidth() {
@@ -51,6 +50,11 @@ public class Container extends AbstractCollection<IndexedRectangle> {
             }
         }
         return height;
+    }
+
+    public Dimension getSize() {
+        Dimension d = new Dimension(this.getWidth(), this.getHeight());
+        return new Dimension(d);
     }
 
     public Rectangle getBounds() {
