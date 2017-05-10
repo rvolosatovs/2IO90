@@ -52,65 +52,6 @@ public class GreedyPacker implements Packer {
                 rectangle.setLocation(bestRectangle);
         }
 
-        /*
-        rectanglePlaced:
-            if (!sortedRectangles.isEmpty()) {
-                IndexedRectangle rectangle = sortedRectangles.get(0); // from the biggest rectangle to the smallest
-                int x = 0;
-                int y = 0;
-                List<Point> checkedPoints = new ArrayList<>();
-                while (true) {
-                    for (int i = 0; i < x; i++) {
-                        for (int j = 0; j < y; j++) {
-                            if (!checkedPoints.contains(new Point(i, j))) {
-                                if (trueCheck if this point is empty) {
-
-                                    IndexedRectangle placedRectangle = new IndexedRectangle(rectangle.getIndex(),
-                                            new Rectangle(i, j + rectangle.height, rectangle.width, rectangle.height));
-                                    container.add(placedRectangle);
-                                    if (!isValidContainer(container)) {
-                                        container.remove(placedRectangle);
-                                    } else {
-
-                                        sortedRectangles.remove(0);
-                                        break rectanglePlaced;
-                                    }
-                                }
-                                checkedPoints.add(new Point(i, j));
-                            }
-                        }
-                    }
-                    x++;
-                    y++;
-                }
-            }*/
-
-
-
-
-
-        /*int x = 0;
-        if (c.isHeightFixed()) {
-            for (IndexedRectangle r : rectangles) {
-                try {
-                    if (r.getHeight() > c.getHeight()) {
-                        if (c.areRotationsAllowed()) {
-                            r.rotate();
-                        }
-                    }
-                } catch (Exception e) {
-                    System.err.println("Exception: " + e.getMessage());
-                }
-
-                r.setLocation(x, 0);
-                x += r.width;
-            }
-        } else {
-            for (IndexedRectangle r : rectangles) {
-                r.setLocation(x, 0);
-                x += r.width;
-            }
-        }*/
         return new Container(originalRectangles);
     }
 
@@ -143,8 +84,11 @@ public class GreedyPacker implements Packer {
 
     public boolean isValidContainer(Container container, Case c) {
         Collection<IndexedRectangle> rectangles = container.getRectangles();
+        System.out.println(rectangles);
         // check for negative container, ignoring non-placed ones
         for (Rectangle r : rectangles) {
+            System.out.println("x" + r.getMinX() + "y" +r.getMinY());
+            System.out.println("x" + r.getMaxX() + "y" +r.getMaxY());
             if (!(r.x == 0 && r.y == 0)) {
                 if (r.getMinX() < 0 || r.getMinY() < 0) {
                     return false;
@@ -154,13 +98,10 @@ public class GreedyPacker implements Packer {
 
         // check for height limit
         if (c.isHeightFixed()) {
-            try {
-                if (c.getHeight() < container.getHeight()) {
-                    return false;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (c.getHeight() < container.getHeight()) {
+                return false;
             }
+
         }
         // check if there are overlapping rectangles
         for (Rectangle r : rectangles) {
@@ -186,8 +127,19 @@ public class GreedyPacker implements Packer {
             for (int j = rectangle.y - rectangle.height; j < rectangle.y; j++) {
                 set.add(new Point(rectangle.x + rectangle.width, j));
             }
-
             //TODO remove points that have bigger ones
+            Set<Point> cloneSet = new HashSet<>();
+            cloneSet.addAll(set);
+            for (Point point1: cloneSet) {
+                for (Point point2: cloneSet) {
+                    if (point1.x == point2.x && point1.y < point2.y) {
+                        set.remove(point1);
+                    }
+                    if (point1.y == point2.y && point1.x < point2.x) {
+                        set.remove(point1);
+                    }
+                }
+            }
         }
         return set;
     }
