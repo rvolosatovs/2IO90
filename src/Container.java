@@ -45,8 +45,10 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         int height = 0;
 
         for (Rectangle r : rectangles) {
-            if (r.y + r.height > height) {
-                height = r.y + r.height;
+            if (!(r.x == 0 && r.y == 0)) {
+                if (r.y + r.height > height) {
+                    height = r.y + r.height;
+                }
             }
         }
         return height;
