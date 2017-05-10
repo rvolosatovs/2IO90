@@ -10,14 +10,10 @@ public class StupidPacker implements Packer {
         int x = 0;
         if (c.isSizeFixed()) {
             for (IndexedRectangle r : rectangles) {
-                try {
-                    if (r.getHeight() > c.getSize()) {
-                        if (c.areRotationsAllowed()) {
-                            r.rotate();
-                        }
+                if (r.getHeight() > c.getSize()) {
+                    if (c.areRotationsAllowed()) {
+                        r.rotate();
                     }
-                } catch (Exception e) {
-                    System.err.println("Exception: " + e.getMessage());
                 }
 
                 r.setLocation(x, 0);
