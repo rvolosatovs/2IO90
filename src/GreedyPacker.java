@@ -9,9 +9,6 @@ public class GreedyPacker implements Packer {
     @Override
     public Container Pack(Case c) {
         Collection<IndexedRectangle> rectangles = c.getRectangles();
-        for (IndexedRectangle rectangle: rectangles) {
-            System.out.println(rectangle.getX() + " " + rectangle.getY());
-        }
         ArrayList<IndexedRectangle> sortedRectangles = sortOnSize(rectangles);
 
 
@@ -20,12 +17,12 @@ public class GreedyPacker implements Packer {
             System.out.println("rectangle area:"+rectangle.width * rectangle.height);
         }
 
-        Container container = new Container(new HashSet<>());
+        Container container = new Container(new ArrayList<>());
 
         //adding the biggest rectangle at 0, 0
         IndexedRectangle firstRectangle = sortedRectangles.get(0);
         firstRectangle.setLocation(0, 0 + firstRectangle.height);
-        container.add(firstRectangle);
+        container.getRectangles().add(firstRectangle);
         sortedRectangles.remove(0);
 
         for (IndexedRectangle rectangle: sortedRectangles) {
@@ -33,7 +30,7 @@ public class GreedyPacker implements Packer {
             IndexedRectangle bestRectangle = null;
             for (Point point: pointsAvailable(container)) {
                 rectangle.setLocation(point);
-                container.add(rectangle);
+                container.getRectangles().add(rectangle);
                 if (isValidContainer(container, c)) {
                     int area = container.getArea();
                     if (area < smallestArea) {
@@ -41,10 +38,10 @@ public class GreedyPacker implements Packer {
                         bestRectangle = rectangle;
                     }
                 }
-                container.remove(rectangle);
+                container.getRectangles().remove(rectangle);
                 if (c.areRotationsAllowed()) {
                     rectangle.rotate();
-                    container.add(rectangle);
+                    container.getRectangles().add(rectangle);
                     if (isValidContainer(container, c)) {
                         int area = container.getArea();
                         if (area < smallestArea) {
@@ -52,10 +49,10 @@ public class GreedyPacker implements Packer {
                             bestRectangle = rectangle;
                         }
                     }
-                    container.remove(rectangle);
+                    container.getRectangles().remove(rectangle);
                 }
             }
-            container.add(bestRectangle);
+            container.getRectangles().add(bestRectangle);
         }
 
         /*
