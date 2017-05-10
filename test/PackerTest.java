@@ -1,8 +1,7 @@
-import org.junit.Test;
-
 import java.awt.*;
+import java.util.Collection;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 /**
  * Created by berrietrippe on 08/05/2017.
@@ -22,6 +21,25 @@ public abstract class PackerTest {
         int height = newPacker().Pack(c).getHeight();
 
         assertFalse("Packer respects container height", height > containerHeight);
+    }
+
+    public void checkOverlap() {
+        Dimension[] dimensions = new Dimension[4];
+        dimensions[0] = new Dimension(4, 5);
+        dimensions[1] = new Dimension(2, 10);
+        dimensions[2] = new Dimension(7, 13);
+        dimensions[3] = new Dimension(11, 12);
+        int containerheight = 10;
+
+        Case c = new Case(containerheight, false, dimensions);
+
+        Collection<IndexedRectangle> rectangles = newPacker().Pack(c).getRectangles();
+
+        for (Rectangle r : rectangles) {
+            for (Rectangle l : rectangles) {
+                assertFalse("Packer overlaps rectangles", r.contains(l) && r != l);
+            }
+        }
     }
 
 }

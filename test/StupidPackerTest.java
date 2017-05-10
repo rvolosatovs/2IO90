@@ -13,4 +13,7 @@ public class StupidPackerTest extends PackerTest {
     public void checkHeight() {
         super.checkHeight();
     }
+
+    @Test
+    public void checkOverlap() { super.checkOverlap();}
 }
