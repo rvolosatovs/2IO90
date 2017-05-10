@@ -1,6 +1,5 @@
 import java.awt.*;
 import java.util.*;
-import java.util.List;
 
 /**
  * Created by s154563 on 8-5-2017.
@@ -93,10 +92,10 @@ public class GreedyPacker implements Packer {
 
 
         /*int x = 0;
-        if (c.isSizeFixed()) {
+        if (c.isHeightFixed()) {
             for (IndexedRectangle r : rectangles) {
                 try {
-                    if (r.getHeight() > c.getSize()) {
+                    if (r.getHeight() > c.getHeight()) {
                         if (c.areRotationsAllowed()) {
                             r.rotate();
                         }
@@ -151,9 +150,9 @@ public class GreedyPacker implements Packer {
             return false;
         }
         // check for height limit
-        if (c.isSizeFixed()) {
+        if (c.isHeightFixed()) {
             try {
-                if (c.getSize() < container.getHeight()) {
+                if (c.getHeight() < container.getHeight()) {
                     return false;
                 }
             } catch (Exception e) {
