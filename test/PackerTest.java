@@ -17,7 +17,6 @@ public abstract class PackerTest {
         int containerHeight = 6;
 
         Case c = new Case(containerHeight, true, dimensions);
-
         int height = newPacker().Pack(c).getHeight();
 
         assertFalse("Packer respects container height", height > containerHeight);
@@ -29,10 +28,8 @@ public abstract class PackerTest {
         dimensions[1] = new Dimension(2, 10);
         dimensions[2] = new Dimension(7, 13);
         dimensions[3] = new Dimension(11, 12);
-        int containerheight = 10;
 
-        Case c = new Case(containerheight, false, dimensions);
-
+        Case c = new Case(10, false, dimensions);
         Collection<IndexedRectangle> rectangles = newPacker().Pack(c).getRectangles();
 
         for (Rectangle r : rectangles) {
