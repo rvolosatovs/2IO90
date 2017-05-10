@@ -15,10 +15,10 @@ public class GreedyPacker implements Packer {
         ArrayList<IndexedRectangle> sortedRectangles = sortOnSize(rectangles);
 
 
-        /*
-        for (IndexedRectangle rectangle: sizeSortedRectangles) {
-            System.out.println(rectangle.width * rectangle.height);
-        }*/
+
+        for (IndexedRectangle rectangle: sortedRectangles) {
+            System.out.println("rectangle area:"+rectangle.width * rectangle.height);
+        }
 
         Container container = new Container(new HashSet<>());
 
@@ -30,19 +30,32 @@ public class GreedyPacker implements Packer {
 
         for (IndexedRectangle rectangle: sortedRectangles) {
             int smallestArea = Integer.MAX_VALUE;
+            IndexedRectangle bestRectangle = null;
             for (Point point: pointsAvailable(container)) {
-                container.add(new IndexedRectangle(rectangle.getIndex(),
-                        new Rectangle(point.x, point.y, rectangle.width, rectangle.height)));
+                rectangle.setLocation(point);
+                container.add(rectangle);
                 if (isValidContainer(container, c)) {
                     int area = container.getArea();
                     if (area < smallestArea) {
                         smallestArea = area;
+                        bestRectangle = rectangle;
                     }
-                    break;
-                } else {
+                }
+                container.remove(rectangle);
+                if (c.areRotationsAllowed()) {
+                    rectangle.rotate();
+                    container.add(rectangle);
+                    if (isValidContainer(container, c)) {
+                        int area = container.getArea();
+                        if (area < smallestArea) {
+                            smallestArea = area;
+                            bestRectangle = rectangle;
+                        }
+                    }
                     container.remove(rectangle);
                 }
             }
+            container.add(bestRectangle);
         }
 
         /*
