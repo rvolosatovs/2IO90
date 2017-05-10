@@ -11,7 +11,7 @@ public class PackingSolver {
 
         Case c = null;
         try {
-            c = new Case(new FileInputStream("test/cases/03_03_h12_ry.txt"));
+            c = new Case(System.in);
         } catch (Exception e) {
             log.severe("Failed to parse case: " + e.getMessage());
             System.exit(-1);
