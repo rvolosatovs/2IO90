@@ -50,7 +50,7 @@ public class Case {
         return rectangles;
     }
 
-    public boolean isSizeFixed() {
+    public boolean isHeightFixed() {
         return containerHeight > 0;
     }
 
@@ -58,8 +58,8 @@ public class Case {
         return rotationsAllowed;
     }
 
-    public int getSize() {
-        if (!isSizeFixed()) {
+    public int getHeight() {
+        if (!isHeightFixed()) {
             throw new Error("container is free sized");
         }
         return containerHeight;
@@ -70,7 +70,7 @@ public class Case {
         StringBuilder sb = new StringBuilder();
 
         sb.append("container height: ");
-        if (isSizeFixed()) {
+        if (isHeightFixed()) {
             sb.append("fixed ")
                     .append(containerHeight);
         } else {

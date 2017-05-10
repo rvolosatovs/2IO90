@@ -8,9 +8,9 @@ public class StupidPacker implements Packer {
         Collection<IndexedRectangle> rectangles = c.getRectangles();
 
         int x = 0;
-        if (c.isSizeFixed()) {
+        if (c.isHeightFixed()) {
             for (IndexedRectangle r : rectangles) {
-                if (r.getHeight() > c.getSize()) {
+                if (r.getHeight() > c.getHeight()) {
                     if (c.areRotationsAllowed()) {
                         r.rotate();
                     }
