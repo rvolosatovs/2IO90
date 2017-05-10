@@ -1,3 +1,4 @@
+import java.io.FileInputStream;
 import java.util.logging.Logger;
 
 public class PackingSolver {
