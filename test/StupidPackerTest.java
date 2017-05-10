@@ -1,10 +1,16 @@
+import org.junit.Test;
+
 /**
  * Created by berrietrippe on 04/05/2017.
  */
-class StupidPackerTest extends PackerTest {
-
+public class StupidPackerTest extends PackerTest {
     @Override
-    Packer newPacker() {
+    public Packer newPacker() {
         return new StupidPacker();
+    }
+
+    @Test
+    public void checkHeight() {
+        super.checkHeight();
     }
 }
