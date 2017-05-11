@@ -60,7 +60,6 @@ public class CaseTest {
                 new spec(false)
         };
 
-
         for (spec spec : specs) {
             String s = String.join(System.getProperty("line.separator"),
                     "container height:" + (spec.sizeFixed ? "fixed " + spec.size : "free"),
