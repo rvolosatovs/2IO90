@@ -16,40 +16,44 @@ public class GreedyPacker implements Packer {
         for (IndexedRectangle rectangle: rectangles) {
             System.out.println("rectangle area:"+rectangle.width * rectangle.height);
         }
+
         //adding the biggest rectangle at 0, 0
-        IndexedRectangle firstRectangle = rectangles.get(0);
-        firstRectangle.setLocation(0, 0 + firstRectangle.height);
+        IndexedRectangle firstRectangle = sortedRectangles.get(0);
+        firstRectangle.setLocation(0, 0);
+        container.getRectangles().add(firstRectangle);
+        sortedRectangles.remove(0);
 
         System.out.println("Placed first rectangle of size " + firstRectangle.width*firstRectangle.height
         + " at 0,0+height with width " + firstRectangle.width + " and height " + firstRectangle.height);
 
-        for (IndexedRectangle rectangle: rectangles.subList(1, rectangles.size() - 1)) {
-                int smallestArea = Integer.MAX_VALUE;
-                Point bestRectangle = null;
-                Set<Point> pointsAvailable = pointsAvailable(container);
-                System.out.println(pointsAvailable);
-                for (Point point : pointsAvailable) {
-                    rectangle.setLocation(point);
-
+        for (IndexedRectangle rectangle: sortedRectangles) {
+            int smallestArea = Integer.MAX_VALUE;
+            IndexedRectangle bestRectangle = null;
+            for (Point point: pointsAvailable(container)) {
+                rectangle.setLocation(point);
+                container.getRectangles().add(rectangle);
+                if (isValidContainer(container, c)) {
+                    int area = container.getArea();
+                    if (area < smallestArea) {
+                        smallestArea = area;
+                        bestRectangle = rectangle;
+                    }
+                }
+                container.getRectangles().remove(rectangle);
+                if (c.areRotationsAllowed()) {
+                    rectangle.rotate();
+                    container.getRectangles().add(rectangle);
                     if (isValidContainer(container, c)) {
                         int area = container.getArea();
                         if (area < smallestArea) {
                             smallestArea = area;
-                            bestRectangle = rectangle.getLocation();
+                            bestRectangle = rectangle;
                         }
                     }
-                    if (c.areRotationsAllowed()) {
-                        rectangle.rotate();
-                        if (isValidContainer(container, c)) {
-                            int area = container.getArea();
-                            if (area < smallestArea) {
-                                smallestArea = area;
-                                bestRectangle = rectangle.getLocation();
-                            }
-                        }
-                    }
+                    container.getRectangles().remove(rectangle);
                 }
-                rectangle.setLocation(bestRectangle);
+            }
+            container.getRectangles().add(bestRectangle);
         }
 
         return new Container(originalRectangles);
