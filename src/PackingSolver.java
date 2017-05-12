@@ -2,7 +2,7 @@ import java.io.FileInputStream;
 import java.util.logging.Logger;
 
 public class PackingSolver {
-    private static Solution solve(Case c, Packer p) {
+    private static Solution solve(Case c, Packer p) throws Exception {
         return new Solution(c, p.Pack(c));
     }
 
@@ -19,7 +19,7 @@ public class PackingSolver {
 
         Solution s = null;
         try {
-            s = solve(c, new StupidPacker());
+            s = solve(c, new GreedyPacker());
         } catch (Exception e) {
             log.severe("Failed to solve case: " + e.getMessage());
             System.exit(-1);

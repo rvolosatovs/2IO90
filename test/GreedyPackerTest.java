@@ -50,9 +50,9 @@ public class GreedyPackerTest extends PackerTest {
         int containerHeight = 6;
         Case c = new Case(containerHeight, true, dimensions);
         ArrayList<IndexedRectangle> rectangles = (ArrayList<IndexedRectangle>)c.getRectangles();
-        System.out.println(rectangles);
-        rectangles.get(0).setLocation(0, 2);
-        System.out.println(rectangles);
+        //System.out.println(rectangles);
+        rectangles.get(0).setLocation(0, 6);
+        //System.out.println(rectangles);
         assertFalse(greedy.isValidContainer(new Container(rectangles), c));
     }
 

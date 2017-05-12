@@ -1,3 +1,5 @@
+import com.sun.org.apache.regexp.internal.RE;
+
 import java.awt.*;
 import java.util.*;
 
@@ -6,14 +8,15 @@ import java.util.*;
  */
 public class GreedyPacker implements Packer {
     @Override
-    public Container Pack(Case c) {
+    public Container Pack(Case c) throws Exception {
         Collection<IndexedRectangle> originalRectangles = c.getRectangles();
         ArrayList<IndexedRectangle> sortedRectangles = sortOnSize(originalRectangles);
-        Container container = new Container(new ArrayList<>());
+        Container container = new Container();
 
+        /*
         for (IndexedRectangle rectangle: sortedRectangles) {
             System.out.println("rectangle area:"+rectangle.width * rectangle.height);
-        }
+        }*/
 
         //adding the biggest rectangle at 0, 0
         IndexedRectangle firstRectangle = sortedRectangles.get(0);
@@ -21,8 +24,8 @@ public class GreedyPacker implements Packer {
         container.add(firstRectangle);
         sortedRectangles.remove(0);
 
-        System.out.println("Placed first rectangle of size " + firstRectangle.width*firstRectangle.height
-        + " at (0,0) with width " + firstRectangle.width + " and height " + firstRectangle.height);
+        //System.out.println("Placed first rectangle of size " + firstRectangle.width*firstRectangle.height
+        //+ " at (0,0) with width " + firstRectangle.width + " and height " + firstRectangle.height);
 
         for (IndexedRectangle rectangle: sortedRectangles) {
             int smallestArea = Integer.MAX_VALUE;
@@ -52,7 +55,14 @@ public class GreedyPacker implements Packer {
                     container.remove(rectangle);
                 }
             }
-            container.add(bestRectangle);
+            if (bestRectangle == null) {
+                //System.out.println("COULDN'T PLACE RECTANGLE OF SIZE " + rectangle.width*rectangle.height);
+                throw new Exception("COULDN'T PLACE RECTANGLE OF SIZE \" + rectangle.width*rectangle.height");
+            } else {
+                container.add(bestRectangle);
+                //System.out.println("Placed next rectangle of size " + bestRectangle.width * bestRectangle.height + " at " +
+                //        bestRectangle.getLocation() + " with width " + bestRectangle.width + " and height " + bestRectangle.height);
+            }
         }
 
         return container;
@@ -87,11 +97,12 @@ public class GreedyPacker implements Packer {
 
     public boolean isValidContainer(Container container, Case c) {
         Collection<IndexedRectangle> rectangles = container.getRectangles();
-        System.out.println(rectangles);
 
         // check for height limit
         if (c.isHeightFixed()) {
             if (c.getHeight() < container.getHeight()) {
+                //System.out.println("height limit is breached, case height is " + c.getHeight() + " and" +
+                //        " container height is " + container.getHeight());
                 return false;
             }
         }
@@ -100,6 +111,7 @@ public class GreedyPacker implements Packer {
         for (Rectangle r : rectangles) {
             for (Rectangle l : rectangles) {
                 if (r.contains(l) && r != l) {
+                    //System.out.println("rectangle " + r + " and rectangle " + l + " overlap");
                     return false;
                 }
             }
@@ -107,9 +119,13 @@ public class GreedyPacker implements Packer {
         return true;
     }
 
+    public boolean overlaps(Rectangle r, Rectangle l) {
+        return l.x <= r.x + r.width && l.x + l.width >= r.x && l.y <= r.y + r.height && l.y + l.height >= r.y;
+    }
+
     public Set<Point> pointsAvailable(Container container) {
         Set<Point> set = new HashSet<>();
-        for (IndexedRectangle rectangle: container) {
+        for (IndexedRectangle rectangle: container.getRectangles()) {
             //add all the points on the top side
             for (int i = rectangle.x; i <= rectangle.x + rectangle.width; i++) {
                 set.add(new Point(i, rectangle.y + rectangle.height));

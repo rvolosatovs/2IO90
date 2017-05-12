@@ -14,6 +14,8 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         this.rectangles = rectangles;
     }
 
+    public Container() { this.rectangles = new ArrayList<>(); }
+
     public Collection<IndexedRectangle> getRectangles() {
         return new ArrayList<>(rectangles);
     }

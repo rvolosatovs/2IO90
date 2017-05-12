@@ -1,5 +1,13 @@
+import org.junit.Test;
+
 import java.awt.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 
@@ -17,7 +25,12 @@ public abstract class PackerTest {
         int containerHeight = 6;
 
         Case c = new Case(containerHeight, true, dimensions);
-        int height = newPacker().Pack(c).getHeight();
+        int height = 0;
+        try {
+            height = newPacker().Pack(c).getHeight();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         assertFalse("Packer respects container height", height > containerHeight);
     }
@@ -30,12 +43,38 @@ public abstract class PackerTest {
         dimensions[3] = new Dimension(11, 12);
 
         Case c = new Case(10, false, dimensions);
-        Collection<IndexedRectangle> rectangles = newPacker().Pack(c).getRectangles();
+        Collection<IndexedRectangle> rectangles = null;
+        try {
+            rectangles = newPacker().Pack(c).getRectangles();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         for (Rectangle r : rectangles) {
             for (Rectangle l : rectangles) {
                 assertFalse("Packer overlaps rectangles", r.contains(l) && r != l);
             }
+        }
+    }
+
+    public void testAllFiles() {
+        try {
+            Stream<Path> paths = Files.walk(Paths.get("test/cases"));
+            paths.forEach(path -> {
+                if (Files.isRegularFile(path) && path.toString().toLowerCase().endsWith(".txt")) {
+                    try {
+                        System.out.println("Parsing " + path.toString());
+                        Case c = new Case(new FileInputStream(path.toFile()));
+                        Solution s = new Solution(c, newPacker().Pack(c));
+                        System.out.println(s);
+                    } catch (Exception e) {
+                        fail(e.getMessage());
+                    }
+                }
+            });
+            paths.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
