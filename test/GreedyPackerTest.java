@@ -27,6 +27,9 @@ public class GreedyPackerTest extends PackerTest {
     }
 
     @Test
+    public void testAllFiles() { super.testAllFiles(); }
+
+    @Test
     public void testIsValidContainer() {
         GreedyPacker greedy = new GreedyPacker();
         Dimension[] dimensions = new Dimension[1];

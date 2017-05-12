@@ -57,7 +57,7 @@ public class GreedyPacker implements Packer {
             }
             if (bestRectangle == null) {
                 //System.out.println("COULDN'T PLACE RECTANGLE OF SIZE " + rectangle.width*rectangle.height);
-                throw new Exception("COULDN'T PLACE RECTANGLE OF SIZE \" + rectangle.width*rectangle.height");
+                throw new Exception("COULDN'T PLACE RECTANGLE OF SIZE" + rectangle.width*rectangle.height);
             } else {
                 container.add(bestRectangle);
                 //System.out.println("Placed next rectangle of size " + bestRectangle.width * bestRectangle.height + " at " +
