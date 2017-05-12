@@ -26,6 +26,10 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         return rectangles.add(r);
     }
 
+    public boolean remove(IndexedRectangle r) {
+        return rectangles.remove(r);
+    }
+
     public int size() {
         return rectangles.size();
     }
