@@ -13,10 +13,10 @@ public class GreedyPacker implements Packer {
         ArrayList<IndexedRectangle> sortedRectangles = sortOnSize(originalRectangles);
         Container container = new Container();
 
-        /*
+
         for (IndexedRectangle rectangle: sortedRectangles) {
             System.out.println("rectangle area:"+rectangle.width * rectangle.height);
-        }*/
+        }
 
         //adding the biggest rectangle at 0, 0
         IndexedRectangle firstRectangle = sortedRectangles.get(0);
@@ -31,6 +31,7 @@ public class GreedyPacker implements Packer {
             int smallestArea = Integer.MAX_VALUE;
             IndexedRectangle bestRectangle = null;
             for (Point point: pointsAvailable(container)) {
+                //try rectangle with point at bottom left
                 rectangle.setLocation(point);
                 container.add(rectangle);
                 if (isValidContainer(container, c)) {
@@ -41,9 +42,34 @@ public class GreedyPacker implements Packer {
                     }
                 }
                 container.remove(rectangle);
+                //try rectangle with point at top left
+                rectangle.setLocation(new Point(point.x, point.y - rectangle.height));
+                container.add(rectangle);
+                if (isValidContainer(container, c)) {
+                    int area = container.getArea();
+                    if (area < smallestArea) {
+                        smallestArea = area;
+                        bestRectangle = rectangle;
+                    }
+                }
+                container.remove(rectangle);
+
+                //rotate it when allowed
                 if (c.areRotationsAllowed()) {
                     rectangle.rotate();
+                    //try rectangle with point at bottom left
                     rectangle.setLocation(point);
+                    container.add(rectangle);
+                    if (isValidContainer(container, c)) {
+                        int area = container.getArea();
+                        if (area < smallestArea) {
+                            smallestArea = area;
+                            bestRectangle = rectangle;
+                        }
+                    }
+                    container.remove(rectangle);
+                    //try rectangle with point at top left
+                    rectangle.setLocation(new Point(point.x, point.y - rectangle.height));
                     container.add(rectangle);
                     if (isValidContainer(container, c)) {
                         int area = container.getArea();
@@ -57,7 +83,7 @@ public class GreedyPacker implements Packer {
             }
             if (bestRectangle == null) {
                 //System.out.println("COULDN'T PLACE RECTANGLE OF SIZE " + rectangle.width*rectangle.height);
-                throw new Exception("COULDN'T PLACE RECTANGLE OF SIZE" + rectangle.width*rectangle.height);
+                throw new Exception("COULDN'T PLACE RECTANGLE OF SIZE " + rectangle.width*rectangle.height);
             } else {
                 container.add(bestRectangle);
                 //System.out.println("Placed next rectangle of size " + bestRectangle.width * bestRectangle.height + " at " +
@@ -65,7 +91,7 @@ public class GreedyPacker implements Packer {
             }
         }
 
-        return container;
+        return new Container(container.getRectanglesByIndex());
     }
 
     /**
@@ -98,6 +124,13 @@ public class GreedyPacker implements Packer {
     public boolean isValidContainer(Container container, Case c) {
         Collection<IndexedRectangle> rectangles = container.getRectangles();
 
+        // check for negative container
+        for (Rectangle r: rectangles) {
+            if (r.getMinY() < 0) {
+                return false;
+            }
+        }
+
         // check for height limit
         if (c.isHeightFixed()) {
             if (c.getHeight() < container.getHeight()) {
@@ -119,9 +152,6 @@ public class GreedyPacker implements Packer {
         return true;
     }
 
-    public boolean overlaps(Rectangle r, Rectangle l) {
-        return l.x <= r.x + r.width && l.x + l.width >= r.x && l.y <= r.y + r.height && l.y + l.height >= r.y;
-    }
 
     public Set<Point> pointsAvailable(Container container) {
         Set<Point> set = new HashSet<>();
@@ -135,7 +165,7 @@ public class GreedyPacker implements Packer {
                 set.add(new Point(rectangle.x + rectangle.width, j));
             }
         }
-
+        /*
         int[] biggestYforX = new int[container.getWidth() + 1];
         int[] biggestXforY = new int[container.getHeight() + 1];
         for (int i: biggestXforY) {i = -1;}
@@ -165,5 +195,7 @@ public class GreedyPacker implements Packer {
 
 
         return newSet;
+        */
+        return set;
     }
 }

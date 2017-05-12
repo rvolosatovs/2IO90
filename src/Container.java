@@ -20,6 +20,23 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         return new ArrayList<>(rectangles);
     }
 
+    public Collection<IndexedRectangle> getRectanglesByIndex() {
+        ArrayList<IndexedRectangle> copy = new ArrayList<>();
+        copy.addAll(rectangles);
+        ArrayList<IndexedRectangle> result = new ArrayList<>();
+        while (!copy.isEmpty()) {
+            IndexedRectangle min = copy.get(0);
+            for (IndexedRectangle r: copy) {
+                if (r.getIndex() < min.getIndex()) {
+                    min = r;
+                }
+            }
+            copy.remove(min);
+            result.add(min);
+        }
+        return result;
+    }
+
     public Iterator<IndexedRectangle> iterator() {
         return rectangles.iterator();
     }
