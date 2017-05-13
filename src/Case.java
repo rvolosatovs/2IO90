@@ -58,11 +58,11 @@ public class Case {
         return rotationsAllowed;
     }
 
-    public int getSize() throws Exception {
-        if (isSizeFixed()) {
-            return containerHeight;
+    public int getSize() {
+        if (!isSizeFixed()) {
+            throw new Error("container is free sized");
         }
-        throw new Exception("container is free sized");
+        return containerHeight;
     }
 
     @Override
