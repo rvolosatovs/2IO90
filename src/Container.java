@@ -54,6 +54,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         return contains(p.x, p.y);
     }
 
+    // Checks whether x,y is contained by the container
     public boolean contains(int x, int y) {
         for (Rectangle r: this) {
             if (r.contains(x, y)) {
@@ -94,6 +95,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         return d.width * d.height;
     }
 
+    // Gets the bounding polygon of container
     public Polygon getPolygon() {
         Rectangle bounds = getBounds();
         Set<Point> points = new HashSet<>(3*size());
