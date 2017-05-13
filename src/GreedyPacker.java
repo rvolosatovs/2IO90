@@ -188,7 +188,7 @@ public class GreedyPacker implements Packer {
 
     public Set<Point> pointsAvailable(Container container) {
         Set<Point> set = new HashSet<>();
-        for (IndexedRectangle rectangle: container.getRectangles()) {
+        for (IndexedRectangle rectangle: container) {
             //add all the points on the top side
             for (int i = rectangle.x; i <= rectangle.x + rectangle.width; i++) {
                 set.add(new Point(i, rectangle.y + rectangle.height));
