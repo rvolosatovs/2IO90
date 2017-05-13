@@ -1,8 +1,5 @@
 import java.awt.*;
-import java.util.AbstractCollection;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * Created by rvolosatovs on 5/2/17.
@@ -53,40 +50,83 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         return rectangles.size();
     }
 
-    public int getWidth() {
-        int width = 0;
+    public boolean contains(Point p) {
+        return contains(p.x, p.y);
+    }
 
-        for (Rectangle r : rectangles) {
-            if (r.x + r.width > width) {
-                width = r.x + r.width;
+    public boolean contains(int x, int y) {
+        for (Rectangle r: this) {
+            if (r.contains(x, y)) {
+                return true;
             }
         }
-        return width;
+        return false;
+    }
+
+    public int getWidth() {
+        int maxWidth = 0;
+
+        for (Rectangle r : this) {
+            int width = r.x + r.width;
+            if (width > maxWidth) {
+                maxWidth = width;
+            }
+        }
+        return maxWidth;
     }
 
     public int getHeight() {
-        int height = 0;
+        int maxHeight = 0;
 
-        for (Rectangle r : rectangles) {
-            if (r.y + r.height > height) {
-                height = r.y + r.height;
+        for (Rectangle r : this) {
+            int height = r.x + r.height;
+            if (height > maxHeight) {
+                maxHeight =  height;
             }
         }
-        return height;
+        return maxHeight;
     }
 
-    public Dimension getSize() {
-        Dimension d = new Dimension(this.getWidth(), this.getHeight());
-        return new Dimension(d);
-    }
-
-    public Rectangle getBounds() {
-        return new Rectangle(getSize());
-    }
+    public Dimension getSize() {return new Dimension(this.getWidth(), this.getHeight());}
 
     public int getArea() {
         Dimension d = getSize();
         return d.width * d.height;
+    }
+
+    public Polygon getPolygon() {
+        Rectangle bounds = getBounds();
+        Set<Point> points = new HashSet<>(3*size());
+        for (int x = bounds.x; x > 0; x--) {
+            boolean lastContained = false;
+           for (int y = bounds.y; y > 0; y--) {
+               if (!contains(x, y)) {
+                    lastContained = false;
+                    continue;
+               }
+               if (!lastContained && !(contains(x-1,y) && contains(x+1,y))) {
+                   points.add(new Point(x, y));
+               }
+               lastContained = true;
+           }
+        }
+
+        int nPoints = points.size();
+
+        int[] xPoints, yPoints;
+        xPoints = new int[nPoints];
+        yPoints = new int[nPoints];
+        int i = 0;
+        for (Point p : points) {
+            xPoints[i] = p.x;
+            yPoints[i] = p.y;
+            i++;
+        }
+        return new Polygon(xPoints, yPoints, nPoints);
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle(getSize());
     }
 
     @Override
