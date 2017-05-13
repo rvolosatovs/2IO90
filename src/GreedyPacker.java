@@ -27,6 +27,9 @@ public class GreedyPacker implements Packer {
         //System.out.println("Placed first rectangle of size " + firstRectangle.width*firstRectangle.height
         //+ " at (0,0) with width " + firstRectangle.width + " and height " + firstRectangle.height);
 
+        // for each rectangle get the set of points available and try to place that rectangle
+        // with three of its corners at each point and calculate the new area. That way for each
+        // rectangle the smallest area (bestContainer) will be found. If it cannot place it, throw an Exception.
         for (IndexedRectangle rectangle: sortedRectangles) {
             int smallestArea = Integer.MAX_VALUE;
             Container bestContainer = null;
