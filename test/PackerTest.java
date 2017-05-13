@@ -25,12 +25,7 @@ public abstract class PackerTest {
         int containerHeight = 6;
 
         Case c = new Case(containerHeight, true, dimensions);
-        int height = 0;
-        try {
-            height = newPacker().Pack(c).getHeight();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        int height = newPacker().Pack(c).getHeight();
 
         assertFalse("Packer respects container height", height > containerHeight);
     }
@@ -43,12 +38,7 @@ public abstract class PackerTest {
         dimensions[3] = new Dimension(11, 12);
 
         Case c = new Case(10, false, dimensions);
-        Collection<IndexedRectangle> rectangles = null;
-        try {
-            rectangles = newPacker().Pack(c).getRectangles();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Collection<IndexedRectangle> rectangles = newPacker().Pack(c).getRectangles();
 
         for (Rectangle r : rectangles) {
             for (Rectangle l : rectangles) {
