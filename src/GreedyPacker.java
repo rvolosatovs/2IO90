@@ -7,125 +7,6 @@ import java.util.*;
  * Created by s154563 on 8-5-2017.
  */
 public class GreedyPacker implements Packer {
-    @Override
-    public Container Pack(Case c) throws Exception {
-        Collection<IndexedRectangle> originalRectangles = c.getRectangles();
-        ArrayList<IndexedRectangle> sortedRectangles = sortOnSize(originalRectangles);
-        Container container = new Container();
-
-
-        for (IndexedRectangle rectangle: sortedRectangles) {
-            System.out.println("rectangle area:"+rectangle.width * rectangle.height);
-        }
-
-        //adding the biggest rectangle at 0, 0
-        IndexedRectangle firstRectangle = sortedRectangles.get(0);
-        firstRectangle.setLocation(0, 0);
-        container.add(firstRectangle);
-        sortedRectangles.remove(0);
-
-        //System.out.println("Placed first rectangle of size " + firstRectangle.width*firstRectangle.height
-        //+ " at (0,0) with width " + firstRectangle.width + " and height " + firstRectangle.height);
-
-        // for each rectangle get the set of points available and try to place that rectangle
-        // with three of its corners at each point and calculate the new area. That way for each
-        // rectangle the smallest area (bestContainer) will be found. If it cannot place it, throw an Exception.
-        for (IndexedRectangle rectangle: sortedRectangles) {
-            int smallestArea = Integer.MAX_VALUE;
-            Container bestContainer = null;
-            Set<Point> pointsAvailable = pointsAvailable(container);
-            for (Point point: pointsAvailable) {
-                //try rectangle with point at bottom left
-                rectangle.setLocation(point);
-                container.add(rectangle);
-                if (isValidContainer(container, c)) {
-                    int area = container.getArea();
-                    if (area < smallestArea) {
-                        smallestArea = area;
-                        bestContainer = new Container();
-                        bestContainer.addAll(container.getRectangles());
-                    }
-                }
-                container.remove(rectangle);
-                //try rectangle with point at top left
-                rectangle.setLocation(new Point(point.x, point.y - rectangle.height));
-                container.add(rectangle);
-                if (isValidContainer(container, c)) {
-                    int area = container.getArea();
-                    if (area < smallestArea) {
-                        smallestArea = area;
-                        bestContainer = new Container();
-                        bestContainer.addAll(container.getRectangles());
-                    }
-                }
-                container.remove(rectangle);
-                //try rectangle with point at bottom right
-                rectangle.setLocation(new Point(point.x - rectangle.width, point.y));
-                container.add(rectangle);
-                if (isValidContainer(container, c)) {
-                    int area = container.getArea();
-                    if (area < smallestArea) {
-                        smallestArea = area;
-                        bestContainer = new Container();
-                        bestContainer.addAll(container.getRectangles());
-                    }
-                }
-                container.remove(rectangle);
-
-                //rotate it when allowed
-                if (c.areRotationsAllowed()) {
-                    rectangle.rotate();
-                    //try rectangle with point at bottom left
-                    rectangle.setLocation(point);
-                    container.add(rectangle);
-                    if (isValidContainer(container, c)) {
-                        int area = container.getArea();
-                        if (area < smallestArea) {
-                            smallestArea = area;
-                            bestContainer = new Container();
-                            bestContainer.addAll(container.getRectangles());
-                        }
-                    }
-                    container.remove(rectangle);
-                    //try rectangle with point at top left
-                    rectangle.setLocation(new Point(point.x, point.y - rectangle.height));
-                    container.add(rectangle);
-                    if (isValidContainer(container, c)) {
-                        int area = container.getArea();
-                        if (area < smallestArea) {
-                            smallestArea = area;
-                            bestContainer = new Container();
-                            bestContainer.addAll(container.getRectangles());
-                        }
-                    }
-                    container.remove(rectangle);
-                    //try rectangle with point at bottom right
-                    rectangle.setLocation(new Point(point.x - rectangle.width, point.y));
-                    container.add(rectangle);
-                    if (isValidContainer(container, c)) {
-                        int area = container.getArea();
-                        if (area < smallestArea) {
-                            smallestArea = area;
-                            bestContainer = new Container();
-                            bestContainer.addAll(container.getRectangles());
-                        }
-                    }
-                    container.remove(rectangle);
-                }
-            }
-            if (bestContainer == null) {
-                //System.out.println("COULDN'T PLACE RECTANGLE OF SIZE " + rectangle.width*rectangle.height);
-                throw new Exception("COULDN'T PLACE RECTANGLE OF SIZE " + rectangle.width*rectangle.height);
-            } else {
-                container = new Container();
-                container.addAll(bestContainer.getRectangles());
-                //System.out.println("Placed next rectangle of size " + bestRectangle.width * bestRectangle.height + " at " +
-                //        bestRectangle.getLocation() + " with width " + bestRectangle.width + " and height " + bestRectangle.height);
-            }
-        }
-
-        return new Container(container.getRectanglesByIndex());
-    }
 
     /**
      * Sorts a Collection of IndexedRectangles on their area size.
@@ -154,81 +35,49 @@ public class GreedyPacker implements Packer {
         return result;
     }
 
-    public boolean isValidContainer(Container container, Case c) {
-        Collection<IndexedRectangle> rectangles = container.getRectangles();
-
-        // check for negative container
-        for (Rectangle r: rectangles) {
-            if (r.getMinY() < 0 || r.getMinX() < 0) {
-                return false;
+    public Set<Point> pointsAvailable(Container container) {
+        Polygon polygon = container.getPolygon();
+        Set<Point>  points = new HashSet<>(polygon.npoints);
+        for (int x : polygon.xpoints) {
+            for( int y: polygon.ypoints) {
+                points.add(new Point(x+1, y));
+                points.add(new Point(x, y+1));
+                points.add(new Point(x+1, y+1));
             }
         }
-
-        // check for height limit
-        if (c.isHeightFixed()) {
-            for (Rectangle r: rectangles) {
-                if (r.getMaxY() > c.getHeight()) {
-                    return false;
-                }
-            }
-        }
-
-        // check if there are overlapping rectangles
-        for (Rectangle r : rectangles) {
-            for (Rectangle l : rectangles) {
-                if (r.contains(l) && r != l) {
-                    //System.out.println("rectangle " + r + " and rectangle " + l + " overlap");
-                    return false;
-                }
-            }
-        }
-        return true;
+        // TODO check that there were no 1x1 fields, remove unneeded points
+        return points;
     }
 
+    @Override
+    public Container Pack(Case c) throws Exception {
+        Collection<IndexedRectangle> originalRectangles = c.getRectangles();
 
-    public Set<Point> pointsAvailable(Container container) {
-        Set<Point> set = new HashSet<>();
-        for (IndexedRectangle rectangle: container) {
-            //add all the points on the top side
-            for (int i = rectangle.x; i <= rectangle.x + rectangle.width; i++) {
-                set.add(new Point(i, rectangle.y + rectangle.height));
+        ArrayList<IndexedRectangle> sortedRectangles = sortOnSize(originalRectangles);
+        for (IndexedRectangle rectangle: sortedRectangles) {
+            System.out.println("rectangle area:"+rectangle.width * rectangle.height);
+        }
+
+        Container container = new Container();
+        container.add(sortedRectangles.get(0));
+
+        for (int i = 1; i < sortedRectangles.size(); i++) {
+            IndexedRectangle r = sortedRectangles.get(i);
+            container.add(r);
+
+            int minArea = Integer.MAX_VALUE;
+            Point minPoint = null;
+            for (Point p : pointsAvailable(container)) {
+                r.setLocation(p);
+                int area = container.getArea();
+                if (area < minArea) {
+                    minPoint = p;
+                    minArea = area;
+                }
             }
-            //add all the points on the right side
-            for (int j = rectangle.y; j <= rectangle.y + rectangle.height; j++) {
-                set.add(new Point(rectangle.x + rectangle.width, j));
-            }
-        }
-        /*
-        int[] biggestYforX = new int[container.getWidth() + 1];
-        int[] biggestXforY = new int[container.getHeight() + 1];
-        for (int i: biggestXforY) {i = -1;}
-        for (int i: biggestYforX) {i = -1;}
-
-        //add only the highest y's for the top
-        for (Point point: set) {
-            if (biggestYforX[point.x] < point.y) {
-                biggestYforX[point.x] = point.y;
-            }
+            r.setLocation(minPoint);
         }
 
-        //add only the highest x's for the side
-        for (Point point: set) {
-            if (biggestXforY[point.y] < point.x) {
-                biggestXforY[point.y] = point.x;
-            }
-        }
-
-        Set<Point> newSet = new HashSet<>();
-        for (int x = 0; x < biggestYforX.length; x++) {
-            newSet.add(new Point(x, biggestYforX[x]));
-        }
-        for (int y = 0; y < biggestXforY.length; y++) {
-            newSet.add(new Point(biggestXforY[y], y));
-        }
-
-
-        return newSet;
-        */
-        return set;
+        return container;
     }
 }
