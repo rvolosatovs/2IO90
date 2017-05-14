@@ -1,6 +1,7 @@
 import java.util.Collection;
 import java.util.*;
 import java.awt.*;
+import java.lang.*;
 
 /**
  *  Next fit decreasing height packing
@@ -47,17 +48,21 @@ public class NFDHPacker implements Packer {
         ArrayList<IndexedRectangle> sortedRectangles = sortOnHeight(originalRectangles);
 
         int y = 0;
+        int pot_wall = 0;
         int wall = 0;
 
         if (c.isHeightFixed()) {
             for (IndexedRectangle r : sortedRectangles) {
 
-                if ((y+r.getHeight()) > c.getHeight()) { // make new wall
-                    wall += r.getWidth();
-                    y = 0;
+                if(y + r.getHeight() > c.getHeight()){
+                    wall = pot_wall;
+                    y=0;
                 }
+
                 r.setLocation(wall, y);
                 y += r.getHeight();
+                pot_wall = Math.max((int)r.getWidth(), pot_wall);
+
             }
         }
         return new Container(sortedRectangles);
