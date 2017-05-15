@@ -2,6 +2,7 @@ import sys
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import re
+from datetime import datetime
 
 #
 # Parses input
@@ -14,7 +15,6 @@ class InputParser:
 		self.rotationsAllowed = self.getRotationsAllowed(input)
 		self.size, self.numRectangles = self.getSizes(input)
 		self.position = self.getPositions(input)
-		#if not heightIsFixed: self.varHeight = self.getVarHeight()
 
 	def getRotationsAllowed(self, input):
 		intStart = lines.find('rotations allowed: ')+len('rotations allowed: ')
@@ -63,13 +63,6 @@ class PlotBuilder:
 	def __init__(self, input):
 		fig = plt.figure(figsize=(5, 5))
 
-		#self.addRectangles()
-		#ax = fig.add_subplot(111, aspect='auto')
-		#ax.add_patch(patches.Rectangle((0,0),10,2))
-		#ax = fig.add_subplot(111, aspect='auto')
-		#ax.set_xlim()
-		#ax.set_ylim()
-
 		ax = fig.add_subplot(111, aspect='equal')
 		maxY = 0
 		maxX = 0
@@ -83,30 +76,51 @@ class PlotBuilder:
 				if int(input.position[i][0]) + int(input.size[i][0]) > maxX: 
 					maxX = int(input.position[i][0]) + int(input.size[i][0]) + 1
 
-				print int(input.position[i][0])
-				print int(input.position[i][1])
-				print int(input.size[i][0])
-				print int(input.size[i][1])
-
 				ax.add_patch(
-				    patches.Rectangle(
+					patches.Rectangle(
 				        (int(input.position[i][0]), int(input.position[i][1])),   # (x,y)
 				        int(input.size[i][0]),          # width
 				        int(input.size[i][1]),          # height
 				    )
 				)
-				print ax
+		else:
+			for i in range(0, int(input.numRectangles)):
+				if(input.position[i][0]=="no"):
+					if int(input.position[i][2]) + int(input.size[i][1]) > maxY: 
+						maxY = int(input.position[i][2]) + int(input.size[i][1]) + 1
+					if int(input.position[i][1]) + int(input.size[i][0]) > maxX: 
+						maxX = int(input.position[i][1]) + int(input.size[i][0]) + 1
+
+					ax.add_patch(
+						patches.Rectangle(
+					        (int(input.position[i][1]), int(input.position[i][2])),
+					        int(input.size[i][0]),          
+					        int(input.size[i][1]),          
+					    )
+					)
+
+				elif(input.position[i][0]=="yes"):
+					if int(input.position[i][2]) + int(input.size[i][0]) > maxY: 
+						maxY = int(input.position[i][2]) + int(input.size[i][0]) + 1
+					if int(input.position[i][1]) + int(input.size[i][1]) > maxX: 
+						maxX = int(input.position[i][1]) + int(input.size[i][1]) + 1
+
+					ax.add_patch(
+						patches.Rectangle(
+					        (int(input.position[i][1]), int(input.position[i][2])),
+					        int(input.size[i][1]),   
+					        int(input.size[i][0]),      
+					    )
+					)
 
 		ax.set_ylim([0, maxY])
 		ax.set_xlim([0, maxX])
 
 		#plt.show()
-		fig.savefig('vizualizer/rect1.png', dpi=90, bbox_inches='tight')
+		fig.savefig('vizualizer/'+str(datetime.now())+'.png', dpi=500, bbox_inches='tight')
 
-
-print("paste output, control d when done")        
+print("####################################\n#paste output, control d when done#\n####################################")        
 lines = sys.stdin.read()
 input = InputParser(lines)
 PlotBuilder(input)
-
-print("graph plotted in vizualizer foler")
+print(">graph plotted in vizualizer foler")
