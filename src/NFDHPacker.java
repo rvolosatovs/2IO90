@@ -20,21 +20,39 @@ public class NFDHPacker implements Packer {
      * @param rectangles
      * @return Sorted descending ArrayList on height with the rectangles
      */
-    private ArrayList<IndexedRectangle> sortOnHeight(Collection<IndexedRectangle> rectangles) {
+    private ArrayList<IndexedRectangle> sortOnHeight(Collection<IndexedRectangle> rectangles, Case c) {
         ArrayList<IndexedRectangle> result = new ArrayList<>();
 
         for (IndexedRectangle rectangle: rectangles) {
+            if (c.areRotationsAllowed()) {
+                System.out.println("\n");
+                System.out.println("width: "+ rectangle.width);
+                if (rectangle.height > rectangle.width) {
+                    if (c.getHeight() > rectangle.height) {
+                        rectangle.rotate();
+                    }
+                }
+                if (rectangle.height > c.getHeight()){
+                    System.out.println("swapped"+ rectangle.height +" "+rectangle.width);
+                    rectangle.rotate();
+                }
+                System.out.println("width: "+ rectangle.width);
+            }
+
             if (result.isEmpty()) {
+                System.out.println("vvvv");
                 result.add(rectangle);
             } else {
-                int height = rectangle.height;
+                int width = rectangle.width;
                 for (int i = 0; i < result.size(); i++) {
-                    if (height >= result.get(i).height) {
+                    if (width >= result.get(i).width) {
                         result.add(i, rectangle);
+                        System.out.println("vvvfvffvvffvfvvv");
                         break;
                     }
                 }
                 if (!result.contains(rectangle)) {
+                    System.out.println("vzzzzzzz");
                     result.add(rectangle);
                 }
             }
@@ -45,7 +63,7 @@ public class NFDHPacker implements Packer {
     public Container Pack(Case c) {
         Collection<IndexedRectangle> originalRectangles = c.getRectangles();
 
-        ArrayList<IndexedRectangle> sortedRectangles = sortOnHeight(originalRectangles);
+        ArrayList<IndexedRectangle> sortedRectangles = sortOnHeight(originalRectangles, c);
 
         int y = 0;
         int pot_wall = 0;

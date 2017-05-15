@@ -11,7 +11,7 @@ public class PackingSolver {
 
         Case c = null;
         try {
-            c = new Case(System.in);
+            c = new Case(new FileInputStream("test/cases/03_03_h12_ry.txt"));
         } catch (Exception e) {
             log.severe("Failed to parse case: " + e.getMessage());
             System.exit(-1);
@@ -19,7 +19,7 @@ public class PackingSolver {
 
         Solution s = null;
         try {
-            s = solve(c, new StupidPacker());
+            s = solve(c, new NFDHPacker());
         } catch (Exception e) {
             log.severe("Failed to solve case: " + e.getMessage());
             System.exit(-1);
