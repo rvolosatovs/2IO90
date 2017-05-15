@@ -1,3 +1,5 @@
+import com.sun.org.apache.xpath.internal.SourceTree;
+
 import java.awt.*;
 import java.util.*;
 
@@ -11,7 +13,9 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         this.rectangles = rectangles;
     }
 
-    public Container() { this.rectangles = new ArrayList<>(); }
+    public Container() {
+        this.rectangles = new ArrayList<>();
+    }
 
     public Collection<IndexedRectangle> getRectangles() {
         return new ArrayList<>(rectangles);
@@ -23,7 +27,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         ArrayList<IndexedRectangle> result = new ArrayList<>();
         while (!copy.isEmpty()) {
             IndexedRectangle min = copy.get(0);
-            for (IndexedRectangle r: copy) {
+            for (IndexedRectangle r : copy) {
                 if (r.getIndex() < min.getIndex()) {
                     min = r;
                 }
@@ -56,7 +60,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
 
     // Checks whether x,y is contained by the container
     public boolean contains(int x, int y) {
-        for (Rectangle r: this) {
+        for (Rectangle r : this) {
             if (r.contains(x, y)) {
                 return true;
             }
@@ -82,53 +86,61 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         for (Rectangle r : this) {
             int height = r.x + r.height;
             if (height > maxHeight) {
-                maxHeight =  height;
+                maxHeight = height;
             }
         }
         return maxHeight;
     }
 
-    public Dimension getSize() {return new Dimension(this.getWidth(), this.getHeight());}
+    public Dimension getSize() {
+        return new Dimension(this.getWidth(), this.getHeight());
+    }
 
     public int getArea() {
         Dimension d = getSize();
         return d.width * d.height;
     }
 
+    // Gets the bounding rectangle of container
+    public Rectangle getBounds() {
+        return new Rectangle(getSize());
+    }
+
     // Gets the bounding polygon of container
     public Polygon getPolygon() {
         Rectangle bounds = getBounds();
-        Set<Point> points = new HashSet<>(3*size());
-        for (int x = bounds.x; x > 0; x--) {
+        Set<Point> points = new HashSet<>(3 * size());
+        for (int x = bounds.width; x > 0; x--) {
             boolean lastContained = false;
-           for (int y = bounds.y; y > 0; y--) {
-               if (!contains(x, y)) {
+            for (int y = bounds.height; y > 0; y--) {
+                if (!contains(x, y)) {
                     lastContained = false;
                     continue;
-               }
-               if (!lastContained && !(contains(x-1,y) && contains(x+1,y))) {
-                   points.add(new Point(x, y));
-               }
-               lastContained = true;
-           }
+                }
+                if (!lastContained && !(contains(x - 1, y) && contains(x + 1, y))) {
+                    points.add(new Point(x, y));
+                }
+                lastContained = true;
+            }
         }
 
-        int nPoints = points.size();
+        int nPoints = points.size() + 1;
 
         int[] xPoints, yPoints;
         xPoints = new int[nPoints];
         yPoints = new int[nPoints];
-        int i = 0;
+
+        // add 0,0
+        xPoints[0] = 0;
+        yPoints[0] = 0;
+
+        int i = 1;
         for (Point p : points) {
             xPoints[i] = p.x;
             yPoints[i] = p.y;
             i++;
         }
         return new Polygon(xPoints, yPoints, nPoints);
-    }
-
-    public Rectangle getBounds() {
-        return new Rectangle(getSize());
     }
 
     @Override

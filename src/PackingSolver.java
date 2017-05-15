@@ -22,6 +22,7 @@ public class PackingSolver {
             s = solve(c, new GreedyPacker());
         } catch (Exception e) {
             log.severe("Failed to solve case: " + e.getMessage());
+            e.printStackTrace();
             System.exit(-1);
         }
         System.out.println(s);
