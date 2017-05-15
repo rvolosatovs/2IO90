@@ -13,7 +13,7 @@ import java.lang.*;
  *
  */
 public class NFDHPacker implements Packer {
-
+g
     /**
      * credits to Mr. Roman
      * Sorts a Collection of IndexedRectangles on their height.
@@ -43,9 +43,9 @@ public class NFDHPacker implements Packer {
                 System.out.println("vvvv");
                 result.add(rectangle);
             } else {
-                int width = rectangle.width;
+                int height = rectangle.height;
                 for (int i = 0; i < result.size(); i++) {
-                    if (width >= result.get(i).width) {
+                    if (height >= result.get(i).height) {
                         result.add(i, rectangle);
                         System.out.println("vvvfvffvvffvfvvv");
                         break;
