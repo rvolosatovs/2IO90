@@ -123,4 +123,4 @@ print("####################################\n#paste output, control d when done#
 lines = sys.stdin.read()
 input = InputParser(lines)
 PlotBuilder(input)
-print(">graph plotted in vizualizer foler")
+print(">graph plotted in vizualizer folder")
