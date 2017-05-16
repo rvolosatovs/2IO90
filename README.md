@@ -6,3 +6,9 @@ To update it, or if something doesn't work, first try:
 ```
     git submodule update --init --remote --rebase
 ```
+
+# Vizualizer
+
+* first install matplotlib dependency: https://matplotlib.org/users/installing.html
+* to run: `python vizualizer.py`
+* after pasting output of algo press control-d on unix systems to initiate process, windows: control-z and then press enter (not sure). This will also force a blank line after input normally.
