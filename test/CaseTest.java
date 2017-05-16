@@ -39,13 +39,13 @@ public class CaseTest {
     public void parseSpecificationTest() {
         class spec {
             boolean rotationsAllowed;
-            boolean sizeFixed;
-            int size;
+            boolean heightFixed;
+            int height;
 
-            spec(boolean rotationsAllowed, int size) {
+            spec(boolean rotationsAllowed, int height) {
                 this.rotationsAllowed = rotationsAllowed;
-                this.sizeFixed = true;
-                this.size = size;
+                this.heightFixed = true;
+                this.height = height;
             }
 
             spec(boolean rotationsAllowed) {
@@ -62,7 +62,7 @@ public class CaseTest {
 
         for (spec spec : specs) {
             String s = String.join(System.getProperty("line.separator"),
-                    "container height:" + (spec.sizeFixed ? "fixed " + spec.size : "free"),
+                    "container height:" + (spec.heightFixed ? "fixed " + spec.height : "free"),
                     "rotations allowed:" + (spec.rotationsAllowed ? "yes" : "no"),
                     "number of rectangles: 3",
                     "420 69",
@@ -70,13 +70,13 @@ public class CaseTest {
                     "9 11"
             );
             Case c = new Case(new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8)));
-            assertEquals("Fixed size", spec.sizeFixed, c.isSizeFixed());
+            assertEquals("Fixed height", spec.heightFixed, c.isHeightFixed());
             assertEquals("Rotations", spec.rotationsAllowed, c.areRotationsAllowed());
-            if (spec.sizeFixed) {
-                assertEquals("Height", spec.size, c.getSize());
+            if (spec.heightFixed) {
+                assertEquals("Height", spec.height, c.getHeight());
             } else {
                 try {
-                    c.getSize();
+                    c.getHeight();
                     fail("getHeight did not throw an exception on free sized case");
                 } catch (Error e) {
                     System.out.println("getHeight on free sized case threw error: " + e.getMessage());
