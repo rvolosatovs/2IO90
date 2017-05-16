@@ -1,37 +1,45 @@
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by rvolosatovs on 5/15/17.
  */
-class Util {
-    static int areaOf(Rectangle r) {
+public class Util {
+    public static int areaOf(Rectangle r) {
         return r.width * r.height;
     }
 
     /**
-     * Sorts a Collection of IndexedRectangles by their area in decreasing order
+     * Sorts a Collection of objects extending Dimension by their area in decreasing order
      *
-     * @param rectangles
-     * @return Sorted ArrayList containing sorted rectangles
+     * @param dimensions
      */
-    static ArrayList<IndexedRectangle> sortByArea(Collection<? extends IndexedRectangle> rectangles) {
-        ArrayList<IndexedRectangle> result = new ArrayList<>(rectangles);
+    public static void sortByArea(List<? extends Rectangle> dimensions) {
+        dimensions.sort((d1, d2) -> {
+            int area1 = (areaOf(d1));
+            int area2 = (areaOf(d2));
 
-        Collections.sort(result, (r1, r2) -> {
-            int area1 = areaOf(r1);
-            int area2 = areaOf(r2);
-
-            if (area1 > area2) {
+            if (area1 < area2) {
                 return 1;
             }
-            if (area1 < area2) {
+            if (area1 > area2) {
                 return -1;
             }
             return 0;
         });
-        return result;
+    }
+
+    public static void sortByIndex(List<? extends IndexedRectangle> rectangles) {
+        rectangles.sort((r1, r2) -> {
+            int index1 = (r1.getIndex());
+            int index2 = (r2.getIndex());
+
+            if (index1 < index2) {
+                return 1;
+            }
+            if (index1 > index2) {
+                return -1;
+            }
+            return 0;
+        });
     }
 }
