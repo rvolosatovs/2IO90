@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -42,7 +42,7 @@ public class Case {
         return new Solution(this, p.Pack(this));
     }
 
-    public Collection<IndexedRectangle> getRectangles() {
+    public List<IndexedRectangle> getRectangles() {
         ArrayList<IndexedRectangle> rectangles = new ArrayList<>(dimensions.length);
         for (int i = 0; i < dimensions.length; i++) {
             rectangles.add(i, new IndexedRectangle(i, dimensions[i]));
