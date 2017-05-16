@@ -1,110 +1,124 @@
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.awt.Point;
+import java.awt.Polygon;
+import java.util.*;
 
 /**
  * Created by s154563 on 8-5-2017.
  */
 public class GreedyPacker implements Packer {
+    public Set<Point> pointsAvailable(Container container, Rectangle r) {
+        Set<Point> points = container.getBoundingLine();
 
-    /**
-     * Sorts a Collection of IndexedRectangles on their area size.
-     *
-     * @param rectangles
-     * @return Sorted descending ArrayList with the rectangles
-     */
-    private ArrayList<IndexedRectangle> sortOnSize(Collection<IndexedRectangle> rectangles) {
-        ArrayList<IndexedRectangle> result = new ArrayList<>();
+        System.out.println(points);
 
-        for (IndexedRectangle rectangle : rectangles) {
-            if (result.isEmpty()) {
-                result.add(rectangle);
-            } else {
-                int area = rectangle.width * rectangle.height;
-                for (int i = 0; i < result.size(); i++) {
-                    if (area >= result.get(i).height * result.get(i).width) {
-                        result.add(i, rectangle);
-                        break;
+        for (Point p : points) {
+            if (!points.contains(new Point(p.x - 1, p.y))) {
+                int minX = Math.max(0, p.x - r.width);
+                for (int newX = p.x - 1; newX >= minX; newX--) {
+                    if (!container.contains(newX, p.y) || container.isBounding(newX, p.y)) {
+                        System.out.println("adding " + newX + " " + p.y);
+                        points.add(new Point(newX, p.y));
                     }
                 }
-                if (!result.contains(rectangle)) {
-                    result.add(rectangle);
-                }
+                break;
             }
-        }
-        return result;
-    }
+            System.out.println("done counting X edge");
 
-    public Set<Point> pointsAvailable(Container container, Rectangle r) {
-        Polygon polygon = container.getPolygon();
-        Set<Point> points = new HashSet<>(polygon.npoints);
-        for (int i = 0; i < polygon.npoints; i++) {
-            int x = polygon.xpoints[i];
-            int y = polygon.ypoints[i];
-
-            points.add(new Point(x - 1, y - 1));
-            points.add(new Point(x - 1, y));
-            points.add(new Point(x - 1, y + 1));
-            points.add(new Point(x, y + 1));
-            points.add(new Point(x + 1, y + 1));
-            points.add(new Point(x + 1, y));
-            points.add(new Point(x + 1, y - 1));
-            points.add(new Point(x, y - 1));
+            if (!points.contains(new Point(p.x, p.y - 1))) {
+                int minY = Math.max(0, p.y - r.height);
+                for (int newY = p.y - 1; newY >= minY; newY--) {
+                    if (!container.contains(p.x, newY) || container.isBounding(p.x, newY)) {
+                        System.out.println("adding " + p.x + " " + newY);
+                        points.add(new Point(p.x, newY));
+                    }
+                }
+                break;
+            }
+            System.out.println("done counting Y edge");
         }
+
+        Collection<Point> free = new HashSet(points.size());
+        Collection<Point> occupied = new HashSet(points.size());
+
         points.removeIf(p -> {
-            if (p.x < 0 || p.y < 0){
+            if (free.contains(p)) {
+                return false;
+            }
+            if (occupied.contains(p)) {
                 return true;
             }
-            for (int dx = 0; dx < r.width; dx++) {
-                for (int dy = 0; dy < r.height; dy++) {
-                    if (container.contains(p.x+dx, p.x+dy)) {
+
+            for (int dy = r.height; dy > 0; dy--) {
+                int newY = p.y + dy;
+                for (int dx = r.width; dx > 0; dx--) {
+                    int newX = p.x + dx;
+                    if (!container.canPlaceRectangle(newX, newY)) {
+                        occupied.add(p);
                         return true;
                     }
                 }
             }
+            free.add(p);
             return false;
         });
         return points;
     }
 
     @Override
-    public Container Pack(Case c) throws Exception {
-        Collection<IndexedRectangle> originalRectangles = c.getRectangles();
-
-        ArrayList<IndexedRectangle> sortedRectangles = sortOnSize(originalRectangles);
+    public Container Pack(Case c) {
+        ArrayList<IndexedRectangle> rectangles = Util.sortByArea(c.getRectangles());
 
         Container container = new Container();
-        container.add(sortedRectangles.get(0));
+        container.add(rectangles.get(0));
 
         int maxHeight = Integer.MAX_VALUE;
         boolean fixedHeight = c.isHeightFixed();
         if (fixedHeight) {
-           maxHeight = c.getHeight();
+            maxHeight = c.getHeight();
         }
+        container.printRectangles();
 
-        for (int i = 1; i < sortedRectangles.size(); i++) {
-            IndexedRectangle r = sortedRectangles.get(i);
-            container.add(r);
+        for (int i = 1; i < rectangles.size(); i++) {
+            IndexedRectangle r = rectangles.get(i);
+            Set<Point> points = pointsAvailable(container, r);
 
             int minArea = Integer.MAX_VALUE;
             Point minPoint = null;
-            for (Point p : pointsAvailable(container, r)) {
-                if (fixedHeight && p.y+r.height > maxHeight) {
-                    continue;
+            boolean needsRotation = false;
+            boolean rotated = false;
+
+            container.add(r);
+            while (true) {
+                for (Point p : points) {
+                    if (fixedHeight && (p.y + r.height) > maxHeight) {
+                        continue;
+                    }
+
+                    System.out.printf("(%d,%d)\n", p.x, p.y);
+
+                    r.setLocation(p);
+                    int area = container.getArea();
+                    if (area <= minArea) {
+                        if (area < minArea || p.x < minPoint.x || p.y < minPoint.y)  {
+                            needsRotation = rotated;
+                            minPoint = p;
+                            minArea = area;
+                        }
+                    }
                 }
-                r.setLocation(p);
-                int area = container.getArea();
-                if (area < minArea) {
-                    minPoint = p;
-                    minArea = area;
+
+                if (!c.areRotationsAllowed() || rotated) {
+                    break;
                 }
+
+                r.rotate();
+                rotated = true;
             }
-            if (minPoint == null) {
-                throw new Exception(String.format("No free point available for rectangle with index %d (%d %d)", r.getIndex(), r.width, r.height));
+            if (!needsRotation && rotated) {
+                r.rotate();
             }
             r.setLocation(minPoint);
+            container.printRectangles();
         }
 
         return container;

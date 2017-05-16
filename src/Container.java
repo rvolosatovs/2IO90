@@ -1,5 +1,3 @@
-import com.sun.org.apache.xpath.internal.SourceTree;
-
 import java.awt.*;
 import java.util.*;
 
@@ -68,6 +66,28 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         return false;
     }
 
+    public boolean canPlaceRectangle(int x, int y) {
+        return !contains(x, y) || isBounding(x, y);
+    }
+
+    public boolean canPlaceRectangle(Point p) {
+        return !canPlaceRectangle(p.x, p.y);
+    }
+
+    public boolean isBounding(int x, int y) {
+        return (contains(x, y) &&
+                ((x == 0 && y == 0) ||
+                !((x == 0 || contains(x - 1, y - 1) &&
+                        contains(x - 1, y + 1)) &&
+                        (y == 0 || contains(x - 1, y - 1) &&
+                                contains(x + 1, y - 1)) &&
+                        contains(x + 1, y + 1))));
+    }
+
+    public boolean isBounding(Point p) {
+        return isBounding(p.x, p.y);
+    }
+
     public int getWidth() {
         int maxWidth = 0;
 
@@ -84,7 +104,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         int maxHeight = 0;
 
         for (Rectangle r : this) {
-            int height = r.x + r.height;
+            int height = r.y + r.height;
             if (height > maxHeight) {
                 maxHeight = height;
             }
@@ -95,6 +115,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
     public Dimension getSize() {
         return new Dimension(this.getWidth(), this.getHeight());
     }
+
 
     public int getArea() {
         Dimension d = getSize();
@@ -117,7 +138,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
                     lastContained = false;
                     continue;
                 }
-                if (!lastContained && !(contains(x - 1, y) && contains(x + 1, y))) {
+                if (!lastContained && isBounding(x, y)) {
                     points.add(new Point(x, y));
                 }
                 lastContained = true;
@@ -141,6 +162,57 @@ public class Container extends AbstractCollection<IndexedRectangle> {
             i++;
         }
         return new Polygon(xPoints, yPoints, nPoints);
+    }
+
+    public Set<Point> getBoundingLine() {
+        Set<Point> points = new HashSet();
+        for (Rectangle r : this) {
+            int maxX = r.x + r.width;
+            for (int dy = 0; dy <= r.height; dy++) {
+                int y = r.y + dy;
+                points.add(new Point(r.x, y));
+                points.add(new Point(maxX,y));
+            }
+
+            int maxY = r.y + r.height;
+            for (int dx = 0; dx <= r.width; dx++) {
+                int x = r.x + dx;
+                points.add(new Point(x, r.y));
+                points.add(new Point(x, maxY));
+            }
+        }
+        points.removeIf(p -> !isBounding(p));
+        return points;
+    }
+
+    public void printRectangles() {
+        System.out.println("Rectangles:");
+        for (IndexedRectangle r : this) {
+            System.out.printf("i=%d %dx%d (%d,%d)\n", r.getIndex(), r.width, r.height, r.x, r.y);
+        }
+
+        for (int y = getHeight(); y >= 0; y--) {
+            System.out.printf("%d\t", y);
+            for (int x = 0; x <= getWidth(); x++) {
+                if (contains(x, y)) {
+                    if (isBounding(x, y)) {
+                        System.out.print("*");
+                    } else {
+                        System.out.print("+");
+                    }
+                } else {
+                    System.out.print(" ");
+                }
+                System.out.print(" ");
+            }
+            System.out.println("");
+        }
+        System.out.print("\t");
+        for (int x = 0; x <= getWidth(); x++) {
+            System.out.printf("%d ", x);
+        }
+        System.out.println();
+        System.out.println();
     }
 
     @Override
