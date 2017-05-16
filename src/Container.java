@@ -1,6 +1,7 @@
 import java.awt.Point;
 import java.awt.Dimension;
 import java.awt.Polygon;
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -9,22 +10,28 @@ import java.util.*;
 public class Container extends AbstractCollection<IndexedRectangle> {
     private Set<IndexedRectangle> rectangles;
 
-    public Container(Collection<IndexedRectangle> rectangles) {
-        this.rectangles = new HashSet(rectangles);
+    Container(Collection<IndexedRectangle> rectangles) {
+        this.rectangles = new HashSet<>(rectangles);
     }
 
-    public Container() {
-        this.rectangles = new HashSet();
+    Container() {
+        this.rectangles = new HashSet<>();
     }
 
     public Iterator<IndexedRectangle> iterator() {
         return rectangles.iterator();
     }
 
+    @Override
     public boolean add(IndexedRectangle r) {
         return rectangles.add(r);
     }
 
+    public boolean remove(IndexedRectangle r) {
+        return rectangles.remove(r);
+    }
+
+    @Override
     public int size() {
         return rectangles.size();
     }
@@ -38,7 +45,6 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         }
         return false;
     }
-
     public boolean contains(Point p) {
         return contains(p.x, p.y);
     }
@@ -46,7 +52,6 @@ public class Container extends AbstractCollection<IndexedRectangle> {
     public boolean isOccupied(int x, int y) {
         return contains(x, y) && !isBounding(x, y);
     }
-
     public boolean isOccupied(Point p) {
         return isOccupied(p.x, p.y);
     }
@@ -76,15 +81,12 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         }
         return true;
     }
-
     public boolean canPlaceRectangle(int x, int y, Rectangle r) {
         return canPlaceRectangle(x, y, r.width, r.height);
     }
-
     public boolean canPlaceRectangle(Point p, int width, int height) {
         return canPlaceRectangle(p.x, p.y, width, height);
     }
-
     public boolean canPlaceRectangle(Point p, Rectangle r) {
         return canPlaceRectangle(p.x, p.y, r.width, r.height);
     }
@@ -98,7 +100,6 @@ public class Container extends AbstractCollection<IndexedRectangle> {
                                         contains(x + 1, y - 1)) &&
                                 contains(x + 1, y + 1))));
     }
-
     public boolean isBounding(Point p) {
         return isBounding(p.x, p.y);
     }
@@ -229,11 +230,184 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         return sb.toString();
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("placement of rectangles:\n");
-        rectangles.forEach((r) -> sb.append(r.toString()).append("\n"));
-        return sb.toString();
+    private class Plane {
+        private ArrayList<ArrayList<Integer>> rows;
+
+        Plane() {
+            rows = new ArrayList<>();
+        }
+
+        Plane(int height) {
+            rows = new ArrayList<>(height);
+        }
+
+        public int getHeight() {
+            return rows.size();
+        }
+
+        public int getWidth() {
+            int maxWidth = 0;
+            for (ArrayList<Integer> row:rows) {
+                int width = row.size();
+                if (width <= maxWidth) {
+                    continue;
+                }
+                for (; width != maxWidth; width--) {
+                    if (row.get(width-1) != 0) {
+                        maxWidth = width;
+                        break;
+                    }
+                }
+            }
+            return maxWidth;
+        }
+
+        private ArrayList<Integer> getRow(int y) {
+            int height = rows.size();
+            if (height > y) {
+                return rows.get(y);
+            }
+
+            ArrayList<Integer> row = new ArrayList<>();
+            rows.ensureCapacity(y);
+            for (int i = height; i < y; i++) {
+                rows.add(new ArrayList<>());
+            }
+            rows.add(row);
+            return row;
+        }
+
+        private int getValue(int x, int y) {
+            ArrayList<Integer> row = getRow(y);
+            if (x < row.size()) {
+                return row.get(x);
+            }
+            return 0;
+        }
+
+        void add(int x, int y) {
+            ArrayList<Integer> row = getRow(y);
+
+            int width = row.size();
+            if (width > x) {
+                row.set(x, row.get(x) + 1);
+            } else {
+                row.ensureCapacity(x);
+                for (int i = width; i < x; i++) {
+                    row.add(0);
+                }
+                row.add(1);
+            }
+        }
+
+        void remove(int x, int y) {
+            ArrayList<Integer> row = getRow(y);
+            row.set(x, row.get(x) - 1);
+        }
+
+        boolean contains(int x, int y) {
+            return getValue(x,y) > 0;
+        }
+
+        private boolean isSurrounded(int x, int y) {
+            for (int dx = -1; dx < 2; dx++) {
+                for (int dy = -1; dy < 2; dy++) {
+                    if (getValue(x+dx, x+dy) != 1) {
+                        // Either empty or another bound
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        public boolean isOccupied(int x, int y) {
+            int val = getValue(x,y);
+            if (val == 0) {
+                return false;
+            } else if (x == 0 || y == 0) {
+                if (x == 0 && y == 0) {
+                    return val == 1;
+                }
+                return val == 2;
+            } else if (val == 4) {
+                return true;
+            } else if (val > 1) {
+                return false;
+            }
+            // val == 1
+            return isSurrounded(x,y);
+        }
+
+        public boolean isBounding(int x, int y) {
+            int val = getValue(x,y);
+            if (val > 1) {
+                return true;
+            } else if (val == 0) {
+                return false;
+            } else if (x == 0 || y == 0) {
+                return true;
+            }
+            // val == 1
+            return !isSurrounded(x,y);
+        }
+
+    }
+
+    public static class WithPlane extends Container {
+        private Plane plane;
+
+        public WithPlane(Case c) {
+            if (c.isHeightFixed()) {
+                plane = new Plane(c.getHeight());
+            } else {
+                plane = new Plane();
+            }
+        }
+
+        @Override
+        public boolean contains(int x, int y) {
+            return plane.contains(x, y);
+        }
+
+        @Override
+        public boolean add(IndexedRectangle r) {
+            for (int x = r.x; x <= r.x+r.width; x++) {
+                for (int y = r.y; y <= r.y+r.height; y++) {
+                    plane.add(x,y);
+                }
+            }
+            return super.add(r);
+        }
+
+        @Override
+        public boolean remove(IndexedRectangle r) {
+            for (int x = r.x; x <= r.x+r.width; x++) {
+                for (int y = r.y; y <= r.y+r.height; y++) {
+                    plane.remove(x,y);
+                }
+            }
+            return super.remove(r);
+        }
+
+        @Override
+        public int getWidth() {
+            return plane.getWidth();
+        }
+
+        @Override
+        public int getHeight() {
+            return plane.getHeight();
+        }
+
+        @Override
+        public boolean isBounding(int x, int y) {
+            return plane.isBounding(x,y);
+        }
+
+        @Override
+        public boolean isOccupied(int x, int y) {
+            return plane.isOccupied(x,y);
+        }
     }
 }
