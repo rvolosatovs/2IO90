@@ -1,5 +1,3 @@
-import org.junit.Test;
-
 import java.awt.*;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -9,7 +7,8 @@ import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 /**
  * Created by berrietrippe on 08/05/2017.
@@ -24,10 +23,7 @@ public abstract class PackerTest {
         dimensions[2] = new Dimension(2, 4);
         int containerHeight = 6;
 
-        Case c = new Case(containerHeight, true, dimensions);
-        int height = newPacker().Pack(c).getHeight();
-
-        assertFalse("Packer respects container height", height > containerHeight);
+        assertFalse("Packer respects container height", newPacker().Pack(new Case(containerHeight, true, dimensions)).getHeight() > containerHeight);
     }
 
     public void checkOverlap() {
@@ -37,9 +33,7 @@ public abstract class PackerTest {
         dimensions[2] = new Dimension(7, 13);
         dimensions[3] = new Dimension(11, 12);
 
-        Case c = new Case(10, false, dimensions);
-        Collection<IndexedRectangle> rectangles = newPacker().Pack(c).getRectangles();
-
+        Collection<IndexedRectangle> rectangles = newPacker().Pack(new Case(14, false, dimensions)).getRectangles();
         for (Rectangle r : rectangles) {
             for (Rectangle l : rectangles) {
                 assertFalse("Packer overlaps rectangles", r.contains(l) && r != l);
@@ -47,19 +41,20 @@ public abstract class PackerTest {
         }
     }
 
-    public void testAllFiles() {
+    public void testSmallInput() {
         try {
             Stream<Path> paths = Files.walk(Paths.get("test/cases"));
             paths.forEach(path -> {
-                if (Files.isRegularFile(path) && path.toString().toLowerCase().endsWith(".txt")) {
-                    try {
-                        System.out.println("Parsing " + path.toString());
-                        Case c = new Case(new FileInputStream(path.toFile()));
-                        Solution s = new Solution(c, newPacker().Pack(c));
-                        System.out.println(s);
-                    } catch (Exception e) {
-                        fail(e.getMessage());
-                    }
+                if (Files.isRegularFile(path) && path.toString().toLowerCase().endsWith(".txt") && path.getFileName().toString().matches("0(\\d)_(.*)")) {
+                        System.out.println("Solving " + path.toString());
+                        Case c = null;
+                        try {
+                            c = new Case(new FileInputStream(path.toFile()));
+                        } catch (Exception e) {
+                            System.out.printf("Failed to parse case: %s", e.getMessage());
+                            return;
+                        }
+                        System.out.println(new Solution(c, newPacker().Pack(c)));
                 }
             });
             paths.close();

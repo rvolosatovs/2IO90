@@ -1,12 +1,5 @@
 import org.junit.Test;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.junit.Assert.*;
-
 /**
  * Created by berrietrippe on 04/05/2017.
  */
@@ -24,5 +17,10 @@ public class GreedyPackerTest extends PackerTest {
     @Test
     public void checkOverlap() {
         super.checkOverlap();
+    }
+
+    @Test
+    public void testSmallInput() {
+        super.testSmallInput();
     }
 }

@@ -15,8 +15,12 @@ public class StupidPackerTest extends PackerTest {
     }
 
     @Test
-    public void checkOverlap() { super.checkOverlap(); }
+    public void checkOverlap() {
+        super.checkOverlap();
+    }
 
     @Test
-    public void testAllFiles() { super.testAllFiles(); }
+    public void testSmallInput() {
+        super.testSmallInput();
+    }
 }
