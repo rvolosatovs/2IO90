@@ -3,10 +3,10 @@ import org.junit.Test;
 /**
  * Created by berrietrippe on 04/05/2017.
  */
-public class StupidPackerTest extends PackerTest {
+public class GreedyPackerTest extends PackerTest {
     @Override
     public Packer newPacker() {
-        return new StupidPacker();
+        return new GreedyPacker();
     }
 
     @Test
@@ -22,5 +22,10 @@ public class StupidPackerTest extends PackerTest {
     @Test
     public void testSmallInput() {
         super.testSmallInput();
+    }
+
+    @Test
+    public void testSensibleOutput() {
+        super.testSensibleOutput();
     }
 }

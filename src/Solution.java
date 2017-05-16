@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by rvolosatovs on 5/2/17.
  */
@@ -13,11 +16,14 @@ public class Solution {
     public String toString() {
         boolean rotationsAllowed = spec.areRotationsAllowed();
 
+        List<IndexedRectangle> rectangles = new ArrayList(container);
+        Util.sortByIndex(rectangles);
+
         StringBuilder sb = new StringBuilder();
         sb.append(spec.toString())
                 .append("\n")
                 .append("placement of rectangles");
-        container.getRectangles().forEach((r) -> {
+        rectangles.forEach((r) -> {
             sb.append("\n");
             if (rotationsAllowed) {
                 sb.append(r.wasRotated() ? "yes " : "no ");
