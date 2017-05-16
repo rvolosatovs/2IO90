@@ -38,7 +38,7 @@ public class Case {
         sc.close();
     }
 
-    public Solution Solve(Packer p) throws Exception {
+    public Solution Solve(Packer p) {
         return new Solution(this, p.Pack(this));
     }
 
