@@ -5,35 +5,14 @@ import java.util.*;
  * Created by rvolosatovs on 5/2/17.
  */
 public class Container extends AbstractCollection<IndexedRectangle> {
-    private Collection<IndexedRectangle> rectangles;
+    private Set<IndexedRectangle> rectangles;
 
     public Container(Collection<IndexedRectangle> rectangles) {
-        this.rectangles = rectangles;
+        this.rectangles = new HashSet(rectangles);
     }
 
     public Container() {
-        this.rectangles = new ArrayList<>();
-    }
-
-    public Collection<IndexedRectangle> getRectangles() {
-        return new ArrayList<>(rectangles);
-    }
-
-    public Collection<IndexedRectangle> getRectanglesByIndex() {
-        ArrayList<IndexedRectangle> copy = new ArrayList<>();
-        copy.addAll(rectangles);
-        ArrayList<IndexedRectangle> result = new ArrayList<>();
-        while (!copy.isEmpty()) {
-            IndexedRectangle min = copy.get(0);
-            for (IndexedRectangle r : copy) {
-                if (r.getIndex() < min.getIndex()) {
-                    min = r;
-                }
-            }
-            copy.remove(min);
-            result.add(min);
-        }
-        return result;
+        this.rectangles = new HashSet();
     }
 
     public Iterator<IndexedRectangle> iterator() {
@@ -44,16 +23,8 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         return rectangles.add(r);
     }
 
-    public boolean remove(IndexedRectangle r) {
-        return rectangles.remove(r);
-    }
-
     public int size() {
         return rectangles.size();
-    }
-
-    public boolean contains(Point p) {
-        return contains(p.x, p.y);
     }
 
     // Checks whether x,y is contained by the container
@@ -66,22 +37,65 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         return false;
     }
 
-    public boolean canPlaceRectangle(int x, int y) {
-        return !contains(x, y) || isBounding(x, y);
+    public boolean contains(Point p) {
+        return contains(p.x, p.y);
     }
 
-    public boolean canPlaceRectangle(Point p) {
-        return !canPlaceRectangle(p.x, p.y);
+
+    public boolean isOccupied(int x, int y) {
+        return contains(x, y) && !isBounding(x, y);
+    }
+
+    public boolean isOccupied(Point p) {
+        return isOccupied(p.x, p.y);
+    }
+
+    public boolean canPlaceRectangle(int x, int y, int width, int height) {
+        int maxX = x + width;
+        int maxY = y + height;
+
+        for (int newX = x; newX < maxX; newX++) {
+            if (isOccupied(newX, y) || isOccupied(newX, maxY)) {
+                return false;
+            }
+        }
+
+        for (int newY = y; newY < maxY; newY++) {
+            if (isOccupied(x, newY) || isOccupied(maxX, newY)) {
+                return false;
+            }
+        }
+
+        for (int dx = 1; dx < width; dx++) {
+            for (int dy = 1; dy < height; dy++) {
+                if (contains(x + dx, y + dy)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean canPlaceRectangle(int x, int y, Rectangle r) {
+        return canPlaceRectangle(x, y, r.width, r.height);
+    }
+
+    public boolean canPlaceRectangle(Point p, int width, int height) {
+        return canPlaceRectangle(p.x, p.y, width, height);
+    }
+
+    public boolean canPlaceRectangle(Point p, Rectangle r) {
+        return canPlaceRectangle(p.x, p.y, r.width, r.height);
     }
 
     public boolean isBounding(int x, int y) {
         return (contains(x, y) &&
                 ((x == 0 && y == 0) ||
-                !((x == 0 || contains(x - 1, y - 1) &&
-                        contains(x - 1, y + 1)) &&
-                        (y == 0 || contains(x - 1, y - 1) &&
-                                contains(x + 1, y - 1)) &&
-                        contains(x + 1, y + 1))));
+                        !((x == 0 || contains(x - 1, y - 1) &&
+                                contains(x - 1, y + 1)) &&
+                                (y == 0 || contains(x - 1, y - 1) &&
+                                        contains(x + 1, y - 1)) &&
+                                contains(x + 1, y + 1))));
     }
 
     public boolean isBounding(Point p) {
@@ -118,8 +132,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
 
 
     public int getArea() {
-        Dimension d = getSize();
-        return d.width * d.height;
+        return getWidth() * getHeight();
     }
 
     // Gets the bounding rectangle of container
@@ -171,7 +184,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
             for (int dy = 0; dy <= r.height; dy++) {
                 int y = r.y + dy;
                 points.add(new Point(r.x, y));
-                points.add(new Point(maxX,y));
+                points.add(new Point(maxX, y));
             }
 
             int maxY = r.y + r.height;
