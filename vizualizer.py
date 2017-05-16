@@ -2,6 +2,7 @@ import sys
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import re
+import os
 from datetime import datetime
 
 #
@@ -61,6 +62,9 @@ class InputParser:
 #
 class PlotBuilder:
 	def __init__(self, input):
+
+		self.folderChecker()
+
 		fig = plt.figure(figsize=(5, 5))
 
 		ax = fig.add_subplot(111, aspect='equal')
@@ -78,9 +82,10 @@ class PlotBuilder:
 
 				ax.add_patch(
 					patches.Rectangle(
-				        (int(input.position[i][0]), int(input.position[i][1])),   # (x,y)
-				        int(input.size[i][0]),          # width
-				        int(input.size[i][1]),          # height
+				        (int(input.position[i][0]), int(input.position[i][1])),
+				        int(input.size[i][0]),        
+				        int(input.size[i][1]),
+				        ls='solid', lw=2,          
 				    )
 				)
 		else:
@@ -95,7 +100,8 @@ class PlotBuilder:
 						patches.Rectangle(
 					        (int(input.position[i][1]), int(input.position[i][2])),
 					        int(input.size[i][0]),          
-					        int(input.size[i][1]),          
+					        int(input.size[i][1]),
+					        ls='solid', lw=2,            
 					    )
 					)
 
@@ -109,7 +115,8 @@ class PlotBuilder:
 						patches.Rectangle(
 					        (int(input.position[i][1]), int(input.position[i][2])),
 					        int(input.size[i][1]),   
-					        int(input.size[i][0]),      
+					        int(input.size[i][0]), 
+					        ls='solid', lw=2,   
 					    )
 					)
 
@@ -118,6 +125,9 @@ class PlotBuilder:
 
 		#plt.show()
 		fig.savefig('vizualizer/'+str(datetime.now())+'.png', dpi=500, bbox_inches='tight')
+
+	def folderChecker(self):
+		if not os.path.exists('vizualizer'): os.makedirs('vizualizer')
 
 print("####################################\n#paste output, control d when done#\n####################################")        
 lines = sys.stdin.read()
