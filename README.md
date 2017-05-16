@@ -7,7 +7,7 @@ To update it, or if something doesn't work, first try:
     git submodule update --init --remote --rebase
 ```
 
-# vizualizer (visualizer)
+# Vizualizer
 
 * first install matplotlib dependency: https://matplotlib.org/users/installing.html
 * to run: `python vizualizer.py`
