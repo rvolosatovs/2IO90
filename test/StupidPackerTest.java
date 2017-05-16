@@ -10,13 +10,13 @@ public class StupidPackerTest extends PackerTest {
     }
 
     @Test
-    public void checkHeight() {
-        super.checkHeight();
+    public void testHeight() {
+        super.testHeight();
     }
 
     @Test
-    public void checkOverlap() {
-        super.checkOverlap();
+    public void testOverlap() {
+        super.testOverlap();
     }
 
     @Test
