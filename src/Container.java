@@ -1,4 +1,6 @@
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Dimension;
+import java.awt.Polygon;
 import java.util.*;
 
 /**
@@ -40,7 +42,6 @@ public class Container extends AbstractCollection<IndexedRectangle> {
     public boolean contains(Point p) {
         return contains(p.x, p.y);
     }
-
 
     public boolean isOccupied(int x, int y) {
         return contains(x, y) && !isBounding(x, y);
@@ -90,8 +91,8 @@ public class Container extends AbstractCollection<IndexedRectangle> {
 
     public boolean isBounding(int x, int y) {
         return (contains(x, y) &&
-                ((x == 0 && y == 0) ||
-                        !((x == 0 || contains(x - 1, y - 1) &&
+                ((x == 0 && y == 0) || !(
+                        (x == 0 || contains(x - 1, y - 1) &&
                                 contains(x - 1, y + 1)) &&
                                 (y == 0 || contains(x - 1, y - 1) &&
                                         contains(x + 1, y - 1)) &&
@@ -129,7 +130,6 @@ public class Container extends AbstractCollection<IndexedRectangle> {
     public Dimension getSize() {
         return new Dimension(this.getWidth(), this.getHeight());
     }
-
 
     public int getArea() {
         return getWidth() * getHeight();
