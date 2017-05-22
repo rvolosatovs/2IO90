@@ -93,7 +93,8 @@ class PlotBuilder:
 				        int(input.size[i][0]),
 				        int(input.size[i][1]),
 				        ls='solid', lw=1,
-						facecolor=colors[randint(0,5)]
+						facecolor=colors[randint(0,5)],
+						edgecolor="black",
 				    )
 				)
 		else:
@@ -110,7 +111,8 @@ class PlotBuilder:
 					        int(input.size[i][0]),
 					        int(input.size[i][1]),
 					        ls='solid', lw=1,
-							facecolor=colors[randint(0,5)]
+							facecolor=colors[randint(0,5)],
+							edgecolor="black",
 					    )
 					)
 
@@ -126,7 +128,8 @@ class PlotBuilder:
 					        int(input.size[i][1]),
 					        int(input.size[i][0]),
 					        ls='solid', lw=1,
-							facecolor=colors[randint(0,5)]
+							facecolor=colors[randint(0,5)],
+							edgecolor="black",
 					    )
 					)
 
@@ -134,7 +137,7 @@ class PlotBuilder:
 		ax.set_xlim([0, maxX])
 
 		#plt.show()
-		fig.savefig('vizualizer/'+str(datetime.now())+'.png', dpi=500, bbox_inches='tight')
+		fig.savefig(str(datetime.now())+'.png', dpi=500, bbox_inches='tight')
 
 	def folderChecker(self):
 		if not os.path.exists('vizualizer'): os.makedirs('vizualizer')
