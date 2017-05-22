@@ -30,14 +30,14 @@ public class Util {
 
     public static void sortByIndex(List<? extends IndexedRectangle> rectangles) {
         rectangles.sort((r1, r2) -> {
-            int index1 = (r1.getIndex());
-            int index2 = (r2.getIndex());
+            int index1 = r1.getIndex();
+            int index2 = r2.getIndex();
 
             if (index1 < index2) {
-                return 1;
+                return -1;
             }
             if (index1 > index2) {
-                return -1;
+                return 1;
             }
             return 0;
         });
