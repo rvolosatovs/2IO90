@@ -136,8 +136,8 @@ class PlotBuilder:
 		ax.set_ylim([0, maxY])
 		ax.set_xlim([0, maxX])
 
-		plt.show()
-		#fig.savefig(str(datetime.now())+'.png', dpi=500, bbox_inches='tight')
+		#plt.show()
+		fig.savefig(str(datetime.now())+'.png', dpi=500, bbox_inches='tight')
 
 	def folderChecker(self):
 		if not os.path.exists('vizualizer'): os.makedirs('vizualizer')
