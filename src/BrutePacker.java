@@ -24,7 +24,6 @@ public class BrutePacker implements Packer {
         }
 
         container.add(rectangles.get(0));
-
         getArea(container, 1);
 
         return finalContainer;
@@ -43,18 +42,14 @@ public class BrutePacker implements Packer {
                 Set<Point> points = c.getBoundingLine();
                 IndexedRectangle r = rectangles.get(i);
 
-                Set<Point> additionalPoints = new HashSet<>(points.size());
-
                 index++;
 
                 for (Point p : points) {
-
                     if (c.canPlaceRectangle(p, r)) {
                         r.setLocation(p);
                         c.add(r);
                         getArea(c, index); //Recursive call
                         c.remove(r);
-                    } else {
                     }
                 }
             }
