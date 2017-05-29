@@ -9,25 +9,17 @@ import java.util.Set;
  */
 public class BrutePacker implements Packer {
 
-    int minArea = Integer.MAX_VALUE;
-    Container finalContainer;
-    List<IndexedRectangle> rectangles;
-    boolean rotationsAllowed;
-
+    int minArea = Integer.MAX_VALUE; // Global variable keeping track of the most optimal area found yet
+    Container finalContainer; // Global variable keeping track of the most optimal solution found yet
+    
     @Override
     public Container Pack(Case c) {
-        rectangles = c.getRectangles();
-        Util.sortByArea(rectangles);
-
         Container container = new Container();
-        rotationsAllowed = c.areRotationsAllowed();
-
-        getArea(container, 0);
-
+        getArea(container, 0, c.getRectangles(), c.areRotationsAllowed());
         return finalContainer;
     }
 
-    public int getArea(Container c, int index) {
+    public int getArea(Container c, int index, List<IndexedRectangle> rectangles, boolean rotationsAllowed) {
         if (index == rectangles.size()) {
             if (c.getArea() < minArea && c.size() == rectangles.size()) {
                 minArea = c.getArea();
@@ -54,7 +46,7 @@ public class BrutePacker implements Packer {
                         if (c.canPlaceRectangle(p, r)) {
                             r.setLocation(p);
                             c.add(r);
-                            getArea(c, index); //Recursive call
+                            getArea(c, index, rectangles, rotationsAllowed); //Recursive call
                             c.remove(r);
                         }
                         r.rotate();
@@ -62,7 +54,7 @@ public class BrutePacker implements Packer {
                     if (c.canPlaceRectangle(p, r)) {
                         r.setLocation(p);
                         c.add(r);
-                        getArea(c, index); //Recursive call
+                        getArea(c, index, rectangles, rotationsAllowed); //Recursive call
                         c.remove(r);
                     }
                 }
