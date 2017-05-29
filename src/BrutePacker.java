@@ -19,12 +19,8 @@ public class BrutePacker implements Packer {
         Util.sortByArea(rectangles);
 
         Container container = new Container();
-        if (rectangles != null) {
-            rectangles.get(0).setLocation(0, 0);
-        }
 
-        container.add(rectangles.get(0));
-        getArea(container, 1);
+        getArea(container, 0);
 
         return finalContainer;
     }
@@ -38,12 +34,18 @@ public class BrutePacker implements Packer {
                 finalContainer = new Container(newRectangles);
             }
         } else {
+            Set<Point> points;
             for (int i = index; i < rectangles.size(); i++) {
-                Set<Point> points = c.getBoundingLine();
+
+                if (c.size() != 0) {
+                    points = c.getBoundingLine();
+                } else {
+                    points = new HashSet();
+                    points.add(new Point(0, 0));
+                }
+
                 IndexedRectangle r = rectangles.get(i);
-
                 index++;
-
                 for (Point p : points) {
                     if (c.canPlaceRectangle(p, r)) {
                         r.setLocation(p);
