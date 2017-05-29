@@ -15,11 +15,17 @@ public class BrutePacker implements Packer {
     @Override
     public Container Pack(Case c) {
         Container container = new Container();
-        calculateCombination(container, 0, c.getRectangles(), c.areRotationsAllowed());
+        int maxHeight;
+        if (c.isHeightFixed()){
+            maxHeight = c.getHeight();
+        } else {
+            maxHeight = 0;
+        }
+        calculateCombination(container, 0, c.getRectangles(), c.areRotationsAllowed(),c.isHeightFixed(),maxHeight);
         return finalContainer;
     }
 
-    public void calculateCombination(Container c, int index, List<IndexedRectangle> rectangles, boolean rotationsAllowed) {
+    public void calculateCombination(Container c, int index, List<IndexedRectangle> rectangles, boolean rotationsAllowed, boolean fixedHeight, int maxHeight) {
         if (index == rectangles.size()) {
             if (c.getArea() < minArea && c.size() == rectangles.size()) {
                 minArea = c.getArea();
@@ -44,18 +50,34 @@ public class BrutePacker implements Packer {
                     if (rotationsAllowed){
                         r.rotate();
                         if (c.canPlaceRectangle(p, r)) {
-                            r.setLocation(p);
-                            c.add(r);
-                            calculateCombination(c, index, rectangles, rotationsAllowed); //Recursive call
-                            c.remove(r);
+                            boolean shouldPlaceRectangle = true;
+                            if (fixedHeight) {
+                                if ((p.y + r.height) < maxHeight){
+                                    shouldPlaceRectangle = false;
+                                }
+                            }
+                            if (shouldPlaceRectangle) {
+                                r.setLocation(p);
+                                c.add(r);
+                                calculateCombination(c, index, rectangles, rotationsAllowed, fixedHeight, maxHeight); //Recursive call
+                                c.remove(r);
+                            }
                         }
                         r.rotate();
                     }
                     if (c.canPlaceRectangle(p, r)) {
-                        r.setLocation(p);
-                        c.add(r);
-                        calculateCombination(c, index, rectangles, rotationsAllowed); //Recursive call
-                        c.remove(r);
+                        boolean shouldPlaceRectangle = true;
+                        if (fixedHeight) {
+                            if ((p.y + r.height) < maxHeight){
+                                shouldPlaceRectangle = false;
+                            }
+                        }
+                        if (shouldPlaceRectangle) {
+                            r.setLocation(p);
+                            c.add(r);
+                            calculateCombination(c, index, rectangles, rotationsAllowed, fixedHeight, maxHeight); //Recursive call
+                            c.remove(r);
+                        }
                     }
                 }
             }
