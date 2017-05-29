@@ -12,6 +12,7 @@ public class BrutePacker implements Packer {
     int minArea = Integer.MAX_VALUE;
     Container finalContainer;
     List<IndexedRectangle> rectangles;
+    boolean rotationsAllowed;
 
     @Override
     public Container Pack(Case c) {
@@ -19,6 +20,7 @@ public class BrutePacker implements Packer {
         Util.sortByArea(rectangles);
 
         Container container = new Container();
+        rotationsAllowed = c.areRotationsAllowed();
 
         getArea(container, 0);
 
@@ -30,7 +32,7 @@ public class BrutePacker implements Packer {
             if (c.getArea() < minArea && c.size() == rectangles.size()) {
                 minArea = c.getArea();
                 List<IndexedRectangle> newRectangles = new ArrayList<>();
-                rectangles.forEach((r) -> newRectangles.add(new IndexedRectangle(r.index, r.x, r.y, r.width, r.height)));
+                rectangles.forEach((r) -> newRectangles.add((IndexedRectangle)r.clone()));
                 finalContainer = new Container(newRectangles);
             }
         } else {
@@ -47,6 +49,16 @@ public class BrutePacker implements Packer {
                 IndexedRectangle r = rectangles.get(i);
                 index++;
                 for (Point p : points) {
+                    if (rotationsAllowed){
+                        r.rotate();
+                        if (c.canPlaceRectangle(p, r)) {
+                            r.setLocation(p);
+                            c.add(r);
+                            getArea(c, index); //Recursive call
+                            c.remove(r);
+                        }
+                        r.rotate();
+                    }
                     if (c.canPlaceRectangle(p, r)) {
                         r.setLocation(p);
                         c.add(r);
