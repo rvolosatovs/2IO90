@@ -52,7 +52,7 @@ public class BrutePacker implements Packer {
                         if (c.canPlaceRectangle(p, r)) {
                             boolean shouldPlaceRectangle = true;
                             if (fixedHeight) {
-                                if ((p.y + r.height) < maxHeight){
+                                if ((p.y + r.height) > maxHeight){
                                     shouldPlaceRectangle = false;
                                 }
                             }
@@ -68,7 +68,7 @@ public class BrutePacker implements Packer {
                     if (c.canPlaceRectangle(p, r)) {
                         boolean shouldPlaceRectangle = true;
                         if (fixedHeight) {
-                            if ((p.y + r.height) < maxHeight){
+                            if ((p.y + r.height) > maxHeight){
                                 shouldPlaceRectangle = false;
                             }
                         }
