@@ -25,7 +25,8 @@ public class PackingSolver {
             e.printStackTrace();
             System.exit(-1);
         }
-        System.out.println("Running time: " + (System.currentTimeMillis() - timeStamp) + "ms");
+        //Uncomment to see the running time
+//        System.out.println("Running time: " + (System.currentTimeMillis() - timeStamp) + "ms");
         System.out.println(s);
     }
 }
