@@ -17,7 +17,12 @@ public class NFDHPacker implements Packer {
     
     public Container Pack(Case c) {
         List<IndexedRectangle> rectangles = c.getRectangles();
-        Util.sortByWidth(rectangles, c);
+
+        if(c.areRotationsAllowed()){
+            Util.sortByLongestWidth(rectangles, c);
+        } else{
+            Util.sortByWidth(rectangles);
+        }
 
         int y = 0;
         int potWall = 0;
@@ -25,7 +30,6 @@ public class NFDHPacker implements Packer {
 
         if (c.isHeightFixed()) {
             for (IndexedRectangle r : rectangles) {
-
                 if(y + r.height > c.getHeight()){
                     wall = potWall;
                     y = 0;
@@ -35,10 +39,8 @@ public class NFDHPacker implements Packer {
                 r.setLocation(wall, y);
                 y += r.height;
                 potWall = Math.max(r.width, potWall);
-
             }
         }
         return new Container(rectangles);
-
     }
 }
