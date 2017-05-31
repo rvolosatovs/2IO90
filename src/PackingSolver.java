@@ -6,6 +6,7 @@ public class PackingSolver {
     }
 
     public static void main(String[] args) {
+        long timeStamp = System.currentTimeMillis();
         Logger log = Logger.getLogger("LOG");
 
         Case c = null;
@@ -24,6 +25,8 @@ public class PackingSolver {
             e.printStackTrace();
             System.exit(-1);
         }
+        //Uncomment to see the running time
+//        System.out.println("Running time: " + (System.currentTimeMillis() - timeStamp) + "ms");
         System.out.println(s);
     }
 }
