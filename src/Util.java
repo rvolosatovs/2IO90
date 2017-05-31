@@ -48,7 +48,8 @@ public class Util {
         dimensions.forEach((r)->{
             if(c.areRotationsAllowed() && r.height > r.width && c.getHeight() > r.height){
                 r.rotate();
-            }});
+            }
+        });
 
         dimensions.sort((d1, d2) -> {
 

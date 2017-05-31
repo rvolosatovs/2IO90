@@ -28,13 +28,13 @@ public class NFDHPacker implements Packer {
 
                 if(y + r.height > c.getHeight()){
                     wall = potWall;
-                    y=0;
+                    y = 0;
                     potWall = wall + r.width;
                 }
 
                 r.setLocation(wall, y);
-                y += r.getHeight();
-                potWall = Math.max((int)r.getWidth(), potWall);
+                y += r.height;
+                potWall = Math.max(r.width, potWall);
 
             }
         }
