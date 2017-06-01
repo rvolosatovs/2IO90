@@ -43,9 +43,9 @@ public class NFDHPacker implements Packer {
                 System.out.println("vvvv");
                 result.add(rectangle);
             } else {
-                int height = rectangle.height;
+                int width = rectangle.width;
                 for (int i = 0; i < result.size(); i++) {
-                    if (height >= result.get(i).height) {
+                    if (width >= result.get(i).width) {
                         result.add(i, rectangle);
                         System.out.println("vvvfvffvvffvfvvv");
                         break;
@@ -72,9 +72,10 @@ public class NFDHPacker implements Packer {
         if (c.isHeightFixed()) {
             for (IndexedRectangle r : sortedRectangles) {
 
-                if(y + r.getHeight() > c.getHeight()){
+                if(y + r.height > c.getHeight()){
                     wall = potWall;
                     y=0;
+                    potWall = wall + r.width;
                 }
 
                 r.setLocation(wall, y);
