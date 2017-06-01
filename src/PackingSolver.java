@@ -1,3 +1,6 @@
+import java.io.FileInputStream;
+import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PackingSolver {
@@ -6,24 +9,104 @@ public class PackingSolver {
     }
 
     public static void main(String[] args) {
-        Logger log = Logger.getLogger("LOG");
+        long start = System.currentTimeMillis();
+
+        final Set<String> knownParams = new HashSet<>(Arrays.asList(
+                "debug", "file", "greedy", "stupid"
+        ));
+        final Map<Character, String> shorthand = new HashMap(knownParams.size());
+        shorthand.put('d', "debug");
+        shorthand.put('f', "file");
+        shorthand.put('g', "greedy");
+        shorthand.put('s', "stupid");
+
+
+        final Map<String, List<String>> params = new HashMap<>();
+
+        List<String> values = null;
+        for (String arg : args) {
+            if (arg.charAt(0) == '-') {
+                int length = arg.length();
+                if (length < 2) {
+                    System.err.printf("Invalid argument: %s\n", arg);
+                    System.exit(-1);
+                }
+
+                String param;
+                if (arg.charAt(1) == '-') {
+                    values = new ArrayList<>();
+                    params.put(arg.substring(2),values);
+                } else {
+                    for (int i = 1; i < length; i++) {
+                        char c =arg.charAt(i);
+                        if (!shorthand.containsKey(c)) {
+                            System.err.printf("Unknown shorthand flag: %s\n",c);
+                            System.exit(-1);
+                        }
+                        param = shorthand.get(c);
+                        if (!params.containsKey(param)) {
+                            values = new ArrayList<>();
+                            params.put(param,values);
+                        } else {
+                            values = params.get(param);
+                        }
+                    }
+                }
+            } else if (values != null) {
+                values.add(arg);
+            } else {
+                System.err.printf("Invalid argument: %s\n", arg);
+                System.exit(-1);
+            }
+        }
+
+        Set<String> specified = new HashSet<>(params.size());
+        params.forEach((param, v) -> {
+            if (!knownParams.contains(param)) {
+                System.err.printf("Unknown parameter: %s\n", param);
+                System.exit(-1);
+            }
+            specified.add(param);
+        });
+
+        Logger log = Logger.getGlobal();
+        if (params.containsKey("d") || params.containsKey("debug")) {
+            log.setLevel(Level.ALL);
+        } else {
+            log.setLevel(Level.OFF);
+        }
 
         Case c = null;
         try {
-            c = new Case(System.in);
+            if (params.containsKey("file")) {
+                c = new Case(new FileInputStream( params.get("file").get(0)));
+            } else {
+                c = new Case(System.in);
+            }
         } catch (Exception e) {
             log.severe("Failed to parse case: " + e.getMessage());
             System.exit(-1);
         }
 
+        Packer p;
+        if (params.containsKey("greedy")) {
+            p = new GreedyPacker();
+        } else if (params.containsKey("stupid")) {
+            p = new StupidPacker();
+        } else {
+            // default
+            p = new GreedyPacker();
+        }
+
         Solution s = null;
         try {
-            s = solve(c, new GreedyPacker());
+            s = solve(c, p);
         } catch (Exception e) {
             log.severe("Failed to solve case: " + e.getMessage());
             e.printStackTrace();
             System.exit(-1);
         }
         System.out.println(s);
+        log.info("Running time: " + (System.currentTimeMillis() - start) + "ms");
     }
 }
