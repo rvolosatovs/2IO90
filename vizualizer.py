@@ -6,7 +6,6 @@ import os
 from datetime import datetime
 from random import randint
 
-
 #
 # Parses input
 # @param input
@@ -71,6 +70,7 @@ class PlotBuilder:
     def __init__(self, input):
 
         self.folderChecker()
+        self.areaOccupied = 0
 
         fig = plt.figure(figsize=(5, 5))
 
@@ -101,6 +101,7 @@ class PlotBuilder:
                         edgecolor="black",
                     )
                 )
+                self.updateAreaOccupied(int(input.size[i][0]) * int(input.size[i][1]))
         else:
             for i in range(0, int(input.numRectangles)):
                 if (input.position[i][0] == "no"):
@@ -136,18 +137,20 @@ class PlotBuilder:
                             edgecolor="black",
                         )
                     )
+                self.updateAreaOccupied(int(input.size[i][0]) * int(input.size[i][1]))
 
         ax.set_ylim([0, maxY])
         ax.set_xlim([0, maxX])
 
         maxArea = (maxX - 1) * (maxY - 1)
-        areaOccupied = 0
-        for i in range(0, int(input.numRectangles)):
-            areaOccupied = areaOccupied + int(input.size[i][0]) * int(input.size[i][1])
-        percentage = areaOccupied/maxArea
-        print(str(percentage * 100) + " percent")
+
+        percentage = self.areaOccupied/maxArea
+        print(">" + str(percentage * 100) + "% of area used.")
         plt.show()
         #fig.savefig('vizualizer/' + str(datetime.now()) + '.png', dpi=500, bbox_inches='tight')
+
+    def updateAreaOccupied(self, area):
+        self.areaOccupied = self.areaOccupied + area
 
     def folderChecker(self):
         if not os.path.exists('vizualizer'): os.makedirs('vizualizer')
