@@ -7,7 +7,6 @@ import os
 from datetime import datetime
 from random import randint
 
-
 #
 # Parses input
 # @param input
@@ -70,7 +69,6 @@ class InputParser:
 #
 class PlotBuilder:
     def __init__(self, input):
-
         self.folderChecker()
         self.areaOccupied = 0
 
@@ -94,15 +92,15 @@ class PlotBuilder:
                     maxX = int(input.position[i][0]) + int(input.size[i][0]) + 1
 
                 ax.add_patch(
-                    patches.Rectangle(
-                        (int(input.position[i][0]), int(input.position[i][1])),
-                        int(input.size[i][0]),
-                        int(input.size[i][1]),
-                        ls='solid', lw=1,
-                        facecolor=colors[randint(0, 5)],
-                        edgecolor="black",
-                    )
-                )
+                        patches.Rectangle(
+                            (int(input.position[i][0]), int(input.position[i][1])),
+                            int(input.size[i][0]),
+                            int(input.size[i][1]),
+                            ls='solid', lw=1,
+                            facecolor=colors[randint(0, 5)],
+                            edgecolor="black",
+                            )
+                        )
                 self.updateAreaOccupied(int(input.size[i][0]) * int(input.size[i][1]))
         else:
             for i in range(0, int(input.numRectangles)):
@@ -113,15 +111,15 @@ class PlotBuilder:
                         maxX = int(input.position[i][1]) + int(input.size[i][0]) + 1
 
                     ax.add_patch(
-                        patches.Rectangle(
-                            (int(input.position[i][1]), int(input.position[i][2])),
-                            int(input.size[i][0]),
-                            int(input.size[i][1]),
-                            ls='solid', lw=1,
-                            facecolor=colors[randint(0, 5)],
-                            edgecolor="black",
-                        )
-                    )
+                            patches.Rectangle(
+                                (int(input.position[i][1]), int(input.position[i][2])),
+                                int(input.size[i][0]),
+                                int(input.size[i][1]),
+                                ls='solid', lw=1,
+                                facecolor=colors[randint(0, 5)],
+                                edgecolor="black",
+                                )
+                            )
 
                 elif (input.position[i][0] == "yes"):
                     if int(input.position[i][2]) + int(input.size[i][0]) > maxY:
@@ -130,16 +128,16 @@ class PlotBuilder:
                         maxX = int(input.position[i][1]) + int(input.size[i][1]) + 1
 
                     ax.add_patch(
-                        patches.Rectangle(
-                            (int(input.position[i][1]), int(input.position[i][2])),
-                            int(input.size[i][1]),
-                            int(input.size[i][0]),
-                            ls='solid', lw=1,
-                            facecolor=colors[randint(0, 5)],
-                            edgecolor="black",
-                        )
-                    )
-                self.updateAreaOccupied(int(input.size[i][0]) * int(input.size[i][1]))
+                            patches.Rectangle(
+                                (int(input.position[i][1]), int(input.position[i][2])),
+                                int(input.size[i][1]),
+                                int(input.size[i][0]),
+                                ls='solid', lw=1,
+                                facecolor=colors[randint(0, 5)],
+                                edgecolor="black",
+                                )
+                            )
+                    self.updateAreaOccupied(int(input.size[i][0]) * int(input.size[i][1]))
 
         ax.set_ylim([0, maxY])
         ax.set_xlim([0, maxX])
@@ -149,7 +147,6 @@ class PlotBuilder:
         print(">" + str(percentage * 100) + "% of area used.")
 
         plt.show()
-        #fig.savefig('vizualizer/' + str(datetime.now()) + '.png', dpi=500, bbox_inches='tight')
 
     def updateAreaOccupied(self, area):
         self.areaOccupied = self.areaOccupied + area
