@@ -1,3 +1,4 @@
+from __future__ import division
 import sys
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
@@ -5,6 +6,7 @@ import re
 import os
 from datetime import datetime
 from random import randint
+
 
 #
 # Parses input
@@ -143,9 +145,9 @@ class PlotBuilder:
         ax.set_xlim([0, maxX])
 
         maxArea = (maxX - 1) * (maxY - 1)
-
         percentage = self.areaOccupied/maxArea
         print(">" + str(percentage * 100) + "% of area used.")
+
         plt.show()
         #fig.savefig('vizualizer/' + str(datetime.now()) + '.png', dpi=500, bbox_inches='tight')
 
