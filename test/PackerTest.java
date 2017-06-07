@@ -1,4 +1,4 @@
-import java.awt.*;
+import java.awt.Dimension;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -25,7 +25,15 @@ public abstract class PackerTest {
         dimensions[2] = new Dimension(2, 4);
         int containerHeight = 6;
 
-        assertFalse("Packer respects container height", newPacker().Pack(new Case(containerHeight, true, dimensions)).getHeight() > containerHeight);
+        int maxHeight = 0;
+        Collection<IndexedRectangle> rectangles = newPacker().Pack(new Case(containerHeight, true, dimensions));
+        for (Rectangle r : rectangles) {
+            int height = r.y + r.height;
+            if (height > maxHeight) {
+                maxHeight = height;
+            }
+        }
+        assertFalse(String.format("Max height: %d, got %d\nContainer:\n%s", containerHeight, maxHeight, rectangles), maxHeight > containerHeight);
     }
 
     public void testOverlap() {
@@ -78,8 +86,8 @@ public abstract class PackerTest {
 
         Dimension[] dimensionArr = new Dimension[dimensions.size()];
         dimensions.toArray(dimensionArr);
-        Container c = newPacker().Pack(new Case(true, dimensionArr));
-        assertEquals(dimensions.size(), c.size());
+        Collection<IndexedRectangle> c = newPacker().Pack(new Case(true, dimensionArr));
+        assertEquals("Output length:", dimensions.size(), c.size());
 
         List<Rectangle> rectangles = new ArrayList<>(dimensions.size());
         dimensions.forEach(d -> {
@@ -93,7 +101,6 @@ public abstract class PackerTest {
                 return;
             }
         }
-        c.printRectangles();
         fail("No rectangle placed at (0,0)");
     }
 }

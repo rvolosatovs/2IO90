@@ -46,7 +46,7 @@ public class ContainerTest {
         );
 
         Container c = new Container(rectangles);
-        c.printRectangles();
+        System.out.println(c);
         for (Rectangle r : rectangles) {
             for (int dx = 0; dx <= r.width; dx++) {
                 for (int dy = 0; dy <= r.height; dy++) {
@@ -74,7 +74,7 @@ public class ContainerTest {
         );
 
         Container c = new Container(rectangles);
-        c.printRectangles();
+        System.out.println(c);
         for (int x = 0; x <= 4; x++) {
             for (int y = 0; y <= 3; y++) {
                 assertEquals(String.format("c.contains(%d,%d)", x, y), contained.get(x).contains(y), c.contains(x, y));
@@ -99,7 +99,7 @@ public class ContainerTest {
         );
 
         Container c = new Container(rectangles);
-        c.printRectangles();
+        System.out.println(c);
         for (int x = 0; x <= 4; x++) {
             for (int y = 0; y <= 3; y++) {
                 assertEquals(String.format("c.isOccupied(%d,%d)", x, y), inside.get(x).contains(y), c.isOccupied(x, y));
@@ -114,7 +114,7 @@ public class ContainerTest {
         );
 
         Container c = new Container(rectangles);
-        c.printRectangles();
+        System.out.println(c);
         assertFalse("c.canPlaceRectangle (0,0,4,8)", c.canPlaceRectangle(0, 0, 4, 8));
     }
 }
