@@ -65,6 +65,10 @@ public class Case {
         return containerHeight;
     }
 
+    public int getSize(){
+        return dimensions.length;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
