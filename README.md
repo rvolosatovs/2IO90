@@ -12,3 +12,12 @@ To update it, or if something doesn't work, first try:
 * first install matplotlib dependency: https://matplotlib.org/users/installing.html
 * to run: `python vizualizer.py`
 * after pasting output of algo press control-d on unix systems to initiate process, windows: control-z and then press enter (not sure). This will also force a blank line after input normally.
+
+# CLI Tool
+* Go to `src` directory and run `javac PackingSolver.java`
+* To run: `java PackingSolver -flags`
+
+## Flags
+* `-f "test/file/path"` for the test file paths.
+* `-s` for stupid packer
+* `-g` for greedy packer
