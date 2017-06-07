@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -38,10 +39,6 @@ public class Case {
         sc.close();
     }
 
-    public Solution Solve(Packer p) {
-        return new Solution(this, p.Pack(this));
-    }
-
     public List<IndexedRectangle> getRectangles() {
         ArrayList<IndexedRectangle> rectangles = new ArrayList<>(dimensions.length);
         for (int i = 0; i < dimensions.length; i++) {
@@ -63,33 +60,5 @@ public class Case {
             throw new Error("container is free sized");
         }
         return containerHeight;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("container height: ");
-        if (isHeightFixed()) {
-            sb.append("fixed ")
-                    .append(containerHeight);
-        } else {
-            sb.append("free");
-        }
-
-        sb.append("\n")
-                .append("rotations allowed: ")
-                .append(areRotationsAllowed() ? "yes" : "no")
-                .append("\n")
-                .append("number of rectangles: ")
-                .append(dimensions.length);
-
-        for (Dimension d : dimensions) {
-            sb.append("\n")
-                    .append(d.width)
-                    .append(" ")
-                    .append(d.height);
-        }
-        return sb.toString();
     }
 }

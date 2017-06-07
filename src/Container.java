@@ -198,34 +198,35 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         return points;
     }
 
-    public void printRectangles() {
-        System.out.println("Rectangles:");
-        for (IndexedRectangle r : this) {
-            System.out.printf("i=%d %dx%d (%d,%d)\n", r.getIndex(), r.width, r.height, r.x, r.y);
-        }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Rectangles:\n");
+        rectangles.forEach(r -> sb.append(r.toString()).append("\n"));
 
         for (int y = getHeight(); y >= 0; y--) {
-            System.out.printf("%d\t", y);
+            sb.append(String.format("%d\t", y));
             for (int x = 0; x <= getWidth(); x++) {
                 if (contains(x, y)) {
                     if (isBounding(x, y)) {
-                        System.out.print("*");
+                        sb.append("*");
                     } else {
-                        System.out.print("+");
+                        sb.append("+");
                     }
                 } else {
-                    System.out.print(" ");
+                    sb.append(" ");
                 }
-                System.out.print(" ");
+                sb.append(" ");
             }
-            System.out.println("");
+            sb.append("\n");
         }
-        System.out.print("\t");
+        sb.append("\t");
         for (int x = 0; x <= getWidth(); x++) {
-            System.out.printf("%d ", x);
+            sb.append(String.format("%d ", x));
         }
-        System.out.println();
-        System.out.println();
+        sb.append("\n");
+        sb.append("\n");
+        return sb.toString();
     }
 
     @Override

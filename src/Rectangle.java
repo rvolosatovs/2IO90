@@ -83,4 +83,9 @@ public class Rectangle extends java.awt.Rectangle {
     public boolean intersects(java.awt.Rectangle r) {
         throw new Error("Fix your imports");
     }
+
+    @Override
+    public String toString() {
+        return String.format("[(%d,%d),(%d,%d),(%d,%d),(%d,%d)]", x, y , x, y+height, x+width, y + height, x+width, y);
+    }
 }

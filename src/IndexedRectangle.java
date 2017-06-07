@@ -26,16 +26,17 @@ public class IndexedRectangle extends Rectangle {
         this.index = index;
     }
 
+    public IndexedRectangle(final IndexedRectangle rectangle) {
+        super(rectangle);
+        this.index = rectangle.index;
+    }
+
     public int getIndex() {
         return index;
     }
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append(x)
-                .append(" ")
-                .append(y)
-                .toString();
+        return String.format("i=%d %s",index, super.toString());
     }
 }
