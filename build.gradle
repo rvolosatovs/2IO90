@@ -8,19 +8,6 @@ repositories {
     jcenter()
 }
 
-sourceSets {
-  main {
-    java {
-        srcDir 'src'
-    }
-  }
-  test {
-    java {
-        srcDir 'test'
-    }
-  }
-}
-
 dependencies {
     testCompile 'junit:junit:4.12'
 }

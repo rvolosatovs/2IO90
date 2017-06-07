@@ -1,4 +1,6 @@
-import java.awt.*;
+package solver;
+
+import java.awt.Dimension;
 
 /**
  * Created by rvolosatovs on 5/2/17.

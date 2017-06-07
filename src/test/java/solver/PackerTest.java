@@ -1,3 +1,4 @@
+package solver;
 import java.awt.Dimension;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -56,6 +57,28 @@ public abstract class PackerTest {
             Stream<Path> paths = Files.walk(Paths.get("test/cases"));
             paths.forEach(path -> {
                 if (Files.isRegularFile(path) && path.toString().toLowerCase().endsWith(".txt") && path.getFileName().toString().matches("0(\\d)_(.*)")) {
+                    System.out.println("Solving " + path.toString());
+                    Case c = null;
+                    try {
+                        c = new Case(new FileInputStream(path.toFile()));
+                    } catch (Exception e) {
+                        System.out.printf("Failed to parse case: %s", e.getMessage());
+                        return;
+                    }
+                    System.out.println(new Solution(c, newPacker().Pack(c)));
+                }
+            });
+            paths.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void test25() {
+        try {
+            Stream<Path> paths = Files.walk(Paths.get("test/cases"));
+            paths.forEach(path -> {
+                if (Files.isRegularFile(path) && path.toString().toLowerCase().endsWith(".txt") && path.getFileName().toString().matches("05_02_hf_ry.txt")) {
                     System.out.println("Solving " + path.toString());
                     Case c = null;
                     try {

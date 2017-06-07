@@ -1,13 +1,11 @@
+package solver;
+
 import java.io.FileInputStream;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PackingSolver {
-    private static Solution solve(Case c, Packer p) throws Exception {
-        return new Solution(c, p.Pack(c));
-    }
-
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
 
@@ -100,7 +98,7 @@ public class PackingSolver {
 
         Solution s = null;
         try {
-            s = solve(c, p);
+            s = new Solution(c, p);
         } catch (Exception e) {
             log.severe("Failed to solve case: " + e.getMessage());
             e.printStackTrace();

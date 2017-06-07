@@ -1,3 +1,5 @@
+package solver;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -25,25 +27,14 @@ public class Solution {
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append("container height: ");
-        if (spec.isHeightFixed()) {
-            sb.append("fixed ")
-                    .append(spec.getHeight());
-        } else {
-            sb.append("free");
-        }
+        sb.append("container height: ").append(spec.isHeightFixed() ? String.format("%d free", spec.getHeight()) : "fixed ");
 
         sb.append("\n")
-                .append("rotations allowed: ")
-                .append(spec.areRotationsAllowed() ? "yes" : "no")
-                .append("\n")
-                .append("number of rectangles: ")
-                .append(rectangles.size());
+                .append("rotations allowed: ").append(spec.areRotationsAllowed() ? "yes" : "no").append("\n")
+                .append("number of rectangles: ").append(rectangles.size());
 
         rectangles.forEach(r -> sb.append("\n")
-                .append(r.width)
-                .append(" ")
-                .append(r.height));
+                .append(r.width).append(" ").append(r.height));
 
         sb.append("\n")
                 .append("placement of rectangles");
@@ -51,9 +42,7 @@ public class Solution {
         rectangles.forEach(r -> {
             sb.append("\n");
             if (spec.areRotationsAllowed()) sb.append(r.wasRotated() ? "yes " : "no ");
-            sb.append(r.x)
-                    .append(" ")
-                    .append(r.x);
+            sb.append(r.x).append(" ").append(r.y);
         });
         return sb.toString();
     }

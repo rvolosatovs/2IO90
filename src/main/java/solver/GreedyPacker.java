@@ -1,7 +1,10 @@
+package solver;
+
 import java.awt.Point;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * Created by s154563 on 8-5-2017.
@@ -18,8 +21,12 @@ public class GreedyPacker implements Packer {
             maxHeight = c.getHeight();
         }
 
-        Container container = new Container();
+        Container container = new Container.WithPlane(c);
         for (int i = 0; i < rectangles.size(); i++) {
+            Logger log = Logger.getGlobal();
+            log.entering("GreedyPacker", "iteration", i);
+            System.out.println(i);
+
             IndexedRectangle r = rectangles.get(i);
 
             Set<Point> points;
@@ -70,11 +77,11 @@ public class GreedyPacker implements Packer {
             }
 
             Set<Point> fittingPoints = new HashSet(points.size());
-            points.forEach(p -> {
+            for (Point p : points) {
                 if (container.canPlaceRectangle(p, r)) {
                     fittingPoints.add(p);
                 }
-            });
+            }
 
             container.add(r);
             for (Point p : fittingPoints) {
@@ -82,7 +89,9 @@ public class GreedyPacker implements Packer {
                     continue;
                 }
 
+                container.remove(r);
                 r.setLocation(p);
+                container.add(r);
                 int area = container.getArea();
                 if (area <= minArea) {
                     if (area < minArea || p.x < minPoint.x || p.y < minPoint.y) {
@@ -93,14 +102,18 @@ public class GreedyPacker implements Packer {
             }
 
             if (c.areRotationsAllowed()) {
+                container.remove(r);
                 r.rotate();
+                container.add(r);
 
                 for (Point p : fittingPointsRotated) {
                     if (fixedHeight && (p.y + r.height) > maxHeight) {
                         continue;
                     }
 
+                    container.remove(r);
                     r.setLocation(p);
+                    container.add(r);
                     int area = container.getArea();
                     if (area <= minArea) {
                         if (area < minArea || p.x < minPoint.x || p.y < minPoint.y) {
@@ -112,10 +125,14 @@ public class GreedyPacker implements Packer {
                 }
 
                 if (!needsRotation) {
+                    container.remove(r);
                     r.rotate();
+                    container.add(r);
                 }
             }
+            container.remove(r);
             r.setLocation(minPoint);
+            container.add(r);
         }
         return container;
     }

@@ -1,12 +1,13 @@
+package solver;
 import org.junit.Test;
 
 /**
  * Created by berrietrippe on 04/05/2017.
  */
-public class GreedyPackerTest extends PackerTest {
+public class StupidPackerTest extends PackerTest {
     @Override
     public Packer newPacker() {
-        return new GreedyPacker();
+        return new StupidPacker();
     }
 
     @Test
@@ -22,10 +23,5 @@ public class GreedyPackerTest extends PackerTest {
     @Test
     public void testSmallInput() {
         super.testSmallInput();
-    }
-
-    @Test
-    public void testSensibleOutput() {
-        super.testSensibleOutput();
     }
 }
