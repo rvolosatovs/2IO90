@@ -21,11 +21,9 @@ public class BrutePackerTest extends PackerTest {
 
     @Test
     public void testSmallInput() {
-//        super.testSmallInput();
     }
 
     @Test
     public void testSensibleOutput() {
-//        super.testSensibleOutput();
     }
 }
