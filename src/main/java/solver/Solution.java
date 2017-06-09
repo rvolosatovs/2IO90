@@ -27,7 +27,7 @@ public class Solution {
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append("container height: ").append(spec.isHeightFixed() ? String.format("%d free", spec.getHeight()) : "fixed ");
+        sb.append("container height: ").append(spec.isHeightFixed() ? String.format("fixed %d", spec.getHeight()) : "free");
 
         sb.append("\n")
                 .append("rotations allowed: ").append(spec.areRotationsAllowed() ? "yes" : "no").append("\n")

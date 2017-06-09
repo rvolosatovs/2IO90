@@ -1,9 +1,6 @@
 package solver;
 import org.junit.Test;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * Created by berrietrippe on 04/05/2017.
  */
