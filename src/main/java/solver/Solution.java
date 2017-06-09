@@ -3,6 +3,7 @@ package solver;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by rvolosatovs on 5/2/17.
@@ -19,6 +20,7 @@ public class Solution {
     public Solution(final Case spec, final Packer p) {
         this.spec = spec;
         this.rectangles = p.Pack(spec);
+        Logger.getGlobal().info(this.rectangles.toString());
     }
 
     public String toString() {
