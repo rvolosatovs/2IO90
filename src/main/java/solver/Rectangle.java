@@ -1,6 +1,6 @@
 package solver;
 
-import java.awt.*;
+import java.awt.Dimension;
 
 /**
  * Created by rvolosatovs on 5/16/17.
@@ -18,6 +18,7 @@ public class Rectangle extends java.awt.Rectangle {
 
     public Rectangle(final Rectangle rectangle) {
         super(rectangle);
+        rotated = rectangle.rotated;
     }
 
     public Rectangle(final Dimension dimension) {

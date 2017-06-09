@@ -84,9 +84,9 @@ public class CaseTest {
                 }
             }
             assertArrayEquals(new IndexedRectangle[]{
-                    new IndexedRectangle(1, 420, 69),
-                    new IndexedRectangle(2, 42, 42),
-                    new IndexedRectangle(3, 9, 11)
+                    new IndexedRectangle(0, 420, 69),
+                    new IndexedRectangle(1, 42, 42),
+                    new IndexedRectangle(2, 9, 11)
             }, c.getRectangles().toArray());
         }
     }

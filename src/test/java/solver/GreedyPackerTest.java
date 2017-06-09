@@ -1,6 +1,9 @@
 package solver;
 import org.junit.Test;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Created by berrietrippe on 04/05/2017.
  */
@@ -26,17 +29,15 @@ public class GreedyPackerTest extends PackerTest {
     }
 
     @Test
-    public void test25() {
-        super.test25();
+    public void testOutputLengthSameSizes() {
+        super.testOutputLengthSameSizes();
     }
 
     @Test
-    public void testSensibleOutput() {
-        super.testSensibleOutput();
+    public void testOutputLengthRandom() { super.testOutputLengthRandom();
     }
 
     @Test
-    public void testHELLO() {
-        System.out.println("FUCK FUCK FUCK");
+    public void testOutputLengthEmpty() { super.testOutputLengthEmpty();
     }
 }

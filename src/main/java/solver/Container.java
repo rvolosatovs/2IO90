@@ -205,7 +205,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Rectangles:\n");
-        rectangles.forEach(r -> sb.append(r.toString()).append("\n"));
+        this.forEach(r -> sb.append(r.toString()).append("\n"));
 
         for (int y = getHeight(); y >= 0; y--) {
             sb.append(String.format("%d\t", y));

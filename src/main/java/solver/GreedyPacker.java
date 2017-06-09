@@ -4,7 +4,6 @@ import java.awt.Point;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 /**
  * Created by s154563 on 8-5-2017.
@@ -23,17 +22,13 @@ public class GreedyPacker implements Packer {
 
         Container container = new Container.WithPlane(c);
         for (int i = 0; i < rectangles.size(); i++) {
-            Logger log = Logger.getGlobal();
-            log.entering("GreedyPacker", "iteration", i);
-            System.out.println(i);
-
             IndexedRectangle r = rectangles.get(i);
 
             Set<Point> points;
             if (container.size() != 0) {
                 points = container.getBoundingLine();
             } else {
-                points = new HashSet();
+                points = new HashSet<>();
                 points.add(new Point(0, 0));
             }
 
@@ -62,11 +57,10 @@ public class GreedyPacker implements Packer {
             int minArea = Integer.MAX_VALUE;
             Point minPoint = null;
             boolean needsRotation = false;
-            boolean rotated = false;
 
             Set<Point> fittingPointsRotated = null;
             if (c.areRotationsAllowed()) {
-                fittingPointsRotated = new HashSet(points.size());
+                fittingPointsRotated = new HashSet<>(points.size());
                 r.rotate();
                 for (Point p : points) {
                     if (container.canPlaceRectangle(p, r)) {
@@ -76,7 +70,7 @@ public class GreedyPacker implements Packer {
                 r.rotate();
             }
 
-            Set<Point> fittingPoints = new HashSet(points.size());
+            Set<Point> fittingPoints = new HashSet<>(points.size());
             for (Point p : points) {
                 if (container.canPlaceRectangle(p, r)) {
                     fittingPoints.add(p);

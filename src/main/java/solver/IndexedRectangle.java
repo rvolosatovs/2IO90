@@ -1,6 +1,7 @@
 package solver;
 
 import java.awt.Dimension;
+import java.util.Objects;
 
 /**
  * Created by rvolosatovs on 5/2/17.
@@ -35,6 +36,16 @@ public class IndexedRectangle extends Rectangle {
 
     public int getIndex() {
         return index;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof IndexedRectangle && ((IndexedRectangle) o).index == this.index && super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.index)+super.hashCode();
     }
 
     @Override
