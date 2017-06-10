@@ -7,7 +7,17 @@ public class NFDHPackerTest extends PackerTest {
     public Packer newPacker() { return new NFDHPacker(); }
 
     @Test
-    public void testOverlap() {
-        super.testOverlap();
+    public void testOutputLengthRandom() {
+        super.testOutputLengthRandom();
+    }
+
+    @Test
+    public void testOutputLengthSameSizes() {
+        super.testOutputLengthSameSizes();
+    }
+
+    @Test
+    public void testOutputLengthEmpty() {
+        super.testOutputLengthEmpty();
     }
 }

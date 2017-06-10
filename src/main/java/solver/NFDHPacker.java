@@ -16,7 +16,6 @@ import java.util.List;
  *
  */
 public class NFDHPacker implements Packer {
-    
     public Container Pack(Case c) {
         List<IndexedRectangle> rectangles = c.getRectangles();
 
