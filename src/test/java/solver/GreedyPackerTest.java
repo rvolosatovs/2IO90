@@ -22,6 +22,11 @@ public class GreedyPackerTest extends PackerTest {
     }
 
     @Test
+    public void testMediumInput() {
+        super.testMediumInput();
+    }
+
+    @Test
     public void testOutputLengthSameSizes() {
         super.testOutputLengthSameSizes();
     }
