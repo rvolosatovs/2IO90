@@ -1,3 +1,5 @@
+package solver;
+
 import org.junit.Test;
 
 /**
@@ -12,11 +14,6 @@ public class StupidPackerTest extends PackerTest {
     @Test
     public void testHeight() {
         super.testHeight();
-    }
-
-    @Test
-    public void testOverlap() {
-        super.testOverlap();
     }
 
     @Test

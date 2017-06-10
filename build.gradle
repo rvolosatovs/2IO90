@@ -8,19 +8,12 @@ repositories {
     jcenter()
 }
 
-sourceSets {
-  main {
-    java {
-        srcDir 'src'
-    }
-  }
-  test {
-    java {
-        srcDir 'test'
-    }
-  }
-}
-
 dependencies {
     testCompile 'junit:junit:4.12'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'solver.PackingSolver'
+    }
 }

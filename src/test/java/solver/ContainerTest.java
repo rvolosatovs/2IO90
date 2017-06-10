@@ -1,7 +1,10 @@
+package solver;
+
 import org.junit.Test;
 
 import java.awt.*;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -12,6 +15,9 @@ import static org.junit.Assert.assertFalse;
  * Created by rvolosatovs on 5/15/17.
  */
 public class ContainerTest {
+    Container newContainer(Collection<? extends IndexedRectangle> rectangles) {
+        return  new Container(rectangles);
+    }
     @Test
     public void testIsBounding() {
         List<IndexedRectangle> rectangles = Arrays.asList(
@@ -45,8 +51,8 @@ public class ContainerTest {
                 new Point(1, 0)
         );
 
-        Container c = new Container(rectangles);
-        c.printRectangles();
+        Container c = newContainer(rectangles);
+        System.out.println(c);
         for (Rectangle r : rectangles) {
             for (int dx = 0; dx <= r.width; dx++) {
                 for (int dy = 0; dy <= r.height; dy++) {
@@ -73,8 +79,8 @@ public class ContainerTest {
                 Arrays.asList(0, 1)
         );
 
-        Container c = new Container(rectangles);
-        c.printRectangles();
+        Container c = newContainer(rectangles);
+        System.out.println(c);
         for (int x = 0; x <= 4; x++) {
             for (int y = 0; y <= 3; y++) {
                 assertEquals(String.format("c.contains(%d,%d)", x, y), contained.get(x).contains(y), c.contains(x, y));
@@ -91,15 +97,15 @@ public class ContainerTest {
         );
 
         List<List<Integer>> inside = Arrays.asList(
-                Arrays.asList(),
+                Arrays.asList(0, 1, 2),
                 Arrays.asList(2),
                 Arrays.asList(),
                 Arrays.asList(),
                 Arrays.asList()
         );
 
-        Container c = new Container(rectangles);
-        c.printRectangles();
+        Container c = newContainer(rectangles);
+        System.out.println(c);
         for (int x = 0; x <= 4; x++) {
             for (int y = 0; y <= 3; y++) {
                 assertEquals(String.format("c.isOccupied(%d,%d)", x, y), inside.get(x).contains(y), c.isOccupied(x, y));
@@ -113,8 +119,8 @@ public class ContainerTest {
                 new IndexedRectangle(0, 0, 0, 7, 1)
         );
 
-        Container c = new Container(rectangles);
-        c.printRectangles();
+        Container c = newContainer(rectangles);
+        System.out.println(c);
         assertFalse("c.canPlaceRectangle (0,0,4,8)", c.canPlaceRectangle(0, 0, 4, 8));
     }
 }

@@ -1,4 +1,6 @@
-import java.awt.*;
+package solver;
+
+import java.awt.Dimension;
 
 /**
  * Created by rvolosatovs on 5/16/17.
@@ -16,6 +18,7 @@ public class Rectangle extends java.awt.Rectangle {
 
     public Rectangle(final Rectangle rectangle) {
         super(rectangle);
+        rotated = rectangle.rotated;
     }
 
     public Rectangle(final Dimension dimension) {
@@ -82,5 +85,10 @@ public class Rectangle extends java.awt.Rectangle {
     @Override
     public boolean intersects(java.awt.Rectangle r) {
         throw new Error("Fix your imports");
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[(%d,%d),(%d,%d),(%d,%d),(%d,%d)]", x, y, x, y + height, x + width, y + height, x + width, y);
     }
 }

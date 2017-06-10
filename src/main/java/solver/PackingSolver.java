@@ -1,13 +1,11 @@
+package solver;
+
 import java.io.FileInputStream;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PackingSolver {
-    private static Solution solve(Case c, Packer p) throws Exception {
-        return new Solution(c, p.Pack(c));
-    }
-
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
 
@@ -35,18 +33,18 @@ public class PackingSolver {
                 String param;
                 if (arg.charAt(1) == '-') {
                     values = new ArrayList<>();
-                    params.put(arg.substring(2),values);
+                    params.put(arg.substring(2), values);
                 } else {
                     for (int i = 1; i < length; i++) {
-                        char c =arg.charAt(i);
+                        char c = arg.charAt(i);
                         if (!shorthand.containsKey(c)) {
-                            System.err.printf("Unknown shorthand flag: %s\n",c);
+                            System.err.printf("Unknown shorthand flag: %s\n", c);
                             System.exit(-1);
                         }
                         param = shorthand.get(c);
                         if (!params.containsKey(param)) {
                             values = new ArrayList<>();
-                            params.put(param,values);
+                            params.put(param, values);
                         } else {
                             values = params.get(param);
                         }
@@ -79,7 +77,7 @@ public class PackingSolver {
         Case c = null;
         try {
             if (params.containsKey("file")) {
-                c = new Case(new FileInputStream( params.get("file").get(0)));
+                c = new Case(new FileInputStream(params.get("file").get(0)));
             } else {
                 c = new Case(System.in);
             }
@@ -100,7 +98,7 @@ public class PackingSolver {
 
         Solution s = null;
         try {
-            s = solve(c, p);
+            s = new Solution(c, p);
         } catch (Exception e) {
             log.severe("Failed to solve case: " + e.getMessage());
             e.printStackTrace();

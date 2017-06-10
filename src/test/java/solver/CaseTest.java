@@ -1,3 +1,5 @@
+package solver;
+
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -18,7 +20,7 @@ public class CaseTest {
     @Test
     public void readAllFilesTest() {
         try {
-            Stream<Path> paths = Files.walk(Paths.get("test/cases"));
+            Stream<Path> paths = Files.walk(Paths.get("testcases"));
             paths.forEach(path -> {
                 if (Files.isRegularFile(path) && path.toString().toLowerCase().endsWith(".txt")) {
                     try {
@@ -83,9 +85,9 @@ public class CaseTest {
                 }
             }
             assertArrayEquals(new IndexedRectangle[]{
-                    new IndexedRectangle(1, 420, 69),
-                    new IndexedRectangle(2, 42, 42),
-                    new IndexedRectangle(3, 9, 11)
+                    new IndexedRectangle(0, 420, 69),
+                    new IndexedRectangle(1, 42, 42),
+                    new IndexedRectangle(2, 9, 11)
             }, c.getRectangles().toArray());
         }
     }

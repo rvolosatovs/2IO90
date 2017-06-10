@@ -1,4 +1,7 @@
-import java.awt.*;
+package solver;
+
+import java.awt.Dimension;
+import java.util.Objects;
 
 /**
  * Created by rvolosatovs on 5/2/17.
@@ -26,16 +29,27 @@ public class IndexedRectangle extends Rectangle {
         this.index = index;
     }
 
+    public IndexedRectangle(final IndexedRectangle rectangle) {
+        super(rectangle);
+        this.index = rectangle.index;
+    }
+
     public int getIndex() {
         return index;
     }
 
     @Override
+    public boolean equals(Object o) {
+        return o instanceof IndexedRectangle && ((IndexedRectangle) o).index == this.index && super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.index) + super.hashCode();
+    }
+
+    @Override
     public String toString() {
-        return new StringBuilder()
-                .append(x)
-                .append(" ")
-                .append(y)
-                .toString();
+        return String.format("i=%d %s", index, super.toString());
     }
 }
