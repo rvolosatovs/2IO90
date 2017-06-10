@@ -21,34 +21,7 @@ import static org.junit.Assert.*;
 public abstract class PackerTest {
     public abstract Packer newPacker();
 
-    public void testHeight() {
-        Dimension[] dimensions = new Dimension[3];
-        dimensions[0] = new Dimension(2, 3);
-        dimensions[1] = new Dimension(5, 7);
-        dimensions[2] = new Dimension(2, 4);
-        int containerHeight = 6;
-
-        int maxHeight = 0;
-        Collection<IndexedRectangle> rectangles = newPacker().Pack(new Case(containerHeight, true, dimensions));
-        System.out.println(rectangles);
-        for (Rectangle r : rectangles) {
-            int height = r.y + r.height;
-            if (height > maxHeight) {
-                maxHeight = height;
-            }
-        }
-        assertFalse(String.format("Max height: %d, got %d\nContainer:\n%s", containerHeight, maxHeight, rectangles), maxHeight > containerHeight);
-    }
-
-    public void testOverlap() {
-        Dimension[] dimensions = new Dimension[4];
-        dimensions[0] = new Dimension(4, 5);
-        dimensions[1] = new Dimension(2, 10);
-        dimensions[2] = new Dimension(7, 13);
-        dimensions[3] = new Dimension(11, 12);
-
-        Collection<IndexedRectangle> rectangles = newPacker().Pack(new Case(14, false, dimensions));
-        System.out.println(rectangles);
+    void assertNoOverlap(Collection<? extends Rectangle> rectangles) {
         for (Rectangle r1 : rectangles) {
             for (Rectangle r2 : rectangles) {
                 assertFalse(String.format("r1(%s).intersects(r2(%s)): %s", r1, r2, r1.intersection(r2)), r1.intersects(r2) && r1 != r2);
@@ -56,9 +29,40 @@ public abstract class PackerTest {
         }
     }
 
+    void assertHeightLimitRespected(Case c, Collection<? extends Rectangle> rectangles) {
+        if (!c.isHeightFixed()) {
+            return;
+        }
+
+        int maxHeight = 0;
+        for (Rectangle r : rectangles) {
+            int height = r.y + r.height;
+            if (height > maxHeight) {
+                maxHeight = height;
+            }
+        }
+        assertFalse(String.format("Max height: %d, got %d", c.getHeight(), maxHeight), maxHeight > c.getHeight());
+    }
+
+    public void testHeight() {
+        Dimension[] dimensions = new Dimension[3];
+        dimensions[0] = new Dimension(2, 3);
+        dimensions[1] = new Dimension(5, 7);
+        dimensions[2] = new Dimension(2, 4);
+        int containerHeight = 6;
+
+        Case c = new Case(containerHeight, true, dimensions);
+
+        Collection<IndexedRectangle> rectangles = newPacker().Pack(c);
+        System.out.println(rectangles);
+        assertTrue(String.format("Input size: %d, got %d", c.getRectangles().size(), rectangles.size()), c.getRectangles().size() == rectangles.size());
+        assertHeightLimitRespected(c, rectangles);
+        assertNoOverlap(rectangles);
+    }
+
     public void testSmallInput() {
         try {
-            Stream<Path> paths = Files.walk(Paths.get("test/cases"));
+            Stream<Path> paths = Files.walk(Paths.get("testcases"));
             paths.forEach(path -> {
                 if (Files.isRegularFile(path) && path.toString().toLowerCase().endsWith(".txt") && path.getFileName().toString().matches("0(\\d)_(.*)")) {
                     System.out.println("Solving " + path.toString());
@@ -69,7 +73,11 @@ public abstract class PackerTest {
                         System.out.printf("Failed to parse case: %s", e.getMessage());
                         return;
                     }
-                    System.out.println(new Solution(c, newPacker().Pack(c)));
+                    Collection<IndexedRectangle> rectangles = newPacker().Pack(c);
+                    System.out.println(rectangles);
+                    assertTrue(String.format("Input size: %d, got %d", c.getRectangles().size(), rectangles.size()), c.getRectangles().size() == rectangles.size());
+                    assertHeightLimitRespected(c, rectangles);
+                    assertNoOverlap(rectangles);
                 }
             });
             paths.close();
@@ -78,7 +86,7 @@ public abstract class PackerTest {
         }
     }
 
-    private void assertEqualOutputLength(Collection<Dimension> dimensions) {
+    private void assertEqualOutputLength(Collection<? extends Dimension> dimensions) {
         Dimension[] dimensionArr = new Dimension[dimensions.size()];
         dimensions.toArray(dimensionArr);
         Collection<IndexedRectangle> c = newPacker().Pack(new Case(true, dimensionArr));

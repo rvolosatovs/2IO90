@@ -17,11 +17,6 @@ public class StupidPackerTest extends PackerTest {
     }
 
     @Test
-    public void testOverlap() {
-        super.testOverlap();
-    }
-
-    @Test
     public void testSmallInput() {
         super.testSmallInput();
     }

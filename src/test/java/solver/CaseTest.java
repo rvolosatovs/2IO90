@@ -20,7 +20,7 @@ public class CaseTest {
     @Test
     public void readAllFilesTest() {
         try {
-            Stream<Path> paths = Files.walk(Paths.get("test/cases"));
+            Stream<Path> paths = Files.walk(Paths.get("testcases"));
             paths.forEach(path -> {
                 if (Files.isRegularFile(path) && path.toString().toLowerCase().endsWith(".txt")) {
                     try {
