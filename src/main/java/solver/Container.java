@@ -186,7 +186,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
     }
 
     public Set<Point> getBoundingLine() {
-        Set<Point> points = new HashSet();
+        Set<Point> points = new HashSet<>();
         for (Rectangle r : this) {
             int maxX = r.x + r.width;
             for (int dy = 0; dy <= r.height; dy++) {
@@ -255,6 +255,16 @@ public class Container extends AbstractCollection<IndexedRectangle> {
             return plane.contains(x, y);
         }
 
+        private void updateBoudingLine(Set<Point> points) {
+            for (Point p : points) {
+                if (isBounding(p)) {
+                    boundingLine.add(p);
+                } else {
+                    boundingLine.remove(p);
+                }
+            }
+        }
+
         @Override
         public boolean add(IndexedRectangle r) {
             Set<Point> edges = new HashSet<>(2 * r.width + 2 * r.height - 4);
@@ -270,11 +280,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
                     edges.add(new Point(r.x, y));
                 }
             }
-            for (Point p : edges) {
-                if (isBounding(p)) {
-                    boundingLine.add(p);
-                }
-            }
+            updateBoudingLine(edges);
             return super.add(r);
         }
 
@@ -293,11 +299,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
                     edges.add(new Point(r.x, y));
                 }
             }
-            for (Point p : edges) {
-                if (boundingLine.contains(p) && !isBounding(p)) {
-                    boundingLine.remove(p);
-                }
-            }
+            updateBoudingLine(edges);
             return super.remove(r);
         }
 
@@ -324,6 +326,11 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         @Override
         public Set<Point> getBoundingLine() {
             return new HashSet<>(boundingLine);
+        }
+
+        @Override
+        public String toString() {
+            return String.format("%s\nPlane:\n%s", super.toString(), plane.toString());
         }
     }
 
@@ -406,19 +413,24 @@ public class Container extends AbstractCollection<IndexedRectangle> {
             return getValue(x, y) > 0;
         }
 
-        private boolean isSurrounded(int x, int y) {
-            for (int dx = -1; dx < 2; dx++) {
-                for (int dy = -1; dy < 2; dy++) {
-                    if (getValue(x + dx, x + dy) != 1) {
-                        // Either empty or another bound
-                        return false;
+        boolean hasEmptyNeighbour(int x, int y) {
+            for (int dy = -1; dy < 2; dy++) {
+                int newY = y + dy;
+                ArrayList<Integer> row = getRow(newY);
+                for (int dx = -1; dx < 2; dx++) {
+                    int newX = x + dx;
+                    if (newX == x && newY == y) {
+                        continue;
+                    }
+                    if (row.size() <= newX || row.get(newX) == 0) {
+                        return true;
                     }
                 }
             }
-            return true;
+            return false;
         }
 
-        public boolean isOccupied(int x, int y) {
+        boolean isOccupied(int x, int y) {
             int val = getValue(x, y);
             if (val == 0) {
                 return false;
@@ -433,10 +445,10 @@ public class Container extends AbstractCollection<IndexedRectangle> {
                 return false;
             }
             // val == 1
-            return isSurrounded(x, y);
+            return !hasEmptyNeighbour(x, y);
         }
 
-        public boolean isBounding(int x, int y) {
+        boolean isBounding(int x, int y) {
             int val = getValue(x, y);
             if (val > 1) {
                 return true;
@@ -446,7 +458,26 @@ public class Container extends AbstractCollection<IndexedRectangle> {
                 return true;
             }
             // val == 1
-            return !isSurrounded(x, y);
+            return hasEmptyNeighbour(x, y);
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            for (int y = getHeight(); y >= 0; y--) {
+                sb.append(String.format("%d\t", y));
+                for (int x = 0; x <= getWidth(); x++) {
+                    sb.append(getValue(x, y)).append(" ");
+                }
+                sb.append("\n");
+            }
+            sb.append("\t");
+            for (int x = 0; x <= getWidth(); x++) {
+                sb.append(String.format("%d ", x));
+            }
+            sb.append("\n");
+            sb.append("\n");
+            return sb.toString();
         }
     }
 }
