@@ -1,5 +1,6 @@
 import java.util.List;
 
+
 /**
  * Created by rvolosatovs on 5/15/17.
  */
@@ -41,5 +42,30 @@ public class Util {
             }
             return 0;
         });
+    }
+
+    public static void sortByWidth(List<? extends Rectangle> rectangles) {
+        rectangles.sort((d1, d2) -> {
+            int width1 = d1.width;
+            int width2 = d2.width;
+
+            if (width1 < width2){
+                return 1;
+            }
+            if (width1 > width2){
+                return -1;
+            }
+            return 0;
+        });
+    }
+
+    public static void sortByLongestWidth(List<? extends Rectangle> rectangles, Case c) {
+        rectangles.forEach((r)->{
+            if(c.areRotationsAllowed() && r.height > r.width && c.getHeight() > r.height){
+                r.rotate();
+            }
+        });
+
+        sortByWidth(rectangles);
     }
 }
