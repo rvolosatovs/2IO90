@@ -7,17 +7,7 @@ public class NFDHPackerTest extends PackerTest {
     public Packer newPacker() { return new NFDHPacker(); }
 
     @Test
-    public void testOutputLengthRandom() {
-        super.testOutputLengthRandom();
-    }
-
-    @Test
-    public void testOutputLengthSameSizes() {
-        super.testOutputLengthSameSizes();
-    }
-
-    @Test
-    public void testOutputLengthEmpty() {
-        super.testOutputLengthEmpty();
+    public void testHeight() {
+        super.testHeight();
     }
 }
