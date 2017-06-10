@@ -3,7 +3,6 @@ package solver;
 import java.awt.Point;
 import java.awt.Dimension;
 import java.awt.Polygon;
-import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -47,6 +46,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         }
         return false;
     }
+
     public boolean contains(Point p) {
         return contains(p.x, p.y);
     }
@@ -54,6 +54,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
     public boolean isOccupied(int x, int y) {
         return contains(x, y) && !isBounding(x, y);
     }
+
     public boolean isOccupied(Point p) {
         return isOccupied(p.x, p.y);
     }
@@ -83,12 +84,15 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         }
         return true;
     }
+
     public boolean canPlaceRectangle(int x, int y, Rectangle r) {
         return canPlaceRectangle(x, y, r.width, r.height);
     }
+
     public boolean canPlaceRectangle(Point p, int width, int height) {
         return canPlaceRectangle(p.x, p.y, width, height);
     }
+
     public boolean canPlaceRectangle(Point p, Rectangle r) {
         return canPlaceRectangle(p.x, p.y, r.width, r.height);
     }
@@ -102,6 +106,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
                                         contains(x + 1, y - 1)) &&
                                 contains(x + 1, y + 1))));
     }
+
     public boolean isBounding(Point p) {
         return isBounding(p.x, p.y);
     }
@@ -232,6 +237,96 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         return sb.toString();
     }
 
+    public static class WithPlane extends Container {
+        private Plane plane;
+        private Set<Point> boundingLine;
+
+        public WithPlane(Case c) {
+            if (c.isHeightFixed()) {
+                plane = new Plane(c.getHeight());
+            } else {
+                plane = new Plane();
+            }
+            boundingLine = new HashSet<>();
+        }
+
+        @Override
+        public boolean contains(int x, int y) {
+            return plane.contains(x, y);
+        }
+
+        @Override
+        public boolean add(IndexedRectangle r) {
+            Set<Point> edges = new HashSet<>(2 * r.width + 2 * r.height - 4);
+
+            int maxX = r.x + r.width;
+            int maxY = r.y + r.height;
+            for (int x = r.x; x <= maxX; x++) {
+                edges.add(new Point(x, maxY));
+                edges.add(new Point(x, r.y));
+                for (int y = r.y; y <= maxY; y++) {
+                    plane.add(x, y);
+                    edges.add(new Point(maxX, y));
+                    edges.add(new Point(r.x, y));
+                }
+            }
+            for (Point p : edges) {
+                if (isBounding(p)) {
+                    boundingLine.add(p);
+                }
+            }
+            return super.add(r);
+        }
+
+        @Override
+        public boolean remove(IndexedRectangle r) {
+            Set<Point> edges = new HashSet<>(2 * r.width + 2 * r.height - 4);
+
+            int maxX = r.x + r.width;
+            int maxY = r.y + r.height;
+            for (int x = r.x; x <= maxX; x++) {
+                edges.add(new Point(x, maxY));
+                edges.add(new Point(x, r.y));
+                for (int y = r.y; y <= maxY; y++) {
+                    plane.remove(x, y);
+                    edges.add(new Point(maxX, y));
+                    edges.add(new Point(r.x, y));
+                }
+            }
+            for (Point p : edges) {
+                if (boundingLine.contains(p) && !isBounding(p)) {
+                    boundingLine.remove(p);
+                }
+            }
+            return super.remove(r);
+        }
+
+        @Override
+        public int getWidth() {
+            return plane.getWidth();
+        }
+
+        @Override
+        public int getHeight() {
+            return plane.getHeight();
+        }
+
+        @Override
+        public boolean isBounding(int x, int y) {
+            return plane.isBounding(x, y);
+        }
+
+        @Override
+        public boolean isOccupied(int x, int y) {
+            return plane.isOccupied(x, y);
+        }
+
+        @Override
+        public Set<Point> getBoundingLine() {
+            return new HashSet<>(boundingLine);
+        }
+    }
+
     private class Plane {
         private ArrayList<ArrayList<Integer>> rows;
 
@@ -249,13 +344,13 @@ public class Container extends AbstractCollection<IndexedRectangle> {
 
         public int getWidth() {
             int maxWidth = 0;
-            for (ArrayList<Integer> row:rows) {
+            for (ArrayList<Integer> row : rows) {
                 int width = row.size();
                 if (width <= maxWidth) {
                     continue;
                 }
                 for (; width != maxWidth; width--) {
-                    if (row.get(width-1) != 0) {
+                    if (row.get(width - 1) != 0) {
                         maxWidth = width;
                         break;
                     }
@@ -308,13 +403,13 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         }
 
         boolean contains(int x, int y) {
-            return getValue(x,y) > 0;
+            return getValue(x, y) > 0;
         }
 
         private boolean isSurrounded(int x, int y) {
             for (int dx = -1; dx < 2; dx++) {
                 for (int dy = -1; dy < 2; dy++) {
-                    if (getValue(x+dx, x+dy) != 1) {
+                    if (getValue(x + dx, x + dy) != 1) {
                         // Either empty or another bound
                         return false;
                     }
@@ -324,7 +419,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         }
 
         public boolean isOccupied(int x, int y) {
-            int val = getValue(x,y);
+            int val = getValue(x, y);
             if (val == 0) {
                 return false;
             } else if (x == 0 || y == 0) {
@@ -338,11 +433,11 @@ public class Container extends AbstractCollection<IndexedRectangle> {
                 return false;
             }
             // val == 1
-            return isSurrounded(x,y);
+            return isSurrounded(x, y);
         }
 
         public boolean isBounding(int x, int y) {
-            int val = getValue(x,y);
+            int val = getValue(x, y);
             if (val > 1) {
                 return true;
             } else if (val == 0) {
@@ -351,65 +446,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
                 return true;
             }
             // val == 1
-            return !isSurrounded(x,y);
-        }
-
-    }
-
-    public static class WithPlane extends Container {
-        private Plane plane;
-
-        public WithPlane(Case c) {
-            if (c.isHeightFixed()) {
-                plane = new Plane(c.getHeight());
-            } else {
-                plane = new Plane();
-            }
-        }
-
-        @Override
-        public boolean contains(int x, int y) {
-            return plane.contains(x, y);
-        }
-
-        @Override
-        public boolean add(IndexedRectangle r) {
-            for (int x = r.x; x <= r.x+r.width; x++) {
-                for (int y = r.y; y <= r.y+r.height; y++) {
-                    plane.add(x,y);
-                }
-            }
-            return super.add(r);
-        }
-
-        @Override
-        public boolean remove(IndexedRectangle r) {
-            for (int x = r.x; x <= r.x+r.width; x++) {
-                for (int y = r.y; y <= r.y+r.height; y++) {
-                    plane.remove(x,y);
-                }
-            }
-            return super.remove(r);
-        }
-
-        @Override
-        public int getWidth() {
-            return plane.getWidth();
-        }
-
-        @Override
-        public int getHeight() {
-            return plane.getHeight();
-        }
-
-        @Override
-        public boolean isBounding(int x, int y) {
-            return plane.isBounding(x,y);
-        }
-
-        @Override
-        public boolean isOccupied(int x, int y) {
-            return plane.isOccupied(x,y);
+            return !isSurrounded(x, y);
         }
     }
 }

@@ -1,4 +1,5 @@
 package solver;
+
 import java.awt.Dimension;
 import java.io.FileInputStream;
 import java.io.IOException;

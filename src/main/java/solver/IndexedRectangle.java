@@ -45,11 +45,11 @@ public class IndexedRectangle extends Rectangle {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.index)+super.hashCode();
+        return Objects.hash(this.index) + super.hashCode();
     }
 
     @Override
     public String toString() {
-        return String.format("i=%d %s",index, super.toString());
+        return String.format("i=%d %s", index, super.toString());
     }
 }

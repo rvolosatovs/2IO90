@@ -89,6 +89,6 @@ public class Rectangle extends java.awt.Rectangle {
 
     @Override
     public String toString() {
-        return String.format("[(%d,%d),(%d,%d),(%d,%d),(%d,%d)]", x, y , x, y+height, x+width, y + height, x+width, y);
+        return String.format("[(%d,%d),(%d,%d),(%d,%d),(%d,%d)]", x, y, x, y + height, x + width, y + height, x + width, y);
     }
 }

@@ -1,4 +1,5 @@
 package solver;
+
 import org.junit.Test;
 
 import java.awt.*;

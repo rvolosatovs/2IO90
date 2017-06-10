@@ -1,4 +1,5 @@
 package solver;
+
 import org.junit.Test;
 
 /**
@@ -31,10 +32,12 @@ public class GreedyPackerTest extends PackerTest {
     }
 
     @Test
-    public void testOutputLengthRandom() { super.testOutputLengthRandom();
+    public void testOutputLengthRandom() {
+        super.testOutputLengthRandom();
     }
 
     @Test
-    public void testOutputLengthEmpty() { super.testOutputLengthEmpty();
+    public void testOutputLengthEmpty() {
+        super.testOutputLengthEmpty();
     }
 }
