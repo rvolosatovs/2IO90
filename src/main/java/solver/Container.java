@@ -336,7 +336,14 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         }
 
         public int getHeight() {
-            return rows.size();
+            for (int i = rows.size()-1; i >= 0; i--) {
+                for (int v : rows.get(i)) {
+                    if (v != 1) {
+                        return i;
+                    }
+                }
+            }
+            return 0;
         }
 
         int getWidth() {
@@ -422,14 +429,9 @@ public class Container extends AbstractCollection<IndexedRectangle> {
 
         boolean isOccupied(int x, int y) {
             int val = getValue(x, y);
-            if (val == 0) {
-                return false;
-            } else if (x == 0 || y == 0) {
-                return x==y || val == 2;
-            } else if (val == 4) {
-                return true;
-            }
-            return false;
+            if (val == 0) return false;
+            if (x == 0 || y == 0) return x == y || val == 2;
+            return val == 4;
         }
 
         @Override
