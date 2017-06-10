@@ -1,3 +1,5 @@
+package solver;
+
 import java.util.Collection;
 import java.util.*;
 import java.awt.*;
