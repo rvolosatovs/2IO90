@@ -63,7 +63,9 @@ public class Util {
 
     public static void sortByLongestWidth(List<? extends Rectangle> rectangles, Case c) {
         rectangles.forEach((r)->{
-            if(c.areRotationsAllowed() && r.height > r.width && c.getHeight() > r.height){
+            if(r.height > c.getHeight()){
+                r.rotate();
+            } else if (r.width < c.getHeight() && r.height > r.width){
                 r.rotate();
             }
         });
