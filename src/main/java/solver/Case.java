@@ -62,4 +62,36 @@ public class Case {
         }
         return containerHeight;
     }
+
+    public int getSize(){
+        return dimensions.length;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("container height: ");
+        if (isHeightFixed()) {
+            sb.append("fixed ")
+                    .append(containerHeight);
+        } else {
+            sb.append("free");
+        }
+
+        sb.append("\n")
+                .append("rotations allowed: ")
+                .append(areRotationsAllowed() ? "yes" : "no")
+                .append("\n")
+                .append("number of rectangles: ")
+                .append(dimensions.length);
+
+        for (Dimension d : dimensions) {
+            sb.append("\n")
+                    .append(d.width)
+                    .append(" ")
+                    .append(d.height);
+        }
+        return sb.toString();
+    }
 }
