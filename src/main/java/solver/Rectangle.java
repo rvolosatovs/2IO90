@@ -34,6 +34,14 @@ public class Rectangle extends java.awt.Rectangle {
         setBounds(x, y, height, width);
     }
 
+    public void doubleRectangle(){
+        setBounds(this.x*2,this.y*2,this.width*2,this.height*2);
+    }
+
+    public void halfRectangle(){
+        setBounds(this.x/2,this.y/2,this.width/2,this.height/2);
+    }
+
     public boolean wasRotated() {
         return rotated;
     }
