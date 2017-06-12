@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by s154563 on 8-5-2017.
@@ -22,6 +23,11 @@ public class GreedyPacker implements Packer {
 
         Container container = new Container.WithPlane(c);
         for (int i = 0; i < rectangles.size(); i++) {
+            if (PackingSolver.runningTime > 280000) {
+                rectangles = rectangles.subList(i, rectangles.size() - 1);
+                return new NFDHPacker(container, rectangles);
+            }
+
             IndexedRectangle r = rectangles.get(i);
 
             Set<Point> points;
