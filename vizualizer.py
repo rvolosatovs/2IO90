@@ -47,6 +47,7 @@ class InputParser:
         for p in positions:
             parsedPos.append(p.split(' '))
 
+
         return parsedPos
 
     def getSizes(self, lines):
@@ -82,13 +83,12 @@ class PlotBuilder:
         # patterns = ['-', '+', 'x', 'o', 'O', '.', '*']  # more patterns
 
         if not input.rotationsAllowed:
-
             for i in range(0, int(input.numRectangles)):
 
                 # keep track of max y for border
-                if int(input.position[i][1]) + int(input.size[i][1]) > maxY:
+                if int(input.position[i][1]) + int(input.size[i][1]) >= maxY:
                     maxY = int(input.position[i][1]) + int(input.size[i][1]) + 1
-                if int(input.position[i][0]) + int(input.size[i][0]) > maxX:
+                if int(input.position[i][0]) + int(input.size[i][0]) >= maxX:
                     maxX = int(input.position[i][0]) + int(input.size[i][0]) + 1
 
                 ax.add_patch(
@@ -105,9 +105,9 @@ class PlotBuilder:
         else:
             for i in range(0, int(input.numRectangles)):
                 if (input.position[i][0] == "no"):
-                    if int(input.position[i][2]) + int(input.size[i][1]) > maxY:
+                    if (int(input.position[i][2]) + int(input.size[i][1])) >= maxY:
                         maxY = int(input.position[i][2]) + int(input.size[i][1]) + 1
-                    if int(input.position[i][1]) + int(input.size[i][0]) > maxX:
+                    if int(input.position[i][1]) + int(input.size[i][0]) >= maxX:
                         maxX = int(input.position[i][1]) + int(input.size[i][0]) + 1
 
                     ax.add_patch(
@@ -122,29 +122,29 @@ class PlotBuilder:
                             )
 
                 elif (input.position[i][0] == "yes"):
-                    if int(input.position[i][2]) + int(input.size[i][0]) > maxY:
-                        maxY = int(input.position[i][2]) + int(input.size[i][0]) + 1
-                    if int(input.position[i][1]) + int(input.size[i][1]) > maxX:
-                        maxX = int(input.position[i][1]) + int(input.size[i][1]) + 1
+                    if (int(input.position[i][2]) + int(input.size[i][1]) >= maxY):
+                        maxY = int(input.position[i][2]) + int(input.size[i][1]) + 1
+                    if int(input.position[i][1]) + int(input.size[i][0]) >= maxX:
+                        maxX = int(input.position[i][1]) + int(input.size[i][0]) + 1
 
                     ax.add_patch(
                             patches.Rectangle(
                                 (int(input.position[i][1]), int(input.position[i][2])),
-                                int(input.size[i][1]),
                                 int(input.size[i][0]),
+                                int(input.size[i][1]),
                                 ls='solid', lw=1,
                                 facecolor=colors[randint(0, 5)],
                                 edgecolor="black",
                                 )
                             )
                     self.updateAreaOccupied(int(input.size[i][0]) * int(input.size[i][1]))
-
+        
         ax.set_ylim([0, maxY])
         ax.set_xlim([0, maxX])
 
         maxArea = (maxX - 1) * (maxY - 1)
         percentage = self.areaOccupied/maxArea
-        print(">" + str(percentage * 100) + "% of area used.")
+        #print(">" + str(percentage * 100) + "% of area used.")
 
         plt.show()
 
