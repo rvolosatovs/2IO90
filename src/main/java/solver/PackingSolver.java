@@ -2,10 +2,16 @@ package solver;
 
 import java.io.FileInputStream;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PackingSolver {
+    public static long runningTime = 0;
+
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
 
@@ -99,6 +105,16 @@ public class PackingSolver {
             p = new GreedyPacker();
         }
 
+        Thread updateRunningTime = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(true) {
+                    runningTime = System.currentTimeMillis() - start;
+                }
+            }
+        });
+        updateRunningTime.run();
+
         Solution s = null;
         try {
             s = new Solution(c, p);
@@ -107,6 +123,7 @@ public class PackingSolver {
             e.printStackTrace();
             System.exit(-1);
         }
+        updateRunningTime.interrupt();
         System.out.println(s);
         log.info("Running time: " + (System.currentTimeMillis() - start) + "ms");
     }
