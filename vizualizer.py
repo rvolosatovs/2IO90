@@ -105,17 +105,10 @@ class PlotBuilder:
         else:
             for i in range(0, int(input.numRectangles)):
                 if (input.position[i][0] == "no"):
-<<<<<<< Updated upstream
-                    if int(input.position[i][2]) + int(input.size[i][0]) > maxY:
-                        maxY = int(input.position[i][2]) + int(input.size[i][0]) + 1
-                    if int(input.position[i][1]) + int(input.size[i][1]) > maxX:
-                        maxX = int(input.position[i][1]) + int(input.size[i][1]) + 1
-=======
                     if (int(input.position[i][2]) + int(input.size[i][1])) >= maxY:
                         maxY = int(input.position[i][2]) + int(input.size[i][1]) + 1
                     if int(input.position[i][1]) + int(input.size[i][0]) >= maxX:
                         maxX = int(input.position[i][1]) + int(input.size[i][0]) + 1
->>>>>>> Stashed changes
 
                     ax.add_patch(
                             patches.Rectangle(
@@ -151,7 +144,7 @@ class PlotBuilder:
 
         maxArea = (maxX - 1) * (maxY - 1)
         percentage = self.areaOccupied/maxArea
-        print(">" + str(percentage * 100) + "% of area used.")
+        #print(">" + str(percentage * 100) + "% of area used.")
 
         plt.show()
 
