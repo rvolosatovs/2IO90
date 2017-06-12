@@ -105,10 +105,10 @@ class PlotBuilder:
         else:
             for i in range(0, int(input.numRectangles)):
                 if (input.position[i][0] == "no"):
-                    if int(input.position[i][2]) + int(input.size[i][1]) > maxY:
-                        maxY = int(input.position[i][2]) + int(input.size[i][1]) + 1
-                    if int(input.position[i][1]) + int(input.size[i][0]) > maxX:
-                        maxX = int(input.position[i][1]) + int(input.size[i][0]) + 1
+                    if int(input.position[i][2]) + int(input.size[i][0]) > maxY:
+                        maxY = int(input.position[i][2]) + int(input.size[i][0]) + 1
+                    if int(input.position[i][1]) + int(input.size[i][1]) > maxX:
+                        maxX = int(input.position[i][1]) + int(input.size[i][1]) + 1
 
                     ax.add_patch(
                             patches.Rectangle(
@@ -130,8 +130,8 @@ class PlotBuilder:
                     ax.add_patch(
                             patches.Rectangle(
                                 (int(input.position[i][1]), int(input.position[i][2])),
-                                int(input.size[i][1]),
                                 int(input.size[i][0]),
+                                int(input.size[i][1]),
                                 ls='solid', lw=1,
                                 facecolor=colors[randint(0, 5)],
                                 edgecolor="black",
