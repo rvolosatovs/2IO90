@@ -1,6 +1,7 @@
 package solver;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,11 +14,27 @@ public class GreedyPacker implements Packer {
     public Container Pack(Case c) {
         List<IndexedRectangle> rectangles = c.getRectangles();
         Util.sortByArea(rectangles);
+        boolean needsDoubling = false;
+
+        for (Rectangle r: rectangles){
+            if (r.width == 1 || r.height == 1){
+                needsDoubling = true;
+            }
+        }
+
+        if (needsDoubling){
+            for (IndexedRectangle r: rectangles){
+                r.doubleRectangle();
+            }
+        }
 
         int maxHeight = Integer.MAX_VALUE;
         boolean fixedHeight = c.isHeightFixed();
         if (fixedHeight) {
             maxHeight = c.getHeight();
+            if(needsDoubling){
+                maxHeight = maxHeight*2;
+            }
         }
 
         Container container = new Container.WithPlane(c);
@@ -128,6 +145,13 @@ public class GreedyPacker implements Packer {
             r.setLocation(minPoint);
             container.add(r);
         }
+
+        if (needsDoubling){
+            for (IndexedRectangle r: rectangles){
+                r.halfRectangle();
+            }
+        }
+
         return container;
     }
 }
