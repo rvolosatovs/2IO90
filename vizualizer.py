@@ -47,6 +47,7 @@ class InputParser:
         for p in positions:
             parsedPos.append(p.split(' '))
 
+
         return parsedPos
 
     def getSizes(self, lines):
@@ -82,13 +83,12 @@ class PlotBuilder:
         # patterns = ['-', '+', 'x', 'o', 'O', '.', '*']  # more patterns
 
         if not input.rotationsAllowed:
-
             for i in range(0, int(input.numRectangles)):
 
                 # keep track of max y for border
-                if int(input.position[i][1]) + int(input.size[i][1]) > maxY:
+                if int(input.position[i][1]) + int(input.size[i][1]) >= maxY:
                     maxY = int(input.position[i][1]) + int(input.size[i][1]) + 1
-                if int(input.position[i][0]) + int(input.size[i][0]) > maxX:
+                if int(input.position[i][0]) + int(input.size[i][0]) >= maxX:
                     maxX = int(input.position[i][0]) + int(input.size[i][0]) + 1
 
                 ax.add_patch(
@@ -105,10 +105,17 @@ class PlotBuilder:
         else:
             for i in range(0, int(input.numRectangles)):
                 if (input.position[i][0] == "no"):
+<<<<<<< Updated upstream
                     if int(input.position[i][2]) + int(input.size[i][0]) > maxY:
                         maxY = int(input.position[i][2]) + int(input.size[i][0]) + 1
                     if int(input.position[i][1]) + int(input.size[i][1]) > maxX:
                         maxX = int(input.position[i][1]) + int(input.size[i][1]) + 1
+=======
+                    if (int(input.position[i][2]) + int(input.size[i][1])) >= maxY:
+                        maxY = int(input.position[i][2]) + int(input.size[i][1]) + 1
+                    if int(input.position[i][1]) + int(input.size[i][0]) >= maxX:
+                        maxX = int(input.position[i][1]) + int(input.size[i][0]) + 1
+>>>>>>> Stashed changes
 
                     ax.add_patch(
                             patches.Rectangle(
@@ -122,10 +129,10 @@ class PlotBuilder:
                             )
 
                 elif (input.position[i][0] == "yes"):
-                    if int(input.position[i][2]) + int(input.size[i][0]) > maxY:
-                        maxY = int(input.position[i][2]) + int(input.size[i][0]) + 1
-                    if int(input.position[i][1]) + int(input.size[i][1]) > maxX:
-                        maxX = int(input.position[i][1]) + int(input.size[i][1]) + 1
+                    if (int(input.position[i][2]) + int(input.size[i][1]) >= maxY):
+                        maxY = int(input.position[i][2]) + int(input.size[i][1]) + 1
+                    if int(input.position[i][1]) + int(input.size[i][0]) >= maxX:
+                        maxX = int(input.position[i][1]) + int(input.size[i][0]) + 1
 
                     ax.add_patch(
                             patches.Rectangle(
@@ -138,7 +145,7 @@ class PlotBuilder:
                                 )
                             )
                     self.updateAreaOccupied(int(input.size[i][0]) * int(input.size[i][1]))
-
+        
         ax.set_ylim([0, maxY])
         ax.set_xlim([0, maxX])
 
