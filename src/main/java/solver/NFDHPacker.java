@@ -46,7 +46,9 @@ public class NFDHPacker implements Packer {
         return new Container(rectangles);
     }
 
-    public Container Pack(Container c, List<IndexedRectangle> rectangles) {
+    public Container Pack(Container c, List<IndexedRectangle> rectangles, int maxHeight) {
+
+        if (maxHeight == Integer.MAX_VALUE) maxHeight = c.getHeight();
 
         int y = 0;
         int potWall = c.getWidth();
@@ -54,7 +56,7 @@ public class NFDHPacker implements Packer {
 
 
         for (IndexedRectangle r : rectangles) {
-            if (y + r.height > c.getHeight()){
+            if (y + r.height > maxHeight){
                 wall = potWall;
                 y = 0;
                 potWall = wall + r.width;
