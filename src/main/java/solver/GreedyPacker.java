@@ -25,7 +25,8 @@ public class GreedyPacker implements Packer {
         for (int i = 0; i < rectangles.size(); i++) {
             if (PackingSolver.runningTime > 280000) {
                 rectangles = rectangles.subList(i, rectangles.size() - 1);
-                //return NFDHPacker(container, rectangles);
+                NFDHPacker nfdh = new NFDHPacker();
+                return nfdh.Pack(container, rectangles);
             }
 
             IndexedRectangle r = rectangles.get(i);
