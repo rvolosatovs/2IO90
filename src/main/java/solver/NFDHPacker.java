@@ -52,7 +52,7 @@ public class NFDHPacker implements Packer {
 
         int y = 0;
         int potWall = c.getWidth();
-        int wall = 0;
+        int wall = c.getWidth();
 
 
         for (IndexedRectangle r : rectangles) {
