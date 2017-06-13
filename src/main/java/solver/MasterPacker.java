@@ -1,4 +1,5 @@
 package solver;
+
 /**
  * Created by berrietrippe on 07/06/2017.
  */
