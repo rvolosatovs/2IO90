@@ -18,7 +18,7 @@ public class PackingSolver {
         final Set<String> knownParams = new HashSet<>(Arrays.asList(
                 "debug", "file", "greedy", "stupid", "master", "nfdh"
         ));
-        final Map<Character, String> shorthand = new HashMap(knownParams.size());
+        final Map<Character, String> shorthand = new HashMap<>(knownParams.size());
         shorthand.put('d', "debug");
         shorthand.put('f', "file");
         shorthand.put('g', "greedy");
@@ -113,6 +113,7 @@ public class PackingSolver {
             public void run() {
                 while(true) {
                     runningTime = System.currentTimeMillis() - start;
+                    if (Thread.interrupted()) break;
                 }
             }
         });
