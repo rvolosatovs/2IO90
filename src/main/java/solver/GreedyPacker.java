@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.RecursiveAction;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -23,11 +24,16 @@ public class GreedyPacker implements Packer {
 
         Container container = new Container.WithPlane(c);
         for (int i = 0; i < rectangles.size(); i++) {
-            if (PackingSolver.runningTime > 500) {
+            if (/*PackingSolver.runningTime > 500*/i > 1) {
                 rectangles = rectangles.subList(i, rectangles.size());
-                if (c.isHeightFixed()){
-                    maxHeight = c.getHeight();
+
+                if (!fixedHeight) {
+                    maxHeight = 0;
+                    for (Rectangle r: container) {
+                        if (r.getMaxY() > maxHeight) maxHeight = (int)r.getMaxY();
+                    }
                 }
+                System.out.println("fixed = " + fixedHeight + " maxHeight = " + maxHeight + " width = " + container.getWidth());
                 NFDHPacker nfdh = new NFDHPacker();
                 return nfdh.Pack(container, rectangles, maxHeight);
             }
