@@ -48,8 +48,6 @@ public class NFDHPacker implements Packer {
 
     public Container Pack(Container c, List<IndexedRectangle> rectangles, int maxHeight) {
 
-        if (maxHeight == Integer.MAX_VALUE) maxHeight = c.getHeight();
-
         int y = 0;
         int potWall = c.getWidth();
         int wall = c.getWidth();

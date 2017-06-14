@@ -23,9 +23,12 @@ public class GreedyPacker implements Packer {
 
         Container container = new Container.WithPlane(c);
         for (int i = 0; i < rectangles.size(); i++) {
+            System.out.println("running time from greedypacker = " + PackingSolver.runningTime);
             if (PackingSolver.runningTime > 500) {
                 rectangles = rectangles.subList(i, rectangles.size());
+                if (c.isHeightFixed()) maxHeight = container.getHeight();
                 NFDHPacker nfdh = new NFDHPacker();
+                System.out.println("maxheight " + maxHeight);
                 return nfdh.Pack(container, rectangles, maxHeight);
             }
 
