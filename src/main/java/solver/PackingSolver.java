@@ -111,13 +111,13 @@ public class PackingSolver {
         Thread updateRunningTime = new Thread(new Runnable() {
             @Override
             public void run() {
-                while(true) {
+                while (true) {
                     runningTime = System.currentTimeMillis() - start;
                     if (Thread.interrupted()) break;
                 }
             }
         });
-        updateRunningTime.run();
+        updateRunningTime.start();
 
         Solution s = null;
         try {

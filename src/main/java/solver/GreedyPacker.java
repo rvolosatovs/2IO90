@@ -23,7 +23,7 @@ public class GreedyPacker implements Packer {
 
         Container container = new Container.WithPlane(c);
         for (int i = 0; i < rectangles.size(); i++) {
-            if (/*PackingSolver.runningTime > 280*/true) {
+            if (PackingSolver.runningTime > 500) {
                 rectangles = rectangles.subList(i, rectangles.size());
                 NFDHPacker nfdh = new NFDHPacker();
                 return nfdh.Pack(container, rectangles, maxHeight);
