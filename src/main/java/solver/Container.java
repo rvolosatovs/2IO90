@@ -116,8 +116,8 @@ public class Container extends AbstractCollection<IndexedRectangle> {
             }
         }
 
-        for (int dx = 1; dx < width; dx++) {
-            for (int dy = 1; dy < height; dy++) {
+        for (int dx = 1; dx < width - 1; dx++) {
+            for (int dy = 1; dy < height - 1; dy++) {
                 if (contains(x + dx, y + dy)) {
                     return false;
                 }
