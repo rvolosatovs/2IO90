@@ -17,12 +17,13 @@ import java.util.List;
  */
 public class NFDHPacker implements Packer {
 
+    @Override
     public Container Pack(Case c) {
         List<IndexedRectangle> rectangles = c.getRectangles();
 
-        if(c.areRotationsAllowed()){
+        if (c.areRotationsAllowed()){
             Util.sortByLongestWidth(rectangles, c.getHeight());
-        } else{
+        } else {
             Util.sortByWidth(rectangles);
         }
 
@@ -47,17 +48,16 @@ public class NFDHPacker implements Packer {
     }
 
     public Container Pack(Container c, List<IndexedRectangle> rectangles, int maxHeight, boolean rotationsAllowed) {
-        System.out.println("NFDH maxheight = " + maxHeight);
 
         if(rotationsAllowed){
-            Util.sortByLongestWidth(rectangles, c.getHeight());
+            Util.sortByLongestWidth(rectangles, maxHeight);
         } else{
             Util.sortByWidth(rectangles);
         }
 
         int y = 0;
-        int potWall = c.getWidth();
-        int wall = c.getWidth();
+        int potWall = c.getWidth()-1 + rectangles.get(0).width;
+        int wall = c.getWidth()-1;
 
 
         for (IndexedRectangle r : rectangles) {
