@@ -24,7 +24,7 @@ public class GreedyPacker implements Packer {
 
         Container container = new Container.WithPlane(c);
         for (int i = 0; i < rectangles.size(); i++) {
-            if (/*PackingSolver.runningTime > 500*/i > 1) {
+            if (PackingSolver.runningTime > 240000) {
                 rectangles = rectangles.subList(i, rectangles.size());
 
                 if (!fixedHeight) {
@@ -33,7 +33,6 @@ public class GreedyPacker implements Packer {
                         if (r.getMaxY() > maxHeight) maxHeight = (int)r.getMaxY();
                     }
                 }
-                System.out.println("fixed = " + fixedHeight + " maxHeight = " + maxHeight + " width = " + container.getWidth());
                 NFDHPacker nfdh = new NFDHPacker();
                 return nfdh.Pack(container, rectangles, maxHeight, c.areRotationsAllowed());
             }
