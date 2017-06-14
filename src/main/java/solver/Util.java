@@ -61,11 +61,11 @@ public class Util {
         });
     }
 
-    public static void sortByLongestWidth(List<? extends Rectangle> rectangles, Case c) {
+    public static void sortByLongestWidth(List<? extends Rectangle> rectangles, int height) {
         rectangles.forEach((r)->{
-            if(r.height > c.getHeight()){
+            if(r.height > height){
                 r.rotate();
-            } else if (r.width < c.getHeight() && r.height > r.width){
+            } else if (r.width < height && r.height > r.width){
                 r.rotate();
             }
         });

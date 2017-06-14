@@ -21,7 +21,7 @@ public class NFDHPacker implements Packer {
         List<IndexedRectangle> rectangles = c.getRectangles();
 
         if(c.areRotationsAllowed()){
-            Util.sortByLongestWidth(rectangles, c);
+            Util.sortByLongestWidth(rectangles, c.getHeight());
         } else{
             Util.sortByWidth(rectangles);
         }
@@ -46,8 +46,15 @@ public class NFDHPacker implements Packer {
         return new Container(rectangles);
     }
 
-    public Container Pack(Container c, List<IndexedRectangle> rectangles, int maxHeight) {
+    public Container Pack(Container c, List<IndexedRectangle> rectangles, int maxHeight, boolean rotationsAllowed) {
         System.out.println("NFDH maxheight = " + maxHeight);
+
+        if(rotationsAllowed){
+            Util.sortByLongestWidth(rectangles, c.getHeight());
+        } else{
+            Util.sortByWidth(rectangles);
+        }
+
         int y = 0;
         int potWall = c.getWidth();
         int wall = c.getWidth();

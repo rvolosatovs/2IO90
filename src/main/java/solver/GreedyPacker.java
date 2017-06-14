@@ -35,7 +35,7 @@ public class GreedyPacker implements Packer {
                 }
                 System.out.println("fixed = " + fixedHeight + " maxHeight = " + maxHeight + " width = " + container.getWidth());
                 NFDHPacker nfdh = new NFDHPacker();
-                return nfdh.Pack(container, rectangles, maxHeight);
+                return nfdh.Pack(container, rectangles, maxHeight, c.areRotationsAllowed());
             }
 
             IndexedRectangle r = rectangles.get(i);
