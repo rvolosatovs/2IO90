@@ -1,28 +1,22 @@
 package solver;
 
-import java.util.Collection;
-import java.util.*;
-import java.awt.*;
-import java.lang.*;
 import java.util.List;
 
 /**
- *  Next fit decreasing height packing
- *  Only use this when fixed height.
- *
- *  In sorted on width order; place rectangle with biggest height in left bottom
- *  then if fits, add next rectangle on top, if not, place it against new 'wall',
- *  the max x position of the biggest rectangle in previous row.
- *
+ * Next fit decreasing height packing
+ * Only use this when fixed height.
+ * <p>
+ * In sorted on width order; place rectangle with biggest height in left bottom
+ * then if fits, add next rectangle on top, if not, place it against new 'wall',
+ * the max x position of the biggest rectangle in previous row.
  */
 public class NFDHPacker implements Packer {
-    
     public Container Pack(Case c) {
         List<IndexedRectangle> rectangles = c.getRectangles();
 
-        if(c.areRotationsAllowed()){
+        if (c.areRotationsAllowed()) {
             Util.sortByLongestWidth(rectangles, c);
-        } else{
+        } else {
             Util.sortByWidth(rectangles);
         }
 
@@ -32,7 +26,7 @@ public class NFDHPacker implements Packer {
 
         if (c.isHeightFixed()) {
             for (IndexedRectangle r : rectangles) {
-                if(y + r.height > c.getHeight()){
+                if (y + r.height > c.getHeight()) {
                     wall = potWall;
                     y = 0;
                     potWall = wall + r.width;
