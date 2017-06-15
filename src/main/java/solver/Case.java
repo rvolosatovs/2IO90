@@ -94,4 +94,8 @@ public class Case {
         }
         return sb.toString();
     }
+
+    public void setContainerHeight(int height) {
+        containerHeight = height;
+    }
 }

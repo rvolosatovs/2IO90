@@ -5,7 +5,7 @@ package solver;
  */
 public class MasterPacker implements Packer {
     @Override
-    public Container Pack(Case c) {
+    public Container Pack(Case c) throws InterruptedException {
         int caseSize = c.getSize();
         switch(caseSize){
             case 3: return (new GreedyPacker().Pack(c));

@@ -19,7 +19,12 @@ public class Solution {
 
     public Solution(final Case spec, final Packer p) {
         this.spec = spec;
-        this.rectangles = p.Pack(spec);
+        try {
+            this.rectangles = p.Pack(spec);
+        } catch (InterruptedException e) { // Greedy exceeded its time
+            NFDHPacker nfdhPacker = new NFDHPacker();
+            this.rectangles = nfdhPacker.Pack(spec, e.getContainer(), e.getRectangles());
+        }
         Logger.getGlobal().info(this.rectangles.toString());
     }
 

@@ -42,21 +42,21 @@ public class NFDHPacker implements Packer {
         return new Container(rectangles);
     }
 
-    public Container Pack(Container c, List<IndexedRectangle> rectangles, int maxHeight, boolean rotationsAllowed) {
+    public Container Pack(Case c, Container container, List<IndexedRectangle> rectangles) {
 
-        if(rotationsAllowed){
-            Util.sortByLongestWidth(rectangles, maxHeight);
+        if(c.areRotationsAllowed()){
+            Util.sortByLongestWidth(rectangles, c.getHeight());
         } else{
             Util.sortByWidth(rectangles);
         }
 
         int y = 0;
-        int potWall = c.getWidth()-1 + rectangles.get(0).width;
-        int wall = c.getWidth()-1;
+        int potWall = container.getWidth()-1 + rectangles.get(0).width;
+        int wall = container.getWidth()-1;
 
 
         for (IndexedRectangle r : rectangles) {
-            if (y + r.height > maxHeight){
+            if (y + r.height > c.getHeight()){
                 wall = potWall;
                 y = 0;
                 potWall = wall + r.width;
@@ -67,7 +67,7 @@ public class NFDHPacker implements Packer {
             potWall = Math.max(r.width, potWall);
         }
 
-        rectangles.addAll(c);
+        rectangles.addAll(container);
         return new Container(rectangles);
     }
 }

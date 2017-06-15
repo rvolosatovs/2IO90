@@ -10,10 +10,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PackingSolver {
-    public static long runningTime = 0;
+    public static long startTime;
 
     public static void main(String[] args) {
-        long start = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
 
         final Set<String> knownParams = new HashSet<>(Arrays.asList(
                 "debug", "file", "greedy", "stupid", "master", "nfdh"
@@ -107,18 +107,7 @@ public class PackingSolver {
             // default
             p = new GreedyPacker();
         }
-
-        Thread updateRunningTime = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    runningTime = System.currentTimeMillis() - start;
-                    if (Thread.interrupted()) break;
-                }
-            }
-        });
-        updateRunningTime.start();
-
+        
         Solution s = null;
         try {
             s = new Solution(c, p);
@@ -127,8 +116,8 @@ public class PackingSolver {
             e.printStackTrace();
             System.exit(-1);
         }
-        updateRunningTime.interrupt();
+
         System.out.println(s);
-        log.info("Running time: " + (System.currentTimeMillis() - start) + "ms");
+        log.info("Running time: " + (System.currentTimeMillis() - startTime) + "ms");
     }
 }

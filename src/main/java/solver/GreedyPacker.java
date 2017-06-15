@@ -12,7 +12,7 @@ import java.util.concurrent.TimeoutException;
  */
 public class GreedyPacker implements Packer {
     @Override
-    public Container Pack(Case c) {
+    public Container Pack(Case c) throws InterruptedException {
         List<IndexedRectangle> rectangles = c.getRectangles();
         Util.sortByArea(rectangles);
 
@@ -24,13 +24,13 @@ public class GreedyPacker implements Packer {
 
         Container container = new Container.WithPlane(c);
         for (int i = 0; i < rectangles.size(); i++) {
-            if (PackingSolver.runningTime > 240000) {
+            if (System.currentTimeMillis() - PackingSolver.startTime > 240000) {
                 rectangles = rectangles.subList(i, rectangles.size());
                 if (!fixedHeight) {
                     maxHeight = container.getHeight();
                 }
-                NFDHPacker nfdh = new NFDHPacker();
-                return nfdh.Pack(container, rectangles, maxHeight, c.areRotationsAllowed());
+                c.setContainerHeight(maxHeight);
+                throw new InterruptedException(container, rectangles);
             }
 
             IndexedRectangle r = rectangles.get(i);
