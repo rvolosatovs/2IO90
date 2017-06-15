@@ -32,4 +32,9 @@ public class ContainerWithPlaneTest extends ContainerTest {
     public void testCanPlaceRectangle() {
         super.testCanPlaceRectangle();
     }
+
+    @Test
+    public void testAreaWidthAndHeight() {
+        super.testAreaWidthAndHeight();
+    }
 }
