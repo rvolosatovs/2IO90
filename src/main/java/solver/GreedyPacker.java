@@ -24,7 +24,8 @@ public class GreedyPacker implements Packer {
 
         Container container = new Container.WithPlane(c);
         for (int i = 0; i < rectangles.size(); i++) {
-            if (System.currentTimeMillis() - PackingSolver.startTime > 240000) {
+            //System.out.println("running time: " + (System.currentTimeMillis() - PackingSolver.startTime));
+            if (System.currentTimeMillis() - PackingSolver.startTime > 270000) {
                 rectangles = rectangles.subList(i, rectangles.size());
                 if (!fixedHeight) {
                     maxHeight = container.getHeight();

@@ -8,6 +8,7 @@ import org.junit.Test;
 public class GreedyPackerTest extends PackerTest {
     @Override
     public Packer newPacker() {
+        PackingSolver.startTime = System.currentTimeMillis();
         return new GreedyPacker();
     }
 
