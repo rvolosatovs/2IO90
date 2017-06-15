@@ -137,14 +137,15 @@ public class Container extends AbstractCollection<IndexedRectangle> {
     boolean canPlaceRectangle(Point p, Rectangle r) {
         return canPlaceRectangle(p.x, p.y, r.width, r.height);
     }
-
-
+    
     int getWidth() {
         int maxWidth = 0;
 
-        for (Rectangle r: this) {
-            if (r.getMaxX() > maxWidth)
-                maxWidth = (int)r.getMaxX();
+        for (Rectangle r : this) {
+            int width = r.x + r.width;
+            if (width > maxWidth) {
+                maxWidth = width;
+            }
         }
         return maxWidth;
     }
@@ -152,9 +153,11 @@ public class Container extends AbstractCollection<IndexedRectangle> {
     int getHeight() {
         int maxHeight = 0;
 
-        for (Rectangle r: this) {
-            if (r.getMaxY() > maxHeight)
-                maxHeight = (int)r.getMaxY();
+        for (Rectangle r : this) {
+            int height = r.y + r.height;
+            if (height > maxHeight) {
+                maxHeight = height;
+            }
         }
         return maxHeight;
     }
