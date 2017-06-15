@@ -121,12 +121,17 @@ public class ContainerTest {
     @Test
     public void testCanPlaceRectangle() {
         List<IndexedRectangle> rectangles = Arrays.asList(
-                new IndexedRectangle(0, 0, 0, 7, 1)
+                new IndexedRectangle(0, 0, 0, 7, 1),
+                new IndexedRectangle(1, 5, 5, 1, 1)
         );
 
         Container c = newContainer(rectangles);
         System.out.println(c);
         assertFalse("c.canPlaceRectangle (0,0,4,8)", c.canPlaceRectangle(0, 0, 4, 8));
+        assertFalse("c.canPlaceRectangle (0,0,1,1)", c.canPlaceRectangle(0, 0, 1, 1));
+        assertTrue("c.canPlaceRectangle (1,1,1,1)", c.canPlaceRectangle(1, 1, 1, 1));
+        assertFalse("c.canPlaceRectangle (5,5, 1,1)", c.canPlaceRectangle(5, 5, 1, 1));
+        assertTrue("c.canPlaceRectangle (20,20,1,1)", c.canPlaceRectangle(20, 20, 1, 1));
     }
 
     @Test
