@@ -53,7 +53,7 @@ public class GreedyPackerTest extends PackerTest {
         try {
             Stream<Path> paths = Files.walk(Paths.get("testcases"));
             paths.forEach(path -> {
-                if (Files.isRegularFile(path) && path.toString().toLowerCase().endsWith(".txt") && path.getFileName().toString().matches("25_02_hf_ry.txt")) {
+                if (Files.isRegularFile(path) && path.toString().toLowerCase().endsWith(".txt") && path.getFileName().toString().matches("25_(.*)")) {
                     System.out.println("Solving " + path.toString());
                     Case c = null;
                     try {
