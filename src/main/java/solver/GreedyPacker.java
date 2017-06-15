@@ -24,13 +24,15 @@ public class GreedyPacker implements Packer {
 
         Container container = new Container.WithPlane(c);
         for (int i = 0; i < rectangles.size(); i++) {
-            //System.out.println("running time: " + (System.currentTimeMillis() - PackingSolver.startTime));
-            if (System.currentTimeMillis() - PackingSolver.startTime > 270000) {
+            if (System.currentTimeMillis() - PackingSolver.startTime > 100) {
+                System.out.println("Switching to nfdh at: " + (System.currentTimeMillis() - PackingSolver.startTime));
                 rectangles = rectangles.subList(i, rectangles.size());
                 if (!fixedHeight) {
                     maxHeight = container.getHeight();
+                    c.setContainerHeight(maxHeight);
+                    System.out.println("Case height set to " + maxHeight);
                 }
-                c.setContainerHeight(maxHeight);
+
                 throw new InterruptedException(container, rectangles);
             }
 

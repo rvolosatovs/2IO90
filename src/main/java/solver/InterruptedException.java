@@ -6,8 +6,8 @@ public class InterruptedException extends Exception {
     Container container;
     List<IndexedRectangle> rectangles;
 
-    public InterruptedException(Container c, List<IndexedRectangle> l) {
-        this.container = c;
+    public InterruptedException(Container container, List<IndexedRectangle> l) {
+        this.container = container;
         this.rectangles = l;
     }
 
@@ -18,4 +18,5 @@ public class InterruptedException extends Exception {
     public List<IndexedRectangle> getRectangles() {
         return this.rectangles;
     }
+
 }

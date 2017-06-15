@@ -44,6 +44,7 @@ public class NFDHPacker implements Packer {
 
     public Container Pack(Case c, Container container, List<IndexedRectangle> rectangles) {
 
+        System.out.println("nfdh received case height: " + c.getHeight());
         if(c.areRotationsAllowed()){
             Util.sortByLongestWidth(rectangles, c.getHeight());
         } else{
@@ -51,8 +52,8 @@ public class NFDHPacker implements Packer {
         }
 
         int y = 0;
-        int potWall = container.getWidth()-1 + rectangles.get(0).width;
-        int wall = container.getWidth()-1;
+        int potWall = container.getWidth() - 1 + rectangles.get(0).width;
+        int wall = container.getWidth() - 1;
 
 
         for (IndexedRectangle r : rectangles) {

@@ -2,6 +2,16 @@ package solver;
 
 import org.junit.Test;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.stream.Stream;
+
+import static org.junit.Assert.assertTrue;
+
 /**
  * Created by berrietrippe on 04/05/2017.
  */
@@ -35,5 +45,47 @@ public class GreedyPackerTest extends PackerTest {
     @Test
     public void testOutputLengthEmpty() {
         super.testOutputLengthEmpty();
+    }
+
+    @Test
+    public void testGreedyToNFDH() {
+        PackingSolver.startTime = System.currentTimeMillis();
+        try {
+            Stream<Path> paths = Files.walk(Paths.get("testcases"));
+            paths.forEach(path -> {
+                if (Files.isRegularFile(path) && path.toString().toLowerCase().endsWith(".txt") && path.getFileName().toString().matches("25_02_hf_ry.txt")) {
+                    System.out.println("Solving " + path.toString());
+                    Case c = null;
+                    try {
+                        c = new Case(new FileInputStream(path.toFile()));
+                    } catch (Exception e) {
+                        System.out.printf("Failed to parse case: %s", e.getMessage());
+                        return;
+                    }
+
+                    Collection<IndexedRectangle> rectangles = null;
+                    /*
+                    try {
+                        rectangles = newPacker().Pack(c);
+                    } catch (InterruptedException e) {
+                        System.out.println("Jump from Greedy to NFDH at: " + (System.currentTimeMillis() - PackingSolver.startTime));
+                        NFDHPacker nfdhPacker = new NFDHPacker();
+                        rectangles = nfdhPacker.Pack(c, e.getContainer(), e.getRectangles());
+                        System.out.println("Finished packing at " + (System.currentTimeMillis() - PackingSolver.startTime));
+                    }
+                    */
+                    Solution s = new Solution(c, newPacker());
+                    rectangles = s.getRectangles();
+                    System.out.println("Finished packing at: "+  (System.currentTimeMillis() - PackingSolver.startTime));
+                    //System.out.println(rectangles);
+                    assertTrue(String.format("Input size: %d, got %d", c.getRectangles().size(), rectangles.size()), c.getRectangles().size() == rectangles.size());
+                    assertHeightLimitRespected(c, rectangles);
+                    assertNoOverlap(rectangles);
+                }
+            });
+            paths.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

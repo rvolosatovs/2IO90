@@ -53,4 +53,8 @@ public class Solution {
         });
         return sb.toString();
     }
+
+    public Collection<IndexedRectangle> getRectangles() {
+        return rectangles;
+    }
 }
