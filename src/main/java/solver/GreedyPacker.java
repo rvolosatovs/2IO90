@@ -26,12 +26,8 @@ public class GreedyPacker implements Packer {
         for (int i = 0; i < rectangles.size(); i++) {
             if (PackingSolver.runningTime > 240000) {
                 rectangles = rectangles.subList(i, rectangles.size());
-
                 if (!fixedHeight) {
-                    maxHeight = 0;
-                    for (Rectangle r: container) {
-                        if (r.getMaxY() > maxHeight) maxHeight = (int)r.getMaxY();
-                    }
+                    maxHeight = container.getHeight();
                 }
                 NFDHPacker nfdh = new NFDHPacker();
                 return nfdh.Pack(container, rectangles, maxHeight, c.areRotationsAllowed());
