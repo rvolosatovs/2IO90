@@ -349,12 +349,12 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         int getWidth() {
             int maxWidth = 0;
             for (ArrayList<Integer> row : rows) {
-                int width = row.size();
+                int width = row.size()-1;
                 if (width <= maxWidth) {
                     continue;
                 }
                 for (; width != maxWidth; width--) {
-                    if (row.get(width - 1) != 0) {
+                    if (row.get(width) != 0) {
                         maxWidth = width;
                         break;
                     }

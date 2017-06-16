@@ -9,6 +9,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -122,5 +123,20 @@ public class ContainerTest {
         Container c = newContainer(rectangles);
         System.out.println(c);
         assertFalse("c.canPlaceRectangle (0,0,4,8)", c.canPlaceRectangle(0, 0, 4, 8));
+    }
+
+    @Test
+    public void testAreaWidthAndHeight() {
+        List<IndexedRectangle> rectangles = Arrays.asList(
+                new IndexedRectangle(0, 0, 0, 2, 2),
+                new IndexedRectangle(1, 2, 2, 1, 1),
+                new IndexedRectangle(2, 3, 3, 1, 2)
+        );
+
+        Container c = newContainer(rectangles);
+        System.out.println(c);
+        assertTrue("c.getWidth() == 4", c.getWidth() == 4);
+        assertTrue("c.getHeight() == 5", c.getHeight() == 5);
+        assertTrue("c.getArea() == 20", c.getArea() == 20);
     }
 }
