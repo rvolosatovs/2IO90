@@ -80,7 +80,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
             return (contains(x-1, y+1) && contains(x, y+1) && contains(x+1, y+1) &&
                     contains(x-1, y) && contains(x+1, y));
         }
-        return !hasEmptyNeighbour(x,y) ||(contains(x,y+1) && contains(x+1, y+1) && contains(x+1, y));
+        return !hasEmptyNeighbour(x,y);
     }
 
     boolean isOccupied(Point p) {
