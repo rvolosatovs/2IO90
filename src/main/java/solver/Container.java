@@ -198,12 +198,12 @@ public class Container extends AbstractCollection<IndexedRectangle> {
             for (int x = 0; x <= getWidth(); x++) {
                 if (contains(x, y)) {
                     if (isBounding(x, y)) {
-                        sb.append("*");
+                        sb.append("▓▓");
                     } else {
-                        sb.append("+");
+                        sb.append("██");
                     }
                 } else {
-                    sb.append(" ");
+                    sb.append("  ");
                 }
                 sb.append(" ");
             }
@@ -211,10 +211,12 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         }
         sb.append("\t");
         for (int x = 0; x <= getWidth(); x++) {
-            sb.append(String.format("%d ", x));
+            String format = "%d ";
+            if (x < 10) {
+                format += " ";
+            }
+            sb.append(String.format(format, x));
         }
-        sb.append("\n");
-        sb.append("\n");
         return sb.toString();
     }
 
@@ -439,16 +441,18 @@ public class Container extends AbstractCollection<IndexedRectangle> {
             for (int y = getHeight(); y >= 0; y--) {
                 sb.append(String.format("%d\t", y));
                 for (int x = 0; x <= getWidth(); x++) {
-                    sb.append(getValue(x, y)).append(" ");
+                    sb.append(getValue(x, y)).append("  ");
                 }
                 sb.append("\n");
             }
             sb.append("\t");
             for (int x = 0; x <= getWidth(); x++) {
-                sb.append(String.format("%d ", x));
+                String format = "%d ";
+                if (x < 10) {
+                    format += " ";
+                }
+                sb.append(String.format(format, x));
             }
-            sb.append("\n");
-            sb.append("\n");
             return sb.toString();
         }
     }
