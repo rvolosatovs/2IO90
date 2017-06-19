@@ -23,8 +23,7 @@ public class GreedyPackerTest extends PackerTest {
 
     @Test
     public void testMediumInput() {
-        // TODO uncomment  once 1x1 issue is fixed
-        //super.testMediumInput();
+        super.testMediumInput();
     }
 
     @Test
