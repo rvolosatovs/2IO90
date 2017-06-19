@@ -98,6 +98,10 @@ public abstract class PackerTest {
         parseAndAssert("(10|25)_(.*)");
     }
 
+    public void testFixedHeightInput() {
+        parseAndAssert("(\\d\\d?)_(.*)_h(\\d+)_(.*)");
+    }
+
     private void assertEqualOutputLength(Collection<? extends Dimension> dimensions) {
         Dimension[] dimensionArr = new Dimension[dimensions.size()];
         dimensions.toArray(dimensionArr);
