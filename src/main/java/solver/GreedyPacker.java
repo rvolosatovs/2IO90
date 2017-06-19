@@ -14,30 +14,14 @@ public class GreedyPacker implements Packer {
     public Container Pack(Case c) {
         List<IndexedRectangle> rectangles = c.getRectangles();
         Util.sortByArea(rectangles);
-        boolean needsDoubling = false;
-
-        for (Rectangle r: rectangles){
-            if (r.width == 1 || r.height == 1){
-                needsDoubling = true;
-            }
-        }
-
-        if (needsDoubling){
-            for (IndexedRectangle r: rectangles){
-                r.doubleRectangle();
-            }
-        }
 
         int maxHeight = Integer.MAX_VALUE;
         boolean fixedHeight = c.isHeightFixed();
         if (fixedHeight) {
             maxHeight = c.getHeight();
-            if(needsDoubling){
-                maxHeight = maxHeight*2;
-            }
         }
 
-        Container container = new Container.WithPlane(c);
+        Container container = new Container.WithDoublePlane(c);
         for (int i = 0; i < rectangles.size(); i++) {
             IndexedRectangle r = rectangles.get(i);
 
@@ -141,15 +125,11 @@ public class GreedyPacker implements Packer {
                     container.add(r);
                 }
             }
+
+
             container.remove(r);
             r.setLocation(minPoint);
             container.add(r);
-        }
-
-        if (needsDoubling){
-            for (IndexedRectangle r: rectangles){
-                r.halfRectangle();
-            }
         }
 
         return container;

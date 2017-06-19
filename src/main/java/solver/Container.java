@@ -326,6 +326,150 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         }
     }
 
+
+    public static class WithDoublePlane extends Container {
+        private Plane plane;
+        private Set<Point> boundingLine;
+
+        WithDoublePlane(Case c) {
+            if (c.isHeightFixed()) {
+                plane = new Plane(c.getHeight()*2);
+            } else {
+                plane = new Plane();
+            }
+            boundingLine = new HashSet<>();
+        }
+
+        WithDoublePlane(Collection<? extends IndexedRectangle> rectangles) {
+            super(rectangles);
+            boundingLine = new HashSet<>();
+            plane = new Plane();
+            this.addAll(rectangles);
+        }
+
+        @Override
+        boolean isBounding(int x, int y) {
+            if (!contains(x,y)){
+                return false;
+            } else if (x == 0 || y == 0) {
+                return true;
+            }
+            return hasEmptyNeighbour(x,y);
+        }
+
+        @Override
+        boolean contains(int x, int y) {
+            return plane.contains(x*2, y*2);
+        }
+
+        private void updateBoundingLine(Set<Point> points) {
+            for (Point p : points) {
+                if (isBounding(p)) {
+                    boundingLine.add(p);
+                } else {
+                    boundingLine.remove(p);
+                }
+            }
+        }
+
+        @Override
+        public boolean add(IndexedRectangle r) {
+            Set<Point> edges = new HashSet<>(2 * r.width + 2 * r.height - 4);
+
+            int maxX = r.x + r.width;
+            int maxY = r.y + r.height;
+            for (int x = r.x*2; x <= maxX*2; x++) {
+                edges.add(new Point(x/2, maxY));
+                edges.add(new Point(x/2, r.y));
+                for (int y = r.y*2; y <= maxY*2; y++) {
+                    plane.add(x, y);
+                    edges.add(new Point(maxX/2, y/2));
+                    edges.add(new Point(r.x, y/2));
+                }
+            }
+            updateBoundingLine(edges);
+            return super.add(r);
+        }
+
+        @Override
+        public boolean remove(IndexedRectangle r) {
+            Set<Point> edges = new HashSet<>(2 * r.width + 2 * r.height - 4);
+
+            int maxX = r.x + r.width;
+            int maxY = r.y + r.height;
+            for (int x = r.x*2; x <= maxX*2; x++) {
+                edges.add(new Point(x/2, maxY/2));
+                edges.add(new Point(x/2, r.y));
+                for (int y = r.y*2; y <= maxY*2; y++) {
+                    plane.remove(x, y);
+                    edges.add(new Point(maxX/2, y/2));
+                    edges.add(new Point(r.x, y/2));
+                }
+            }
+            updateBoundingLine(edges);
+            return super.remove(r);
+        }
+
+        @Override
+        int getWidth() {
+            return plane.getWidth()/2;
+        }
+
+        @Override
+        int getHeight() {
+            return plane.getHeight()/2;
+        }
+
+        @Override
+        boolean isOccupied(int x, int y) {
+            return plane.isOccupied(x*2, y*2);
+        }
+
+        @Override
+        boolean hasEmptyNeighbour(int x, int y) {
+            return plane.hasEmptyNeighbour(x*2,y*2);
+        }
+
+        @Override
+        Set<Point> getBoundingLine() {
+            return new HashSet<>(boundingLine);
+        }
+
+        @Override
+        public String toString() {
+            return String.format("%s\nPlane:\n%s", super.toString(), plane.toString());
+        }
+
+        @Override
+        boolean canPlaceRectangle(int x, int y, int width, int height) {
+            x = x * 2;
+            y = y * 2;
+            int maxX = x + width*2;
+            int maxY = y + height*2;
+
+            for (int newX = x; newX < maxX; newX++) {
+                if (plane.isOccupied(newX, y) || plane.isOccupied(newX, maxY)) {
+                    return false;
+                }
+            }
+
+            for (int newY = y; newY < maxY; newY++) {
+                if (plane.isOccupied(x, newY) || plane.isOccupied(maxX, newY)) {
+                    return false;
+                }
+            }
+
+            for (int dx = 1; dx < width*2; dx++) {
+                for (int dy = 1; dy < height*2; dy++) {
+                    if (plane.contains(x + dx, y + dy)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+    }
+
     private class Plane {
         private ArrayList<ArrayList<Integer>> rows;
 

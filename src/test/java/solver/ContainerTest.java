@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by rvolosatovs on 5/15/17.
  */
-public class ContainerTest {
+public abstract class ContainerTest {
     Container newContainer(Collection<? extends IndexedRectangle> rectangles) {
         return  new Container(rectangles);
     }
