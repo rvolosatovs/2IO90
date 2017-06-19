@@ -98,11 +98,6 @@ public abstract class PackerTest {
                 new Dimension(4, 5),
                 new Dimension(2, 10),
                 new Dimension(7, 13),
-                new Dimension(8, 13),
-                new Dimension(11, 12),
-                new Dimension(11, 12),
-                new Dimension(11, 12),
-                new Dimension(13, 12)
         ));
     }
 
@@ -111,14 +106,6 @@ public abstract class PackerTest {
                 new Dimension(5, 5),
                 new Dimension(5, 5),
                 new Dimension(5, 5),
-                new Dimension(5, 5),
-                new Dimension(5, 5),
-                new Dimension(5, 5),
-                new Dimension(5, 5),
-                new Dimension(5, 5),
-                new Dimension(5, 5),
-                new Dimension(5, 5),
-                new Dimension(5, 5)
         ));
     }
 
