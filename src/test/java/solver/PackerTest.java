@@ -86,6 +86,10 @@ public abstract class PackerTest {
         }
     }
 
+    public void testVerySmallInput() {
+        parseAndAssert("03_(.*)");
+    }
+
     public void testSmallInput() {
         parseAndAssert("0(3|5)_(.*)");
     }
