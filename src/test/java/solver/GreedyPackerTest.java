@@ -59,7 +59,7 @@ public class GreedyPackerTest extends PackerTest {
         try {
             Stream<Path> paths = Files.walk(Paths.get("testcases"));
             paths.forEach(path -> {
-                if (Files.isRegularFile(path) && path.toString().toLowerCase().endsWith(".txt") && path.getFileName().toString().matches("25_01_h19_ry")) {
+                if (Files.isRegularFile(path) && path.toString().toLowerCase().endsWith(".txt") && path.getFileName().toString().matches("10000_02_hf_ry.txt")) {
                     System.out.println("Solving " + path.toString());
                     Case c = null;
                     try {
@@ -70,20 +70,9 @@ public class GreedyPackerTest extends PackerTest {
                     }
 
                     Collection<IndexedRectangle> rectangles = null;
-                    /*
-                    try {
-                        rectangles = newPacker().Pack(c);
-                    } catch (InterruptedException e) {
-                        System.out.println("Jump from Greedy to NFDH at: " + (System.currentTimeMillis() - PackingSolver.startTime));
-                        NFDHPacker nfdhPacker = new NFDHPacker();
-                        rectangles = nfdhPacker.Pack(c, e.getContainer(), e.getRectangles());
-                        System.out.println("Finished packing at " + (System.currentTimeMillis() - PackingSolver.startTime));
-                    }
-                    */
                     Solution s = new Solution(c, newPacker());
                     rectangles = s.getRectangles();
                     System.out.println("Finished packing at: "+  (System.currentTimeMillis() - PackingSolver.startTime));
-                    //System.out.println(rectangles);
                     assertTrue(String.format("Input size: %d, got %d", c.getRectangles().size(), rectangles.size()), c.getRectangles().size() == rectangles.size());
                     assertHeightLimitRespected(c, rectangles);
                     assertNoOverlap(rectangles);

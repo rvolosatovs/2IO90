@@ -105,7 +105,7 @@ public class PackingSolver {
             p = new NFDHPacker();
         }  else {
             // default
-            p = new GreedyPacker();
+            p = new MasterPacker();
         }
         
         Solution s = null;
