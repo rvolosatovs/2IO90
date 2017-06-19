@@ -97,7 +97,7 @@ public abstract class PackerTest {
         assertEqualOutputLength(Arrays.asList(
                 new Dimension(4, 5),
                 new Dimension(2, 10),
-                new Dimension(7, 13),
+                new Dimension(7, 13)
         ));
     }
 
@@ -105,7 +105,7 @@ public abstract class PackerTest {
         assertEqualOutputLength(Arrays.asList(
                 new Dimension(5, 5),
                 new Dimension(5, 5),
-                new Dimension(5, 5),
+                new Dimension(5, 5)
         ));
     }
 
