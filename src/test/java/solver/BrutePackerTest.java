@@ -21,12 +21,12 @@ public class BrutePackerTest extends PackerTest {
 
     @Test
     public void testOutputLengthSameSizes() {
-//        super.testOutputLengthSameSizes();
+        super.testOutputLengthSameSizes();
     }
 
     @Test
     public void testOutputLengthRandom() {
-//        super.testOutputLengthRandom();
+        super.testOutputLengthRandom();
     }
 
     @Test
