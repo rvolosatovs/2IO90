@@ -20,4 +20,9 @@ public class StupidPackerTest extends PackerTest {
     public void testSmallInput() {
         super.testSmallInput();
     }
+
+    @Test
+    public void testMediumInput() {
+        super.testMediumInput();
+    }
 }

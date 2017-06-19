@@ -6,7 +6,7 @@ import org.junit.Test;
 public class BrutePackerTest extends PackerTest {
     @Override
     public Packer newPacker() {
-        return new GreedyPacker();
+        return new BrutePacker();
     }
 
     @Test
@@ -15,18 +15,18 @@ public class BrutePackerTest extends PackerTest {
     }
 
     @Test
-    public void testSmallInput() {
-        super.testSmallInput();
+    public void testVerySmallInput() {
+        super.testVerySmallInput();
     }
 
     @Test
     public void testOutputLengthSameSizes() {
-//        super.testOutputLengthSameSizes();
+        super.testOutputLengthSameSizes();
     }
 
     @Test
     public void testOutputLengthRandom() {
-//        super.testOutputLengthRandom();
+        super.testOutputLengthRandom();
     }
 
     @Test

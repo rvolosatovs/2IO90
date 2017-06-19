@@ -15,4 +15,9 @@ public class NFDHPackerTest extends PackerTest {
     public void testHeight() {
         super.testHeight();
     }
+
+    @Test
+    public void testFixedHeightInput() {
+        super.testFixedHeightInput();
+    }
 }

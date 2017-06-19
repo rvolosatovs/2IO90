@@ -60,11 +60,11 @@ public abstract class PackerTest {
         assertNoOverlap(rectangles);
     }
 
-    public void testSmallInput() {
+    public void parseAndAssert(String regex) {
         try {
             Stream<Path> paths = Files.walk(Paths.get("testcases"));
             paths.forEach(path -> {
-                if (Files.isRegularFile(path) && path.toString().toLowerCase().endsWith(".txt") && path.getFileName().toString().matches("0(\\d)_(.*)")) {
+                if (Files.isRegularFile(path) && path.toString().toLowerCase().endsWith(".txt") && path.getFileName().toString().matches(regex)) {
                     System.out.println("Solving " + path.toString());
                     Case c = null;
                     try {
@@ -74,16 +74,36 @@ public abstract class PackerTest {
                         return;
                     }
                     Collection<IndexedRectangle> rectangles = newPacker().Pack(c);
-                    System.out.println(rectangles);
+                    if (c.getRectangles().size() <= 25) {
+                        System.out.println(rectangles);
+                    }
                     assertTrue(String.format("Input size: %d, got %d", c.getRectangles().size(), rectangles.size()), c.getRectangles().size() == rectangles.size());
                     assertHeightLimitRespected(c, rectangles);
-                    assertNoOverlap(rectangles);
+                    if (c.getRectangles().size() <= 25) {
+                        assertNoOverlap(rectangles);
+                    }
                 }
             });
             paths.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void testVerySmallInput() {
+        parseAndAssert("03_(.*)");
+    }
+
+    public void testSmallInput() {
+        parseAndAssert("0(3|5)_(.*)");
+    }
+
+    public void testMediumInput() {
+        parseAndAssert("(10|25)_(.*)");
+    }
+
+    public void testFixedHeightInput() {
+        parseAndAssert("(.*)_(.*)_h(\\d+)_(.*)");
     }
 
     private void assertEqualOutputLength(Collection<? extends Dimension> dimensions) {
@@ -97,25 +117,12 @@ public abstract class PackerTest {
         assertEqualOutputLength(Arrays.asList(
                 new Dimension(4, 5),
                 new Dimension(2, 10),
-                new Dimension(7, 13),
-                new Dimension(8, 13),
-                new Dimension(11, 12),
-                new Dimension(11, 12),
-                new Dimension(11, 12),
-                new Dimension(13, 12)
+                new Dimension(7, 13)
         ));
     }
 
     public void testOutputLengthSameSizes() {
         assertEqualOutputLength(Arrays.asList(
-                new Dimension(5, 5),
-                new Dimension(5, 5),
-                new Dimension(5, 5),
-                new Dimension(5, 5),
-                new Dimension(5, 5),
-                new Dimension(5, 5),
-                new Dimension(5, 5),
-                new Dimension(5, 5),
                 new Dimension(5, 5),
                 new Dimension(5, 5),
                 new Dimension(5, 5)
