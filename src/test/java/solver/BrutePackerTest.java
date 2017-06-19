@@ -6,7 +6,7 @@ import org.junit.Test;
 public class BrutePackerTest extends PackerTest {
     @Override
     public Packer newPacker() {
-        return new GreedyPacker();
+        return new BrutePacker();
     }
 
     @Test
