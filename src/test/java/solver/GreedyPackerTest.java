@@ -53,34 +53,4 @@ public class GreedyPackerTest extends PackerTest {
         super.testOutputLengthEmpty();
     }
 
-    @Test
-    public void testGreedyToNFDH() {
-        PackingSolver.startTime = System.currentTimeMillis();
-        try {
-            Stream<Path> paths = Files.walk(Paths.get("testcases"));
-            paths.forEach(path -> {
-                if (Files.isRegularFile(path) && path.toString().toLowerCase().endsWith(".txt") && path.getFileName().toString().matches("10000_02_hf_ry.txt")) {
-                    System.out.println("Solving " + path.toString());
-                    Case c = null;
-                    try {
-                        c = new Case(new FileInputStream(path.toFile()));
-                    } catch (Exception e) {
-                        System.out.printf("Failed to parse case: %s", e.getMessage());
-                        return;
-                    }
-
-                    Collection<IndexedRectangle> rectangles = null;
-                    Solution s = new Solution(c, newPacker());
-                    rectangles = s.getRectangles();
-                    System.out.println("Finished packing at: "+  (System.currentTimeMillis() - PackingSolver.startTime));
-                    assertTrue(String.format("Input size: %d, got %d", c.getRectangles().size(), rectangles.size()), c.getRectangles().size() == rectangles.size());
-                    assertHeightLimitRespected(c, rectangles);
-                    assertNoOverlap(rectangles);
-                }
-            });
-            paths.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
