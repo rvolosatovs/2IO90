@@ -42,7 +42,7 @@ public class BrutePacker implements Packer {
                 if (c.size() != 0) {
                     points = c.getBoundingLine();
                 } else {
-                    points = new HashSet();
+                    points = new HashSet<>();
                     points.add(new Point(0, 0));
                 }
 
