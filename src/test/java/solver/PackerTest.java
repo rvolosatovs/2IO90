@@ -60,11 +60,11 @@ public abstract class PackerTest {
         assertNoOverlap(rectangles);
     }
 
-    public void testSmallInput() {
+    public void parseAndAssert(String regex) {
         try {
             Stream<Path> paths = Files.walk(Paths.get("testcases"));
             paths.forEach(path -> {
-                if (Files.isRegularFile(path) && path.toString().toLowerCase().endsWith(".txt") && path.getFileName().toString().matches("0(\\d)_(.*)")) {
+                if (Files.isRegularFile(path) && path.toString().toLowerCase().endsWith(".txt") && path.getFileName().toString().matches(regex)) {
                     System.out.println("Solving " + path.toString());
                     Case c = null;
                     try {
@@ -84,6 +84,18 @@ public abstract class PackerTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void testVerySmallInput() {
+        parseAndAssert("03_(.*)");
+    }
+
+    public void testSmallInput() {
+        parseAndAssert("0(3|5)_(.*)");
+    }
+
+    public void testMediumInput() {
+        parseAndAssert("(10|25)_(.*)");
     }
 
     private void assertEqualOutputLength(Collection<? extends Dimension> dimensions) {
