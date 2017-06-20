@@ -1,6 +1,6 @@
 package solver;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.*;
 import java.util.List;
 
@@ -13,7 +13,6 @@ public class BrutePacker implements Packer {
     Container container;
 
     List<IndexedRectangle> rectangles;
-    BoundingLine boundingLine;
 
     boolean rotationsAllowed;
     boolean fixedHeight;
@@ -21,6 +20,7 @@ public class BrutePacker implements Packer {
 
     @Override
     public Container Pack(Case c) {
+        BoundingLine boundingLine;
         if (c.isHeightFixed()) {
             fixedHeight = true;
             maxHeight = c.getHeight();
@@ -33,19 +33,19 @@ public class BrutePacker implements Packer {
         rectangles = c.getRectangles();
         container = new Container(rectangles.size());
 
-        calculateCombination(0, 0, 0);
+        calculateCombination(0, 0, 0, boundingLine);
         return finalContainer;
     }
 
-    void calculateCombination(int index, int containerWidth, int containerHeight) {
+    void calculateCombination(int index, int containerWidth, int containerHeight, BoundingLine boundingLine) {
         if (index == rectangles.size()) {
-            System.out.println(container);
             int area = containerWidth * containerHeight;
             if (area < minArea) {
                 minArea = area;
-                Set<IndexedRectangle> newRectangles = new HashSet<>(container.size());
-                container.forEach((r) -> newRectangles.add((IndexedRectangle) r.clone()));
-                finalContainer = new Container(newRectangles);
+                finalContainer = new Container(rectangles.size());
+                for (IndexedRectangle r : container) {
+                    finalContainer.add(new IndexedRectangle(r));
+                }
             }
         } else {
             int nextIndex = index + 1;
@@ -78,17 +78,17 @@ public class BrutePacker implements Packer {
                         continue;
                     }
                     if (needsSwap) {
-                        rectangles.set(i, rectangles.get(nextIndex));
-                        rectangles.set(nextIndex, r);
+                        rectangles.set(i, rectangles.get(index));
+                        rectangles.set(index, r);
                     }
                     r.setLocation(p);
-                    boundingLine.add(r);
+                    BoundingLine newBoundingLine = new BoundingLine(boundingLine);
+                    newBoundingLine.add(r);
                     container.add(r);
-                    calculateCombination(nextIndex, containerWidth, containerHeight);
-                    boundingLine.remove(r);
+                    calculateCombination(nextIndex, containerWidth, containerHeight, newBoundingLine);
                     container.remove(r);
                     if (needsSwap) {
-                        rectangles.set(nextIndex, rectangles.get(i));
+                        rectangles.set(index, rectangles.get(i));
                         rectangles.set(i, r);
                     }
                 }
@@ -117,17 +117,17 @@ public class BrutePacker implements Packer {
                             continue;
                         }
                         if (needsSwap) {
-                            rectangles.set(i, rectangles.get(nextIndex));
-                            rectangles.set(nextIndex, r);
+                            rectangles.set(i, rectangles.get(index));
+                            rectangles.set(index, r);
                         }
                         r.setLocation(p);
-                        boundingLine.add(r);
+                        BoundingLine newBoundingLine = new BoundingLine(boundingLine);
+                        newBoundingLine.add(r);
                         container.add(r);
-                        calculateCombination(nextIndex, containerWidth, containerHeight);
-                        boundingLine.remove(r);
+                        calculateCombination(nextIndex, containerWidth, containerHeight, newBoundingLine);
                         container.remove(r);
                         if (needsSwap) {
-                            rectangles.set(nextIndex, rectangles.get(i));
+                            rectangles.set(index, rectangles.get(i));
                             rectangles.set(i, r);
                         }
                     }
