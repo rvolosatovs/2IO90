@@ -1,5 +1,7 @@
 package solver;
 
+import sun.awt.X11.InfoWindow;
+
 import java.awt.Dimension;
 import java.util.Objects;
 
@@ -51,5 +53,10 @@ public class IndexedRectangle extends Rectangle {
     @Override
     public String toString() {
         return String.format("i=%d %s", index, super.toString());
+    }
+
+    @Override
+    public Object clone() {
+        return new IndexedRectangle(this);
     }
 }
