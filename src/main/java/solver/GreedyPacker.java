@@ -14,25 +14,25 @@ public class GreedyPacker implements Packer {
 
         BoundingLine boundingLine;
 
-        Container container;
+        Container container = new Container(rectangles.size());
 
         int maxHeight = Integer.MAX_VALUE;
         boolean fixedHeight = c.isHeightFixed();
         if (fixedHeight) {
             maxHeight = c.getHeight();
-            container = new Container.WithPlane(maxHeight);
             boundingLine = new BoundingLine(maxHeight);
         } else {
-            container = new Container.WithPlane();
             boundingLine = new BoundingLine();
         }
+
+        int containerWidth = 0;
+        int containerHeight = 0;
 
         for (int i = 0; i < rectangles.size(); i++) {
             if (System.currentTimeMillis() - PackingSolver.startTime > 270000) {
                 rectangles = rectangles.subList(i, rectangles.size());
                 if (!fixedHeight) {
-                    maxHeight = container.getHeight();
-                    c.setContainerHeight(maxHeight);
+                    c.setContainerHeight(containerHeight);
                 }
 
                 throw new InterruptedException(container, rectangles);
@@ -42,6 +42,9 @@ public class GreedyPacker implements Packer {
 
             int minArea = Integer.MAX_VALUE;
             Point minPoint = null;
+
+            int oldHeight = containerHeight;
+            int oldWidth = containerWidth;
 
             outer:
             for (Point p : boundingLine) {
@@ -59,16 +62,15 @@ public class GreedyPacker implements Packer {
                     }
                 }
 
-                r.setLocation(p);
-                container.add(r);
-                int area = container.getArea();
+                containerHeight = Math.max(oldHeight, height);
+                containerWidth = Math.max(oldWidth, width);
+                int area = containerWidth * containerHeight;
                 if (area <= minArea) {
                     if (area < minArea || p.x < minPoint.x || p.y < minPoint.y) {
                         minPoint = p;
                         minArea = area;
                     }
                 }
-                container.remove(r);
             }
 
             if (c.areRotationsAllowed()) {
@@ -91,9 +93,9 @@ public class GreedyPacker implements Packer {
                         }
                     }
 
-                    r.setLocation(p);
-                    container.add(r);
-                    int area = container.getArea();
+                    containerHeight = Math.max(oldHeight, height);
+                    containerWidth = Math.max(oldWidth, width);
+                    int area = containerWidth * containerHeight;
                     if (area <= minArea) {
                         if (area < minArea || p.x < minPoint.x || p.y < minPoint.y) {
                             needsRotation = true;
@@ -101,7 +103,6 @@ public class GreedyPacker implements Packer {
                             minArea = area;
                         }
                     }
-                    container.remove(r);
                 }
 
                 if (!needsRotation) {
