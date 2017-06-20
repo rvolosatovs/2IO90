@@ -15,6 +15,10 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         this.rectangles = new HashSet<>(rectangles);
     }
 
+    Container(int n) {
+        this.rectangles = new HashSet<>(n);
+    }
+
     Container() {
         this.rectangles = new HashSet<>();
     }
