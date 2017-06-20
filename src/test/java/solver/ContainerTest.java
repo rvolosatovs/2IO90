@@ -15,10 +15,11 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by rvolosatovs on 5/15/17.
  */
-public class ContainerTest {
+public abstract class ContainerTest {
     Container newContainer(Collection<? extends IndexedRectangle> rectangles) {
-        return  new Container(rectangles);
+        return new Container(rectangles);
     }
+
     @Test
     public void testIsBounding() {
         List<IndexedRectangle> rectangles = Arrays.asList(
@@ -110,7 +111,7 @@ public class ContainerTest {
         for (int x = 0; x <= 4; x++) {
             for (int y = 0; y <= 3; y++) {
                 if (x == 1 && y == 1) {
-                    System.out.printf("[WARNING] Error ignored at (%d,%d): got %s, should be %s(1x1 issue)\n", x, y, c.isOccupied(x,y), inside.get(x).contains(y));
+                    System.out.printf("[WARNING] Error ignored at (%d,%d): got %s, should be %s(1x1 issue)\n", x, y, c.isOccupied(x, y), inside.get(x).contains(y));
                     continue;
                 }
                 assertEquals(String.format("c.isOccupied(%d,%d)", x, y), inside.get(x).contains(y), c.isOccupied(x, y));
@@ -121,12 +122,17 @@ public class ContainerTest {
     @Test
     public void testCanPlaceRectangle() {
         List<IndexedRectangle> rectangles = Arrays.asList(
-                new IndexedRectangle(0, 0, 0, 7, 1)
+                new IndexedRectangle(0, 0, 0, 7, 1),
+                new IndexedRectangle(1, 5, 5, 1, 1)
         );
 
         Container c = newContainer(rectangles);
         System.out.println(c);
         assertFalse("c.canPlaceRectangle (0,0,4,8)", c.canPlaceRectangle(0, 0, 4, 8));
+        assertFalse("c.canPlaceRectangle (0,0,1,1)", c.canPlaceRectangle(0, 0, 1, 1));
+        assertTrue("c.canPlaceRectangle (1,1,1,1)", c.canPlaceRectangle(1, 1, 1, 1));
+        assertFalse("c.canPlaceRectangle (5,5, 1,1)", c.canPlaceRectangle(5, 5, 1, 1));
+        assertTrue("c.canPlaceRectangle (20,20,1,1)", c.canPlaceRectangle(20, 20, 1, 1));
     }
 
     @Test

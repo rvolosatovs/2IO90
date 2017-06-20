@@ -15,6 +15,10 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         this.rectangles = new HashSet<>(rectangles);
     }
 
+    Container(int n) {
+        this.rectangles = new HashSet<>(n);
+    }
+
     Container() {
         this.rectangles = new HashSet<>();
     }
@@ -68,19 +72,19 @@ public class Container extends AbstractCollection<IndexedRectangle> {
     }
 
     boolean isOccupied(int x, int y) {
-        if (!contains(x,y)) {
+        if (!contains(x, y)) {
             return false;
         } else if (x == 0 && y == 0) {
             return true;
         } else if (x == 0) {
-            return (contains(x, y+1) && contains(x+1, y+1) &&
-                    contains(x+1,y)&&
-                    contains(x+1, y-1) && contains(x, y-1));
+            return (contains(x, y + 1) && contains(x + 1, y + 1) &&
+                    contains(x + 1, y) &&
+                    contains(x + 1, y - 1) && contains(x, y - 1));
         } else if (y == 0) {
-            return (contains(x-1, y+1) && contains(x, y+1) && contains(x+1, y+1) &&
-                    contains(x-1, y) && contains(x+1, y));
+            return (contains(x - 1, y + 1) && contains(x, y + 1) && contains(x + 1, y + 1) &&
+                    contains(x - 1, y) && contains(x + 1, y));
         }
-        return !hasEmptyNeighbour(x,y) ||(contains(x,y+1) && contains(x+1, y+1) && contains(x+1, y));
+        return !hasEmptyNeighbour(x, y) || (contains(x, y + 1) && contains(x + 1, y + 1) && contains(x + 1, y));
     }
 
     boolean isOccupied(Point p) {
@@ -88,12 +92,12 @@ public class Container extends AbstractCollection<IndexedRectangle> {
     }
 
     boolean isBounding(int x, int y) {
-        if (!contains(x,y)) {
+        if (!contains(x, y)) {
             return false;
         } else if (x == 0 || y == 0) {
-           return true;
+            return true;
         }
-        return hasEmptyNeighbour(x,y);
+        return hasEmptyNeighbour(x, y);
     }
 
     boolean isBounding(Point p) {
@@ -137,7 +141,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
     boolean canPlaceRectangle(Point p, Rectangle r) {
         return canPlaceRectangle(p.x, p.y, r.width, r.height);
     }
-    
+
     int getWidth() {
         int maxWidth = 0;
 
@@ -221,14 +225,14 @@ public class Container extends AbstractCollection<IndexedRectangle> {
     }
 
     public static class WithPlane extends Container {
-        private Plane plane;
+        private IntegerPlane plane;
         private Set<Point> boundingLine;
 
         WithPlane(Case c) {
             if (c.isHeightFixed()) {
-                plane = new Plane(c.getHeight());
+                plane = new IntegerPlane(c.getHeight());
             } else {
-                plane = new Plane();
+                plane = new IntegerPlane();
             }
             boundingLine = new HashSet<>();
         }
@@ -236,10 +240,9 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         WithPlane(Collection<? extends IndexedRectangle> rectangles) {
             super(rectangles);
             boundingLine = new HashSet<>();
-            plane = new Plane();
+            plane = new IntegerPlane();
             this.addAll(rectangles);
         }
-
 
         @Override
         boolean contains(int x, int y) {
@@ -306,12 +309,12 @@ public class Container extends AbstractCollection<IndexedRectangle> {
 
         @Override
         boolean isOccupied(int x, int y) {
-            return plane.isOccupied(x, y) || super.isOccupied(x,y);
+            return plane.isOccupied(x, y) || super.isOccupied(x, y);
         }
 
         @Override
         boolean hasEmptyNeighbour(int x, int y) {
-            return plane.hasEmptyNeighbour(x,y);
+            return plane.hasEmptyNeighbour(x, y);
         }
 
         @Override
@@ -325,135 +328,147 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         }
     }
 
-    private class Plane {
-        private ArrayList<ArrayList<Integer>> rows;
 
-        Plane() {
-            rows = new ArrayList<>();
-        }
+    public static class WithDoublePlane extends Container {
+        private IntegerPlane plane;
+        private Set<Point> boundingLine;
 
-        Plane(int height) {
-            rows = new ArrayList<>(height);
-        }
-
-        public int getHeight() {
-            for (int i = rows.size()-1; i >= 0; i--) {
-                for (int v : rows.get(i)) {
-                    if (v != 1) {
-                        return i;
-                    }
-                }
-            }
-            return 0;
-        }
-
-        int getWidth() {
-            int maxWidth = 0;
-            for (ArrayList<Integer> row : rows) {
-                int width = row.size()-1;
-                if (width <= maxWidth) {
-                    continue;
-                }
-                for (; width != maxWidth; width--) {
-                    if (row.get(width) != 0) {
-                        maxWidth = width;
-                        break;
-                    }
-                }
-            }
-            return maxWidth;
-        }
-
-        private ArrayList<Integer> getRow(int y) {
-            int height = rows.size();
-            if (height > y) {
-                return rows.get(y);
-            }
-
-            ArrayList<Integer> row = new ArrayList<>();
-            rows.ensureCapacity(y);
-            for (int i = height; i < y; i++) {
-                rows.add(new ArrayList<>());
-            }
-            rows.add(row);
-            return row;
-        }
-
-        private int getValue(int x, int y) {
-            ArrayList<Integer> row = getRow(y);
-            if (x < row.size()) {
-                return row.get(x);
-            }
-            return 0;
-        }
-
-        void add(int x, int y) {
-            ArrayList<Integer> row = getRow(y);
-
-            int width = row.size();
-            if (width > x) {
-                row.set(x, row.get(x) + 1);
+        WithDoublePlane(Case c) {
+            if (c.isHeightFixed()) {
+                plane = new IntegerPlane(c.getHeight() * 2);
             } else {
-                row.ensureCapacity(x);
-                for (int i = width; i < x; i++) {
-                    row.add(0);
-                }
-                row.add(1);
+                plane = new IntegerPlane();
             }
+            boundingLine = new HashSet<>();
         }
 
-        void remove(int x, int y) {
-            ArrayList<Integer> row = getRow(y);
-            row.set(x, row.get(x) - 1);
+        WithDoublePlane(Collection<? extends IndexedRectangle> rectangles) {
+            super(rectangles);
+            boundingLine = new HashSet<>();
+            plane = new IntegerPlane();
+            this.addAll(rectangles);
         }
 
+        @Override
+        boolean isBounding(int x, int y) {
+            if (!contains(x, y)) {
+                return false;
+            } else if (x == 0 || y == 0) {
+                return true;
+            }
+            return hasEmptyNeighbour(x, y);
+        }
+
+        @Override
         boolean contains(int x, int y) {
-            return getValue(x, y) > 0;
+            return plane.contains(x * 2, y * 2);
         }
 
-        boolean hasEmptyNeighbour(int x, int y) {
-            for (int dy = -1; dy < 2; dy++) {
-                int newY = y + dy;
-                ArrayList<Integer> row = getRow(newY);
-                for (int dx = -1; dx < 2; dx++) {
-                    int newX = x + dx;
-                    if (newX == x && newY == y) {
-                        continue;
-                    }
-                    if (row.size() <= newX || row.get(newX) == 0) {
-                        return true;
-                    }
+        private void updateBoundingLine(Set<Point> points) {
+            for (Point p : points) {
+                if (isBounding(p)) {
+                    boundingLine.add(p);
+                } else {
+                    boundingLine.remove(p);
                 }
             }
-            return false;
         }
 
+        @Override
+        public boolean add(IndexedRectangle r) {
+            Set<Point> edges = new HashSet<>(2 * r.width + 2 * r.height - 4);
+
+            int maxX = r.x + r.width;
+            int maxY = r.y + r.height;
+            for (int x = r.x * 2; x <= maxX * 2; x++) {
+                edges.add(new Point(x / 2, maxY));
+                edges.add(new Point(x / 2, r.y));
+                for (int y = r.y * 2; y <= maxY * 2; y++) {
+                    plane.add(x, y);
+                    edges.add(new Point(maxX / 2, y / 2));
+                    edges.add(new Point(r.x, y / 2));
+                }
+            }
+            updateBoundingLine(edges);
+            return super.add(r);
+        }
+
+        @Override
+        public boolean remove(IndexedRectangle r) {
+            Set<Point> edges = new HashSet<>(2 * r.width + 2 * r.height - 4);
+
+            int maxX = r.x + r.width;
+            int maxY = r.y + r.height;
+            for (int x = r.x * 2; x <= maxX * 2; x++) {
+                edges.add(new Point(x / 2, maxY / 2));
+                edges.add(new Point(x / 2, r.y));
+                for (int y = r.y * 2; y <= maxY * 2; y++) {
+                    plane.remove(x, y);
+                    edges.add(new Point(maxX / 2, y / 2));
+                    edges.add(new Point(r.x, y / 2));
+                }
+            }
+            updateBoundingLine(edges);
+            return super.remove(r);
+        }
+
+        @Override
+        int getWidth() {
+            return plane.getWidth() / 2;
+        }
+
+        @Override
+        int getHeight() {
+            return plane.getHeight() / 2;
+        }
+
+        @Override
         boolean isOccupied(int x, int y) {
-            int val = getValue(x, y);
-            if (val == 0) return false;
-            if (x == 0 || y == 0) return x == y || val == 2;
-            return val == 4;
+            return plane.isOccupied(x * 2, y * 2);
+        }
+
+        @Override
+        boolean hasEmptyNeighbour(int x, int y) {
+            return plane.hasEmptyNeighbour(x * 2, y * 2);
+        }
+
+        @Override
+        Set<Point> getBoundingLine() {
+            return new HashSet<>(boundingLine);
         }
 
         @Override
         public String toString() {
-            StringBuilder sb = new StringBuilder();
-            for (int y = getHeight(); y >= 0; y--) {
-                sb.append(String.format("%d\t", y));
-                for (int x = 0; x <= getWidth(); x++) {
-                    sb.append(getValue(x, y)).append("  ");
+            return String.format("%s\nPlane:\n%s", super.toString(), plane.toString());
+        }
+
+        @Override
+        boolean canPlaceRectangle(int x, int y, int width, int height) {
+            x = x * 2;
+            y = y * 2;
+            int maxX = x + width * 2;
+            int maxY = y + height * 2;
+
+            for (int newX = x; newX < maxX; newX++) {
+                if (plane.isOccupied(newX, y) || plane.isOccupied(newX, maxY)) {
+                    return false;
                 }
-                sb.append("\n");
             }
-            sb.append("\t");
-            for (int x = 0; x <= getWidth(); x++) {
-                String format = "%d ";
-                if (x < 10) {
-                    format += " ";
+
+            for (int newY = y; newY < maxY; newY++) {
+                if (plane.isOccupied(x, newY) || plane.isOccupied(maxX, newY)) {
+                    return false;
                 }
-                sb.append(String.format(format, x));
             }
-            return sb.toString();
+
+            for (int dx = 1; dx < width * 2; dx++) {
+                for (int dy = 1; dy < height * 2; dy++) {
+                    if (plane.contains(x + dx, y + dy)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
     }
 }

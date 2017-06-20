@@ -27,8 +27,8 @@ public class MasterPackerTest extends PackerTest {
     }
 
     @Test
-    public void testSmallInput() {
-        super.testSmallInput();
+    public void testVerySmallInput() {
+        super.testVerySmallInput();
     }
 
     @Test
@@ -65,7 +65,7 @@ public class MasterPackerTest extends PackerTest {
                     Collection<IndexedRectangle> rectangles = null;
                     Solution s = new Solution(c, newPacker());
                     rectangles = s.getRectangles();
-                    System.out.println("Finished packing at: "+  (System.currentTimeMillis() - PackingSolver.startTime));
+                    System.out.println("Finished packing at: " + (System.currentTimeMillis() - PackingSolver.startTime));
                     assertTrue(String.format("Input size: %d, got %d", c.getRectangles().size(), rectangles.size()), c.getRectangles().size() == rectangles.size());
                     assertHeightLimitRespected(c, rectangles);
                     //assertNoOverlap(rectangles);

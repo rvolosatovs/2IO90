@@ -1,6 +1,7 @@
 package solver; /**
  * Created by berrietrippe on 23/05/2017.
  */
+
 import org.junit.Test;
 
 public class BrutePackerTest extends PackerTest {

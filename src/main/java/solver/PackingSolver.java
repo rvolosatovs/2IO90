@@ -75,11 +75,14 @@ public class PackingSolver {
             specified.add(param);
         });
 
+        boolean debug;
         Logger log = Logger.getGlobal();
         if (params.containsKey("d") || params.containsKey("debug")) {
             log.setLevel(Level.ALL);
+            debug = true;
         } else {
             log.setLevel(Level.OFF);
+            debug = false;
         }
 
         Case c = null;
@@ -105,11 +108,11 @@ public class PackingSolver {
             p = new NFDHPacker();
         } else if (params.containsKey("brute")) {
             p = new BrutePacker();
-        }  else {
+        } else {
             // default
             p = new MasterPacker();
         }
-        
+
         Solution s = null;
         try {
             s = new Solution(c, p);
@@ -121,5 +124,9 @@ public class PackingSolver {
 
         System.out.println(s);
         log.info("Running time: " + (System.currentTimeMillis() - startTime) + "ms");
+
+        if (debug) {
+            System.out.println(s.getRectangles());
+        }
     }
 }
