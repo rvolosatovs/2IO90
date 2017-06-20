@@ -1,89 +1,139 @@
 package solver;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by berrietrippe on 22/05/2017.
  */
 public class BrutePacker implements Packer {
-
     int minArea = Integer.MAX_VALUE; // Global variable keeping track of the most optimal area found yet
     Container finalContainer; // Global variable keeping track of the most optimal solution found yet
+    Container container;
+
+    List<IndexedRectangle> rectangles;
+    BoundingLine boundingLine;
+
+    boolean rotationsAllowed;
+    boolean fixedHeight;
+    int maxHeight;
 
     @Override
     public Container Pack(Case c) {
-        Container container = new Container();
-        int maxHeight;
         if (c.isHeightFixed()) {
+            fixedHeight = true;
             maxHeight = c.getHeight();
+            boundingLine = new BoundingLine(maxHeight);
         } else {
-            maxHeight = 0;
+            fixedHeight = false;
+            boundingLine = new BoundingLine();
         }
-        calculateCombination(container, 0, c.getRectangles(), c.areRotationsAllowed(), c.isHeightFixed(), maxHeight);
+        rotationsAllowed = c.areRotationsAllowed();
+        rectangles = c.getRectangles();
+        container = new Container(rectangles.size());
+
+        calculateCombination(0, 0, 0);
         return finalContainer;
     }
 
-    public void calculateCombination(Container c, int index, List<IndexedRectangle> rectangles, boolean rotationsAllowed, boolean fixedHeight, int maxHeight) {
+    void calculateCombination(int index, int containerWidth, int containerHeight) {
         if (index == rectangles.size()) {
-            if (c.getArea() < minArea && c.size() == rectangles.size()) {
-                minArea = c.getArea();
-                List<IndexedRectangle> newRectangles = new ArrayList<>();
-                rectangles.forEach((r) -> newRectangles.add((IndexedRectangle) r.clone()));
+            System.out.println(container);
+            int area = containerWidth * containerHeight;
+            if (area < minArea) {
+                minArea = area;
+                Set<IndexedRectangle> newRectangles = new HashSet<>(container.size());
+                container.forEach((r) -> newRectangles.add((IndexedRectangle) r.clone()));
                 finalContainer = new Container(newRectangles);
             }
         } else {
-            Set<Point> points;
+            int nextIndex = index + 1;
             for (int i = index; i < rectangles.size(); i++) {
+                boolean needsSwap = i != index && nextIndex != rectangles.size();
 
-                if (c.size() != 0) {
-                    points = c.getBoundingLine();
-                } else {
-                    points = new HashSet<>();
-                    points.add(new Point(0, 0));
-                }
+                int oldHeight = containerHeight;
+                int oldWidth = containerWidth;
 
                 IndexedRectangle r = rectangles.get(i);
-                index++;
-                for (Point p : points) {
-                    if (rotationsAllowed) {
-                        r.rotate();
-                        if (c.canPlaceRectangle(p, r)) {
-                            boolean shouldPlaceRectangle = true;
-                            if (fixedHeight) {
-                                if ((p.y + r.height) > maxHeight) {
-                                    shouldPlaceRectangle = false;
+                outer:
+                for (Point p : new HashSet<>(boundingLine)) {
+                    int height = p.y + r.height;
+                    if (fixedHeight && height > maxHeight) {
+                        continue;
+                    }
+
+                    int width = p.x + r.width;
+                    for (int x = p.x; x < width; x++) {
+                        for (int y = p.y; y < height; y++) {
+                            if (boundingLine.isMasked(x, y)) {
+                                continue outer;
+                            }
+                        }
+                    }
+
+                    containerHeight = Math.max(oldHeight, height);
+                    containerWidth = Math.max(oldWidth, width);
+                    if (containerWidth * containerHeight > minArea) {
+                        continue;
+                    }
+                    if (needsSwap) {
+                        rectangles.set(i, rectangles.get(nextIndex));
+                        rectangles.set(nextIndex, r);
+                    }
+                    r.setLocation(p);
+                    boundingLine.add(r);
+                    container.add(r);
+                    calculateCombination(nextIndex, containerWidth, containerHeight);
+                    boundingLine.remove(r);
+                    container.remove(r);
+                    if (needsSwap) {
+                        rectangles.set(nextIndex, rectangles.get(i));
+                        rectangles.set(i, r);
+                    }
+                }
+
+                if (rotationsAllowed) {
+                    r.rotate();
+                    outer:
+                    for (Point p : new HashSet<>(boundingLine)) {
+                        int height = p.y + r.height;
+                        if (fixedHeight && height > maxHeight) {
+                            continue;
+                        }
+
+                        int width = p.x + r.width;
+                        for (int x = p.x; x < width; x++) {
+                            for (int y = p.y; y < height; y++) {
+                                if (boundingLine.isMasked(x, y)) {
+                                    continue outer;
                                 }
                             }
-                            if (shouldPlaceRectangle) {
-                                r.setLocation(p);
-                                c.add(r);
-                                calculateCombination(c, index, rectangles, rotationsAllowed, fixedHeight, maxHeight); //Recursive call
-                                c.remove(r);
-                            }
                         }
-                        r.rotate();
+
+                        containerHeight = Math.max(oldHeight, height);
+                        containerWidth = Math.max(oldWidth, width);
+                        if (containerWidth * containerHeight > minArea) {
+                            continue;
+                        }
+                        if (needsSwap) {
+                            rectangles.set(i, rectangles.get(nextIndex));
+                            rectangles.set(nextIndex, r);
+                        }
+                        r.setLocation(p);
+                        boundingLine.add(r);
+                        container.add(r);
+                        calculateCombination(nextIndex, containerWidth, containerHeight);
+                        boundingLine.remove(r);
+                        container.remove(r);
+                        if (needsSwap) {
+                            rectangles.set(nextIndex, rectangles.get(i));
+                            rectangles.set(i, r);
+                        }
                     }
-                    if (c.canPlaceRectangle(p, r)) {
-                        boolean shouldPlaceRectangle = true;
-                        if (fixedHeight) {
-                            if ((p.y + r.height) > maxHeight) {
-                                shouldPlaceRectangle = false;
-                            }
-                        }
-                        if (shouldPlaceRectangle) {
-                            r.setLocation(p);
-                            c.add(r);
-                            calculateCombination(c, index, rectangles, rotationsAllowed, fixedHeight, maxHeight); //Recursive call
-                            c.remove(r);
-                        }
-                    }
+                    r.rotate();
                 }
             }
         }
     }
-
 }

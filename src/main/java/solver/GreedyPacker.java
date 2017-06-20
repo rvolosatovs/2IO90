@@ -73,9 +73,6 @@ public class GreedyPacker implements Packer {
                 }
             }
 
-            containerHeight = oldHeight;
-            containerWidth = oldWidth;
-
             if (c.areRotationsAllowed()) {
                 boolean needsRotation = false;
 
