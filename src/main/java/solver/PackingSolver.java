@@ -16,7 +16,7 @@ public class PackingSolver {
         startTime = System.currentTimeMillis();
 
         final Set<String> knownParams = new HashSet<>(Arrays.asList(
-                "debug", "file", "greedy", "stupid", "master", "nfdh"
+                "debug", "file", "greedy", "stupid", "nfdh", "brute", "master"
         ));
         final Map<Character, String> shorthand = new HashMap<>(knownParams.size());
         shorthand.put('d', "debug");
@@ -25,7 +25,7 @@ public class PackingSolver {
         shorthand.put('s', "stupid");
         shorthand.put('n', "nfdh");
         shorthand.put('m', "master");
-
+        shorthand.put('b', "brute");
 
         final Map<String, List<String>> params = new HashMap<>();
 
@@ -103,6 +103,8 @@ public class PackingSolver {
             p = new MasterPacker();
         } else if (params.containsKey("nfdh")) {
             p = new NFDHPacker();
+        } else if (params.containsKey("brute")) {
+            p = new BrutePacker();
         }  else {
             // default
             p = new MasterPacker();
