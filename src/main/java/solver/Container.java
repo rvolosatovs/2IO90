@@ -225,13 +225,14 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         private IntegerPlane plane;
         private Set<Point> boundingLine;
 
-        WithPlane(Case c) {
-            if (c.isHeightFixed()) {
-                plane = new IntegerPlane(c.getHeight());
-            } else {
-                plane = new IntegerPlane();
-            }
+        WithPlane() {
+            plane = new IntegerPlane();
             boundingLine = new HashSet<>();
+        }
+
+        WithPlane(int height) {
+            plane = new IntegerPlane(height);
+            boundingLine = new HashSet<>(height*height);
         }
 
         WithPlane(Collection<? extends IndexedRectangle> rectangles) {
