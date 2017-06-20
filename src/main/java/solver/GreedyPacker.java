@@ -33,9 +33,20 @@ public class GreedyPacker implements Packer {
             int minArea = Integer.MAX_VALUE;
             Point minPoint = null;
 
+            outer:
             for (Point p : boundingLine) {
-                if ((fixedHeight && (p.y + r.height) > maxHeight) || !container.canPlaceRectangle(p,r)) {
+                int height = p.y + r.height;
+                if (fixedHeight && height > maxHeight) {
                     continue;
+                }
+
+                int width = p.x+r.width;
+                for (int x = p.x; x < width; x++) {
+                    for (int y = p.y; y < height; y++) {
+                        if (boundingLine.isMasked(x, y)) {
+                            continue outer;
+                        }
+                    }
                 }
 
                 r.setLocation(p);
@@ -54,9 +65,20 @@ public class GreedyPacker implements Packer {
                 boolean needsRotation = false;
 
                 r.rotate();
+                outer:
                 for (Point p : boundingLine) {
-                    if ((fixedHeight && (p.y + r.height) > maxHeight) || !container.canPlaceRectangle(p,r)) {
+                    int height = p.y + r.height;
+                    if (fixedHeight && height > maxHeight) {
                         continue;
+                    }
+
+                    int width = p.x+r.width;
+                    for (int x = p.x; x < width; x++) {
+                        for (int y = p.y; y < height; y++) {
+                            if (boundingLine.isMasked(x, y)) {
+                                continue outer;
+                            }
+                        }
                     }
 
                     r.setLocation(p);

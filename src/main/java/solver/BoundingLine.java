@@ -37,10 +37,17 @@ public class BoundingLine extends AbstractCollection<Point>{
         bound.remove(p);
     }
 
-    private boolean isMasked(Point p) {
+    boolean isMasked(Point p) {
         return masked.contains(p);
     }
 
+    boolean isMasked(int x, int y) {
+        return masked.contains(new Point(x,y));
+    }
+
+    boolean isBounding(Point p) {
+        return bound.contains(p);
+    }
 
     @Override
     public boolean add(Point p) {

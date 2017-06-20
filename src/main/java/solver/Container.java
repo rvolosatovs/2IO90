@@ -9,6 +9,9 @@ import java.util.*;
  * Created by rvolosatovs on 5/2/17.
  */
 public class Container extends AbstractCollection<IndexedRectangle> {
+    int height = 0;
+    int width = 0;
+
     private Set<IndexedRectangle> rectangles;
 
     Container(Collection<? extends IndexedRectangle> rectangles) {
@@ -25,10 +28,14 @@ public class Container extends AbstractCollection<IndexedRectangle> {
 
     @Override
     public boolean add(IndexedRectangle r) {
+        if (this.width != 0) this.width = Math.max(this.width, r.x + r.width);
+        if (this.height != 0) this.height = Math.max(this.height, r.y + r.height);
         return rectangles.add(r);
     }
 
     public boolean remove(IndexedRectangle r) {
+        if (this.width == r.x+r.width) this.width = 0;
+        if (this.height == r.y+r.height) this.height = 0;
         return rectangles.remove(r);
     }
 
@@ -140,6 +147,10 @@ public class Container extends AbstractCollection<IndexedRectangle> {
 
 
     int getWidth() {
+        if (this.width != 0) {
+            return this.width;
+        }
+
         int maxWidth = 0;
 
         for (Rectangle r : this) {
@@ -152,6 +163,10 @@ public class Container extends AbstractCollection<IndexedRectangle> {
     }
 
     int getHeight() {
+        if (this.height != 0) {
+            return this.height;
+        }
+
         int maxHeight = 0;
 
         for (Rectangle r : this) {
