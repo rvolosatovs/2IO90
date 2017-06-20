@@ -1,9 +1,7 @@
 package solver;
 
 import java.awt.Point;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by s154563 on 8-5-2017.
@@ -16,65 +14,27 @@ public class GreedyPacker implements Packer {
 
         BoundingLine boundingLine;
 
+        Container container;
+
         int maxHeight = Integer.MAX_VALUE;
         boolean fixedHeight = c.isHeightFixed();
         if (fixedHeight) {
             maxHeight = c.getHeight();
+            //container = new Container.WithPlane(maxHeight);
+            container = new Container();
             boundingLine = new BoundingLine(maxHeight);
         } else {
+            //container = new Container.WithPlane();
+            container = new Container();
             boundingLine = new BoundingLine();
         }
 
-        Rectangle lastRectangle = null;
-
-        Set<Point> additionalPoints = new HashSet<>();
-
-        Container container = new Container();
         for (IndexedRectangle r : rectangles) {
-            //int maxY = lastRectangle.y + lastRectangle.height;
-            //for (int x = lastRectangle.x; x >= 0; x--) {
-            //    Point p = new Point(x,maxY);
-            //    if (boundingLine.contains(p) || container.isOccupied(p)) {
-            //        break;
-            //    }
-            //    boundingLine.add(p);
-            //}
-            //int maxX = lastRectangle.x + lastRectangle.width;
-            //for (int y = lastRectangle.y; y >= 0; y--) {
-            //    Point p = new Point(maxX,y);
-            //    if (boundingLine.contains(p) || container.isOccupied(p)) {
-            //        break;
-            //    }
-            //    boundingLine.add(p);
-            //}
-
-            System.out.println(boundingLine);
-
             int minArea = Integer.MAX_VALUE;
             Point minPoint = null;
-            boolean needsRotation = false;
 
-            Set<Point> fittingPointsRotated = null;
-            if (c.areRotationsAllowed()) {
-                fittingPointsRotated = new HashSet<>(boundingLine.size());
-                r.rotate();
-                for (Point p : boundingLine) {
-                    if (container.canPlaceRectangle(p, r)) {
-                        fittingPointsRotated.add(p);
-                    }
-                }
-                r.rotate();
-            }
-
-            Set<Point> fittingPoints = new HashSet<>(boundingLine.size());
             for (Point p : boundingLine) {
-                if (container.canPlaceRectangle(p, r)) {
-                    fittingPoints.add(p);
-                }
-            }
-
-            for (Point p : fittingPoints) {
-                if (fixedHeight && (p.y + r.height) > maxHeight) {
+                if ((fixedHeight && (p.y + r.height) > maxHeight) || !container.canPlaceRectangle(p,r)) {
                     continue;
                 }
 
@@ -91,9 +51,11 @@ public class GreedyPacker implements Packer {
             }
 
             if (c.areRotationsAllowed()) {
+                boolean needsRotation = false;
+
                 r.rotate();
-                for (Point p : fittingPointsRotated) {
-                    if (fixedHeight && (p.y + r.height) > maxHeight) {
+                for (Point p : boundingLine) {
+                    if ((fixedHeight && (p.y + r.height) > maxHeight) || !container.canPlaceRectangle(p,r)) {
                         continue;
                     }
 
