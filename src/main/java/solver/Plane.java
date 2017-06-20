@@ -19,7 +19,7 @@ class Plane<T> {
     int getHeight() {
         for (int i = rows.size()-1; i >= 0; i--) {
             for (T v : rows.get(i)) {
-                if (v != null) {
+                if (!isZero(v)) {
                     return i;
                 }
             }
@@ -35,7 +35,7 @@ class Plane<T> {
                 continue;
             }
             for (; width != maxWidth; width--) {
-                if (row.get(width) != null) {
+                if (!isZero(row.get(width))) {
                     maxWidth = width;
                     break;
                 }
@@ -87,8 +87,12 @@ class Plane<T> {
         row.set(x, null);
     }
 
+    boolean isZero(T val) {
+        return val == null;
+    }
+
     boolean contains(int x, int y) {
-        return getValue(x, y) != null;
+        return !isZero(getValue(x, y));
     }
 
     boolean hasEmptyNeighbour(int x, int y) {

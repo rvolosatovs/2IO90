@@ -14,22 +14,21 @@ class IntegerPlane extends Plane<Integer> {
         super(height);
     }
 
+    @Override
+    boolean isZero(Integer val) {
+        return super.isZero(val) || val == 0;
+    }
+
     void add(int x, int y) {
         ArrayList<Integer> row = getRow(y);
 
         int width = row.size();
         if (width > x) {
-            Integer val = row.get(x);
-            if (val  == null) {
-                val = 1;
-            } else {
-                val++;
-            }
-            row.set(x, val);
+            row.set(x, row.get(x)+1);
         } else {
             row.ensureCapacity(x);
             for (int i = width; i < x; i++) {
-                row.add(null);
+                row.add(0);
             }
             row.add(1);
         }
@@ -42,7 +41,7 @@ class IntegerPlane extends Plane<Integer> {
 
     boolean isOccupied(int x, int y) {
         Integer val = getValue(x, y);
-        if (val == null || val == 0) return false;
+        if (isZero(val)) return false;
         if (x == 0 || y == 0) return x == y || val == 2;
         return val == 4;
     }
