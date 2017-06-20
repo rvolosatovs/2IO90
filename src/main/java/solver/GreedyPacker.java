@@ -2,13 +2,16 @@ package solver;
 
 import java.awt.Point;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.RecursiveAction;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by s154563 on 8-5-2017.
  */
 public class GreedyPacker implements Packer {
-    @Override
-    public Container Pack(Case c) {
+
+    public Container Pack(Case c) throws InterruptedException {
         List<IndexedRectangle> rectangles = c.getRectangles();
         Util.sortByArea(rectangles);
 
@@ -29,7 +32,19 @@ public class GreedyPacker implements Packer {
             boundingLine = new BoundingLine();
         }
 
-        for (IndexedRectangle r : rectangles) {
+        for (int i = 0; i < rectangles.size(); i++) {
+            if (System.currentTimeMillis() - PackingSolver.startTime > 270000) {
+                rectangles = rectangles.subList(i, rectangles.size());
+                if (!fixedHeight) {
+                    maxHeight = container.getHeight();
+                    c.setContainerHeight(maxHeight);
+                }
+
+                throw new InterruptedException(container, rectangles);
+            }
+
+            IndexedRectangle r = rectangles.get(i);
+
             int minArea = Integer.MAX_VALUE;
             Point minPoint = null;
 
@@ -85,3 +100,4 @@ public class GreedyPacker implements Packer {
         return container;
     }
 }
+

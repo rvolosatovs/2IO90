@@ -2,12 +2,23 @@ package solver;
 
 import org.junit.Test;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.stream.Stream;
+
+import static org.junit.Assert.assertTrue;
+
 /**
  * Created by berrietrippe on 04/05/2017.
  */
 public class GreedyPackerTest extends PackerTest {
     @Override
     public Packer newPacker() {
+        PackingSolver.startTime = System.currentTimeMillis();
         return new GreedyPacker();
     }
 
@@ -40,4 +51,5 @@ public class GreedyPackerTest extends PackerTest {
     public void testOutputLengthEmpty() {
         super.testOutputLengthEmpty();
     }
+
 }
