@@ -50,7 +50,7 @@ public class GreedyPacker implements Packer {
                     continue;
                 }
 
-                int width = p.x+r.width;
+                int width = p.x + r.width;
                 for (int x = p.x; x < width; x++) {
                     for (int y = p.y; y < height; y++) {
                         if (boundingLine.isMasked(x, y)) {
@@ -82,7 +82,7 @@ public class GreedyPacker implements Packer {
                         continue;
                     }
 
-                    int width = p.x+r.width;
+                    int width = p.x + r.width;
                     for (int x = p.x; x < width; x++) {
                         for (int y = p.y; y < height; y++) {
                             if (boundingLine.isMasked(x, y)) {

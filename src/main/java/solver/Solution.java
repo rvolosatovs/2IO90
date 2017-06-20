@@ -1,5 +1,6 @@
 package solver;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -39,8 +40,10 @@ public class Solution {
                 .append("rotations allowed: ").append(spec.areRotationsAllowed() ? "yes" : "no").append("\n")
                 .append("number of rectangles: ").append(rectangles.size());
 
-        rectangles.forEach(r -> sb.append("\n")
-                .append(r.width).append(" ").append(r.height));
+        for (Dimension d : spec.dimensions) {
+            sb.append("\n")
+                    .append(d.width).append(" ").append(d.height);
+        }
 
         sb.append("\n")
                 .append("placement of rectangles");

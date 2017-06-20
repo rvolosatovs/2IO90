@@ -10,8 +10,8 @@ import java.util.Scanner;
  * Created by rvolosatovs on 5/1/17.
  */
 public class Case {
+    final Dimension[] dimensions;
     private final boolean rotationsAllowed;
-    private final Dimension[] dimensions;
     private int containerHeight;
 
     public Case(final boolean rotationsAllowed, final Dimension[] dimensions) {
@@ -63,7 +63,7 @@ public class Case {
         return containerHeight;
     }
 
-    public int getSize(){
+    public int getSize() {
         return dimensions.length;
     }
 

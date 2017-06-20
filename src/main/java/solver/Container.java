@@ -9,9 +9,6 @@ import java.util.*;
  * Created by rvolosatovs on 5/2/17.
  */
 public class Container extends AbstractCollection<IndexedRectangle> {
-    int height = 0;
-    int width = 0;
-
     private Set<IndexedRectangle> rectangles;
 
     Container(Collection<? extends IndexedRectangle> rectangles) {
@@ -28,14 +25,12 @@ public class Container extends AbstractCollection<IndexedRectangle> {
 
     @Override
     public boolean add(IndexedRectangle r) {
-        if (this.width != 0) this.width = Math.max(this.width, r.x + r.width);
-        if (this.height != 0) this.height = Math.max(this.height, r.y + r.height);
         return rectangles.add(r);
     }
 
     public boolean remove(IndexedRectangle r) {
-        if (this.width == r.x+r.width) this.width = 0;
-        if (this.height == r.y+r.height) this.height = 0;
+        if (this.width == r.x + r.width) this.width = 0;
+        if (this.height == r.y + r.height) this.height = 0;
         return rectangles.remove(r);
     }
 
@@ -75,19 +70,19 @@ public class Container extends AbstractCollection<IndexedRectangle> {
     }
 
     boolean isOccupied(int x, int y) {
-        if (!contains(x,y)) {
+        if (!contains(x, y)) {
             return false;
         } else if (x == 0 && y == 0) {
             return true;
         } else if (x == 0) {
-            return (contains(x, y+1) && contains(x+1, y+1) &&
-                    contains(x+1,y)&&
-                    contains(x+1, y-1) && contains(x, y-1));
+            return (contains(x, y + 1) && contains(x + 1, y + 1) &&
+                    contains(x + 1, y) &&
+                    contains(x + 1, y - 1) && contains(x, y - 1));
         } else if (y == 0) {
-            return (contains(x-1, y+1) && contains(x, y+1) && contains(x+1, y+1) &&
-                    contains(x-1, y) && contains(x+1, y));
+            return (contains(x - 1, y + 1) && contains(x, y + 1) && contains(x + 1, y + 1) &&
+                    contains(x - 1, y) && contains(x + 1, y));
         }
-        return !hasEmptyNeighbour(x,y);
+        return !hasEmptyNeighbour(x, y);
     }
 
     boolean isOccupied(Point p) {
@@ -95,12 +90,12 @@ public class Container extends AbstractCollection<IndexedRectangle> {
     }
 
     boolean isBounding(int x, int y) {
-        if (!contains(x,y)) {
+        if (!contains(x, y)) {
             return false;
         } else if (x == 0 || y == 0) {
-           return true;
+            return true;
         }
-        return hasEmptyNeighbour(x,y);
+        return hasEmptyNeighbour(x, y);
     }
 
     boolean isBounding(Point p) {
@@ -144,7 +139,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
     boolean canPlaceRectangle(Point p, Rectangle r) {
         return canPlaceRectangle(p.x, p.y, r.width, r.height);
     }
-    
+
     int getWidth() {
         if (this.width != 0) {
             return this.width;
@@ -162,10 +157,6 @@ public class Container extends AbstractCollection<IndexedRectangle> {
     }
 
     int getHeight() {
-        if (this.height != 0) {
-            return this.height;
-        }
-
         int maxHeight = 0;
 
         for (Rectangle r : this) {
@@ -239,6 +230,9 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         private IntegerPlane plane;
         private Set<Point> boundingLine;
 
+        int height = 0;
+        int width = 0;
+
         WithPlane() {
             plane = new IntegerPlane();
             boundingLine = new HashSet<>();
@@ -246,7 +240,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
 
         WithPlane(int height) {
             plane = new IntegerPlane(height);
-            boundingLine = new HashSet<>(height*height);
+            boundingLine = new HashSet<>(height * height);
         }
 
         WithPlane(Collection<? extends IndexedRectangle> rectangles) {
@@ -311,22 +305,28 @@ public class Container extends AbstractCollection<IndexedRectangle> {
 
         @Override
         int getWidth() {
+            if (this.width != 0) {
+                return this.width;
+            }
             return plane.getWidth();
         }
 
         @Override
         int getHeight() {
+            if (this.height != 0) {
+                return this.height;
+            }
             return plane.getHeight();
         }
 
         @Override
         boolean isOccupied(int x, int y) {
-            return plane.isOccupied(x, y) || super.isOccupied(x,y);
+            return plane.isOccupied(x, y) || super.isOccupied(x, y);
         }
 
         @Override
         boolean hasEmptyNeighbour(int x, int y) {
-            return plane.hasEmptyNeighbour(x,y);
+            return plane.hasEmptyNeighbour(x, y);
         }
 
         @Override
@@ -347,7 +347,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
 
         WithDoublePlane(Case c) {
             if (c.isHeightFixed()) {
-                plane = new IntegerPlane(c.getHeight()*2);
+                plane = new IntegerPlane(c.getHeight() * 2);
             } else {
                 plane = new IntegerPlane();
             }
@@ -363,17 +363,17 @@ public class Container extends AbstractCollection<IndexedRectangle> {
 
         @Override
         boolean isBounding(int x, int y) {
-            if (!contains(x,y)){
+            if (!contains(x, y)) {
                 return false;
             } else if (x == 0 || y == 0) {
                 return true;
             }
-            return hasEmptyNeighbour(x,y);
+            return hasEmptyNeighbour(x, y);
         }
 
         @Override
         boolean contains(int x, int y) {
-            return plane.contains(x*2, y*2);
+            return plane.contains(x * 2, y * 2);
         }
 
         private void updateBoundingLine(Set<Point> points) {
@@ -392,13 +392,13 @@ public class Container extends AbstractCollection<IndexedRectangle> {
 
             int maxX = r.x + r.width;
             int maxY = r.y + r.height;
-            for (int x = r.x*2; x <= maxX*2; x++) {
-                edges.add(new Point(x/2, maxY));
-                edges.add(new Point(x/2, r.y));
-                for (int y = r.y*2; y <= maxY*2; y++) {
+            for (int x = r.x * 2; x <= maxX * 2; x++) {
+                edges.add(new Point(x / 2, maxY));
+                edges.add(new Point(x / 2, r.y));
+                for (int y = r.y * 2; y <= maxY * 2; y++) {
                     plane.add(x, y);
-                    edges.add(new Point(maxX/2, y/2));
-                    edges.add(new Point(r.x, y/2));
+                    edges.add(new Point(maxX / 2, y / 2));
+                    edges.add(new Point(r.x, y / 2));
                 }
             }
             updateBoundingLine(edges);
@@ -411,13 +411,13 @@ public class Container extends AbstractCollection<IndexedRectangle> {
 
             int maxX = r.x + r.width;
             int maxY = r.y + r.height;
-            for (int x = r.x*2; x <= maxX*2; x++) {
-                edges.add(new Point(x/2, maxY/2));
-                edges.add(new Point(x/2, r.y));
-                for (int y = r.y*2; y <= maxY*2; y++) {
+            for (int x = r.x * 2; x <= maxX * 2; x++) {
+                edges.add(new Point(x / 2, maxY / 2));
+                edges.add(new Point(x / 2, r.y));
+                for (int y = r.y * 2; y <= maxY * 2; y++) {
                     plane.remove(x, y);
-                    edges.add(new Point(maxX/2, y/2));
-                    edges.add(new Point(r.x, y/2));
+                    edges.add(new Point(maxX / 2, y / 2));
+                    edges.add(new Point(r.x, y / 2));
                 }
             }
             updateBoundingLine(edges);
@@ -426,22 +426,22 @@ public class Container extends AbstractCollection<IndexedRectangle> {
 
         @Override
         int getWidth() {
-            return plane.getWidth()/2;
+            return plane.getWidth() / 2;
         }
 
         @Override
         int getHeight() {
-            return plane.getHeight()/2;
+            return plane.getHeight() / 2;
         }
 
         @Override
         boolean isOccupied(int x, int y) {
-            return plane.isOccupied(x*2, y*2);
+            return plane.isOccupied(x * 2, y * 2);
         }
 
         @Override
         boolean hasEmptyNeighbour(int x, int y) {
-            return plane.hasEmptyNeighbour(x*2,y*2);
+            return plane.hasEmptyNeighbour(x * 2, y * 2);
         }
 
         @Override
@@ -458,8 +458,8 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         boolean canPlaceRectangle(int x, int y, int width, int height) {
             x = x * 2;
             y = y * 2;
-            int maxX = x + width*2;
-            int maxY = y + height*2;
+            int maxX = x + width * 2;
+            int maxY = y + height * 2;
 
             for (int newX = x; newX < maxX; newX++) {
                 if (plane.isOccupied(newX, y) || plane.isOccupied(newX, maxY)) {
@@ -473,8 +473,8 @@ public class Container extends AbstractCollection<IndexedRectangle> {
                 }
             }
 
-            for (int dx = 1; dx < width*2; dx++) {
-                for (int dy = 1; dy < height*2; dy++) {
+            for (int dx = 1; dx < width * 2; dx++) {
+                for (int dy = 1; dy < height * 2; dy++) {
                     if (plane.contains(x + dx, y + dy)) {
                         return false;
                     }

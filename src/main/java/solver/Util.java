@@ -51,10 +51,10 @@ public class Util {
             int width1 = d1.width;
             int width2 = d2.width;
 
-            if (width1 < width2){
+            if (width1 < width2) {
                 return 1;
             }
-            if (width1 > width2){
+            if (width1 > width2) {
                 return -1;
             }
             return 0;
@@ -62,10 +62,10 @@ public class Util {
     }
 
     public static void sortByLongestWidth(List<? extends Rectangle> rectangles, int height) {
-        rectangles.forEach((r)->{
-            if(r.height > height){
+        rectangles.forEach((r) -> {
+            if (r.height > height) {
                 r.rotate();
-            } else if (r.width < height && r.height > r.width){
+            } else if (r.width < height && r.height > r.width) {
                 r.rotate();
             }
         });

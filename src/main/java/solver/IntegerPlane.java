@@ -24,7 +24,7 @@ class IntegerPlane extends Plane<Integer> {
 
         int width = row.size();
         if (width > x) {
-            row.set(x, row.get(x)+1);
+            row.set(x, row.get(x) + 1);
         } else {
             row.ensureCapacity(x);
             for (int i = width; i < x; i++) {

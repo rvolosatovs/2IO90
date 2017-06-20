@@ -17,7 +17,7 @@ class Plane<T> {
     }
 
     int getHeight() {
-        for (int i = rows.size()-1; i >= 0; i--) {
+        for (int i = rows.size() - 1; i >= 0; i--) {
             for (T v : rows.get(i)) {
                 if (!isZero(v)) {
                     return i;
@@ -30,7 +30,7 @@ class Plane<T> {
     int getWidth() {
         int maxWidth = 0;
         for (ArrayList<T> row : rows) {
-            int width = row.size()-1;
+            int width = row.size() - 1;
             if (width <= maxWidth) {
                 continue;
             }

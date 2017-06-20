@@ -108,11 +108,11 @@ public class PackingSolver {
             p = new NFDHPacker();
         } else if (params.containsKey("brute")) {
             p = new BrutePacker();
-        }  else {
+        } else {
             // default
             p = new MasterPacker();
         }
-        
+
         Solution s = null;
         try {
             s = new Solution(c, p);

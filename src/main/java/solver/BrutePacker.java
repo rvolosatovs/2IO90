@@ -18,12 +18,12 @@ public class BrutePacker implements Packer {
     public Container Pack(Case c) {
         Container container = new Container();
         int maxHeight;
-        if (c.isHeightFixed()){
+        if (c.isHeightFixed()) {
             maxHeight = c.getHeight();
         } else {
             maxHeight = 0;
         }
-        calculateCombination(container, 0, c.getRectangles(), c.areRotationsAllowed(),c.isHeightFixed(),maxHeight);
+        calculateCombination(container, 0, c.getRectangles(), c.areRotationsAllowed(), c.isHeightFixed(), maxHeight);
         return finalContainer;
     }
 
@@ -32,7 +32,7 @@ public class BrutePacker implements Packer {
             if (c.getArea() < minArea && c.size() == rectangles.size()) {
                 minArea = c.getArea();
                 List<IndexedRectangle> newRectangles = new ArrayList<>();
-                rectangles.forEach((r) -> newRectangles.add((IndexedRectangle)r.clone()));
+                rectangles.forEach((r) -> newRectangles.add((IndexedRectangle) r.clone()));
                 finalContainer = new Container(newRectangles);
             }
         } else {
@@ -49,12 +49,12 @@ public class BrutePacker implements Packer {
                 IndexedRectangle r = rectangles.get(i);
                 index++;
                 for (Point p : points) {
-                    if (rotationsAllowed){
+                    if (rotationsAllowed) {
                         r.rotate();
                         if (c.canPlaceRectangle(p, r)) {
                             boolean shouldPlaceRectangle = true;
                             if (fixedHeight) {
-                                if ((p.y + r.height) > maxHeight){
+                                if ((p.y + r.height) > maxHeight) {
                                     shouldPlaceRectangle = false;
                                 }
                             }
@@ -70,7 +70,7 @@ public class BrutePacker implements Packer {
                     if (c.canPlaceRectangle(p, r)) {
                         boolean shouldPlaceRectangle = true;
                         if (fixedHeight) {
-                            if ((p.y + r.height) > maxHeight){
+                            if ((p.y + r.height) > maxHeight) {
                                 shouldPlaceRectangle = false;
                             }
                         }
