@@ -18,68 +18,101 @@ public class BrutePacker implements Packer {
     public Container Pack(Case c) {
         Container container = new Container();
         int maxHeight;
+
+        BoundingLine boundingLine;
+
         if (c.isHeightFixed()) {
             maxHeight = c.getHeight();
+            boundingLine = new BoundingLine(maxHeight);
         } else {
             maxHeight = 0;
+            boundingLine = new BoundingLine();
         }
-        calculateCombination(container, 0, c.getRectangles(), c.areRotationsAllowed(), c.isHeightFixed(), maxHeight);
+
+        int containerWidth = 0;
+        int containerHeight = 0;
+
+        calculateCombination(container, 0, c.getRectangles(),boundingLine, c.areRotationsAllowed(), c.isHeightFixed(), maxHeight, containerWidth, containerHeight);
         return finalContainer;
     }
 
-    public void calculateCombination(Container c, int index, List<IndexedRectangle> rectangles, boolean rotationsAllowed, boolean fixedHeight, int maxHeight) {
+    public void calculateCombination(Container c, int index, List<IndexedRectangle> rectangles, BoundingLine boundingLine, boolean rotationsAllowed, boolean fixedHeight, int maxHeight, int containerWidth, int containerHeight) {
         if (index == rectangles.size()) {
-            if (c.getArea() < minArea && c.size() == rectangles.size()) {
-                minArea = c.getArea();
-                List<IndexedRectangle> newRectangles = new ArrayList<>();
-                rectangles.forEach((r) -> newRectangles.add((IndexedRectangle) r.clone()));
-                finalContainer = new Container(newRectangles);
+            int area = containerWidth * containerHeight;
+            if (area <= minArea) {
+                if (area < minArea) {
+                    minArea = c.getArea();
+                    List<IndexedRectangle> newRectangles = new ArrayList<>();
+                    rectangles.forEach((r) -> newRectangles.add((IndexedRectangle) r.clone()));
+                    finalContainer = new Container(newRectangles);
+                }
             }
         } else {
-            Set<Point> points;
             for (int i = index; i < rectangles.size(); i++) {
 
-                if (c.size() != 0) {
-                    points = c.getBoundingLine();
-                } else {
-                    points = new HashSet<>();
-                    points.add(new Point(0, 0));
-                }
+                int oldHeight = containerHeight;
+                int oldWidth = containerWidth;
 
                 IndexedRectangle r = rectangles.get(i);
                 index++;
+                Set<Point> points = new HashSet<>(boundingLine);
+
                 for (Point p : points) {
+                    boolean shouldPlaceRectangle = true;
                     if (rotationsAllowed) {
                         r.rotate();
-                        if (c.canPlaceRectangle(p, r)) {
-                            boolean shouldPlaceRectangle = true;
-                            if (fixedHeight) {
-                                if ((p.y + r.height) > maxHeight) {
+                        int height = p.y + r.height;
+                        if (fixedHeight && (height > maxHeight)) {
+                            shouldPlaceRectangle = false;
+                        }
+
+                        int width = p.x + r.width;
+                        for (int x = p.x; x < width; x++) {
+                            for (int y = p.y; y < height; y++) {
+                                if (boundingLine.isMasked(x, y)) {
                                     shouldPlaceRectangle = false;
                                 }
-                            }
-                            if (shouldPlaceRectangle) {
-                                r.setLocation(p);
-                                c.add(r);
-                                calculateCombination(c, index, rectangles, rotationsAllowed, fixedHeight, maxHeight); //Recursive call
-                                c.remove(r);
-                            }
-                        }
-                        r.rotate();
-                    }
-                    if (c.canPlaceRectangle(p, r)) {
-                        boolean shouldPlaceRectangle = true;
-                        if (fixedHeight) {
-                            if ((p.y + r.height) > maxHeight) {
-                                shouldPlaceRectangle = false;
                             }
                         }
                         if (shouldPlaceRectangle) {
                             r.setLocation(p);
                             c.add(r);
-                            calculateCombination(c, index, rectangles, rotationsAllowed, fixedHeight, maxHeight); //Recursive call
+                            boundingLine.add(r);
+                            containerHeight = Math.max(oldHeight, r.y+r.height);
+                            containerWidth = Math.max(oldWidth, r.x+r.width);
+                            calculateCombination(c, index, rectangles, boundingLine, rotationsAllowed, fixedHeight, maxHeight, containerWidth, containerHeight); //Recursive call
+                            containerHeight = oldHeight;
+                            containerWidth = oldWidth;
+                            boundingLine.remove(r);
                             c.remove(r);
                         }
+                        r.rotate();
+                    }
+                    shouldPlaceRectangle = true;
+                    int height = p.y + r.height;
+                    if (fixedHeight && (height > maxHeight)) {
+                        shouldPlaceRectangle = false;
+                    }
+
+                    int width = p.x + r.width;
+                    for (int x = p.x; x < width; x++) {
+                        for (int y = p.y; y < height; y++) {
+                            if (boundingLine.isMasked(x, y)) {
+                                shouldPlaceRectangle = false;
+                            }
+                        }
+                    }
+                    if (shouldPlaceRectangle) {
+                        r.setLocation(p);
+                        c.add(r);
+                        boundingLine.add(r);
+                        containerHeight = Math.max(oldHeight, r.y + r.height);
+                        containerWidth = Math.max(oldWidth, r.x + r.width);
+                        calculateCombination(c, index, rectangles, boundingLine, rotationsAllowed, fixedHeight, maxHeight, containerWidth, containerHeight); //Recursive call
+                        containerHeight = oldHeight;
+                        containerWidth = oldWidth;
+                        boundingLine.remove(r);
+                        c.remove(r);
                     }
                 }
             }
