@@ -27,8 +27,8 @@ public class MasterPackerTest extends PackerTest {
     }
 
     @Test
-    public void testSmallInput() {
-        super.testSmallInput();
+    public void testVerySmallInput() {
+        super.testVerySmallInput();
     }
 
     @Test
