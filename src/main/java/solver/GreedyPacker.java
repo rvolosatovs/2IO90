@@ -114,8 +114,8 @@ public class GreedyPacker implements Packer {
             container.add(r);
             boundingLine.add(r);
 
-            containerHeight = Math.max(oldHeight, r.y+r.height);
-            containerWidth = Math.max(oldWidth, r.x+r.width);
+            containerHeight = Math.max(oldHeight, r.y + r.height);
+            containerWidth = Math.max(oldWidth, r.x + r.width);
         }
 
         return container;

@@ -29,7 +29,7 @@ public class Case {
         Scanner sc = new Scanner(s);
 
         if (sc.skip("container height:").next().equals("fixed")) {
-            containerHeight = (int)Math.min(sc.nextLong(), Integer.MAX_VALUE);
+            containerHeight = (int) Math.min(sc.nextLong(), Integer.MAX_VALUE);
         }
         rotationsAllowed = sc.skip("\\Rrotations allowed:").next().equals("yes");
 

@@ -1,7 +1,5 @@
 package solver;
 
-import sun.awt.X11.InfoWindow;
-
 import java.awt.Dimension;
 import java.util.Objects;
 
