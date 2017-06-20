@@ -59,7 +59,6 @@ public abstract class PackerTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println(rectangles);
         assertTrue(String.format("Input size: %d, got %d", c.getRectangles().size(), rectangles.size()), c.getRectangles().size() == rectangles.size());
         assertHeightLimitRespected(c, rectangles);
         assertNoOverlap(rectangles);
@@ -128,6 +127,7 @@ public abstract class PackerTest {
             e.printStackTrace();
         }
         assertEquals("Output length:", dimensions.size(), c.size());
+        assertNoOverlap(c);
     }
 
     public void testOutputLengthRandom() {
