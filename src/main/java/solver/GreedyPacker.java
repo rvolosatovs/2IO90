@@ -2,9 +2,6 @@ package solver;
 
 import java.awt.Point;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.RecursiveAction;
-import java.util.concurrent.TimeoutException;
 
 /**
  * Created by s154563 on 8-5-2017.
@@ -23,12 +20,10 @@ public class GreedyPacker implements Packer {
         boolean fixedHeight = c.isHeightFixed();
         if (fixedHeight) {
             maxHeight = c.getHeight();
-            //container = new Container.WithPlane(maxHeight);
-            container = new Container();
+            container = new Container.WithPlane(maxHeight);
             boundingLine = new BoundingLine(maxHeight);
         } else {
-            //container = new Container.WithPlane();
-            container = new Container();
+            container = new Container.WithPlane();
             boundingLine = new BoundingLine();
         }
 
