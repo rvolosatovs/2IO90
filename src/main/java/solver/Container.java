@@ -222,14 +222,14 @@ public class Container extends AbstractCollection<IndexedRectangle> {
     }
 
     public static class WithPlane extends Container {
-        private Plane plane;
+        private IntegerPlane plane;
         private Set<Point> boundingLine;
 
         WithPlane(Case c) {
             if (c.isHeightFixed()) {
-                plane = new Plane(c.getHeight());
+                plane = new IntegerPlane(c.getHeight());
             } else {
-                plane = new Plane();
+                plane = new IntegerPlane();
             }
             boundingLine = new HashSet<>();
         }
@@ -237,10 +237,9 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         WithPlane(Collection<? extends IndexedRectangle> rectangles) {
             super(rectangles);
             boundingLine = new HashSet<>();
-            plane = new Plane();
+            plane = new IntegerPlane();
             this.addAll(rectangles);
         }
-
 
         @Override
         boolean contains(int x, int y) {
@@ -328,14 +327,14 @@ public class Container extends AbstractCollection<IndexedRectangle> {
 
 
     public static class WithDoublePlane extends Container {
-        private Plane plane;
+        private IntegerPlane plane;
         private Set<Point> boundingLine;
 
         WithDoublePlane(Case c) {
             if (c.isHeightFixed()) {
-                plane = new Plane(c.getHeight()*2);
+                plane = new IntegerPlane(c.getHeight()*2);
             } else {
-                plane = new Plane();
+                plane = new IntegerPlane();
             }
             boundingLine = new HashSet<>();
         }
@@ -343,7 +342,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         WithDoublePlane(Collection<? extends IndexedRectangle> rectangles) {
             super(rectangles);
             boundingLine = new HashSet<>();
-            plane = new Plane();
+            plane = new IntegerPlane();
             this.addAll(rectangles);
         }
 
@@ -467,138 +466,6 @@ public class Container extends AbstractCollection<IndexedRectangle> {
                 }
             }
             return true;
-        }
-    }
-
-    private class Plane {
-        private ArrayList<ArrayList<Integer>> rows;
-
-        Plane() {
-            rows = new ArrayList<>();
-        }
-
-        Plane(int height) {
-            rows = new ArrayList<>(height);
-        }
-
-        public int getHeight() {
-            for (int i = rows.size()-1; i >= 0; i--) {
-                for (int v : rows.get(i)) {
-                    if (v != 1) {
-                        return i;
-                    }
-                }
-            }
-            return 0;
-        }
-
-        int getWidth() {
-            int maxWidth = 0;
-            for (ArrayList<Integer> row : rows) {
-                int width = row.size()-1;
-                if (width <= maxWidth) {
-                    continue;
-                }
-                for (; width != maxWidth; width--) {
-                    if (row.get(width) != 0) {
-                        maxWidth = width;
-                        break;
-                    }
-                }
-            }
-            return maxWidth;
-        }
-
-        private ArrayList<Integer> getRow(int y) {
-            int height = rows.size();
-            if (height > y) {
-                return rows.get(y);
-            }
-
-            ArrayList<Integer> row = new ArrayList<>();
-            rows.ensureCapacity(y);
-            for (int i = height; i < y; i++) {
-                rows.add(new ArrayList<>());
-            }
-            rows.add(row);
-            return row;
-        }
-
-        private int getValue(int x, int y) {
-            ArrayList<Integer> row = getRow(y);
-            if (x < row.size()) {
-                return row.get(x);
-            }
-            return 0;
-        }
-
-        void add(int x, int y) {
-            ArrayList<Integer> row = getRow(y);
-
-            int width = row.size();
-            if (width > x) {
-                row.set(x, row.get(x) + 1);
-            } else {
-                row.ensureCapacity(x);
-                for (int i = width; i < x; i++) {
-                    row.add(0);
-                }
-                row.add(1);
-            }
-        }
-
-        void remove(int x, int y) {
-            ArrayList<Integer> row = getRow(y);
-            row.set(x, row.get(x) - 1);
-        }
-
-        boolean contains(int x, int y) {
-            return getValue(x, y) > 0;
-        }
-
-        boolean hasEmptyNeighbour(int x, int y) {
-            for (int dy = -1; dy < 2; dy++) {
-                int newY = y + dy;
-                ArrayList<Integer> row = getRow(newY);
-                for (int dx = -1; dx < 2; dx++) {
-                    int newX = x + dx;
-                    if (newX == x && newY == y) {
-                        continue;
-                    }
-                    if (row.size() <= newX || row.get(newX) == 0) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        boolean isOccupied(int x, int y) {
-            int val = getValue(x, y);
-            if (val == 0) return false;
-            if (x == 0 || y == 0) return x == y || val == 2;
-            return val == 4;
-        }
-
-        @Override
-        public String toString() {
-            StringBuilder sb = new StringBuilder();
-            for (int y = getHeight(); y >= 0; y--) {
-                sb.append(String.format("%d\t", y));
-                for (int x = 0; x <= getWidth(); x++) {
-                    sb.append(getValue(x, y)).append("  ");
-                }
-                sb.append("\n");
-            }
-            sb.append("\t");
-            for (int x = 0; x <= getWidth(); x++) {
-                String format = "%d ";
-                if (x < 10) {
-                    format += " ";
-                }
-                sb.append(String.format(format, x));
-            }
-            return sb.toString();
         }
     }
 }
