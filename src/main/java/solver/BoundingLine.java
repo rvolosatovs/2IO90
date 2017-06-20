@@ -37,6 +37,10 @@ public class BoundingLine extends AbstractCollection<Point> {
         bound.remove(p);
     }
 
+    private boolean unmask(Point p) {
+        return masked.remove(p);
+    }
+
     boolean isMasked(Point p) {
         return masked.contains(p);
     }
@@ -58,16 +62,17 @@ public class BoundingLine extends AbstractCollection<Point> {
         return add(new Point(x, y));
     }
 
-    private void unmaskOrAdd(Point p) {
-        if (isMasked(p)) {
-            masked.remove(p);
-        } else {
-            add(p);
-        }
+    public boolean unmaskIfNotMasked(Point p) {
+        return !isMasked(p) && unmask(p);
     }
 
     public boolean addIfNotMasked(Point p) {
         return !isMasked(p) && add(p);
+    }
+
+    void addAndUnmask(Point p) {
+        add(p);
+        unmask(p);
     }
 
     void add(Rectangle r) {
@@ -100,15 +105,25 @@ public class BoundingLine extends AbstractCollection<Point> {
         int maxX = r.x + r.width;
         int maxY = r.y + r.height;
 
-        for (int x = r.x; x <= r.x + r.width; x++) {
-            add(new Point(x, r.y));
-            addIfNotMasked(new Point(x, maxY));
+        for (int x = r.x; x <= maxX; x++) {
+            remove(new Point(x, maxY));
         }
 
-        for (int y = r.y + 1; y < r.y + r.height; y++) {
-            add(new Point(r.x, y));
-            addIfNotMasked(new Point(maxX, y));
+        for (int y = r.y; y <= maxY; y++) {
+            remove(new Point(maxX, y));
         }
+
+        addAndUnmask(new Point(r.x,r.y));
+        for (int x = r.x+1; x < maxX; x++) {
+            addAndUnmask(new Point(x, r.y));
+        }
+        for (int y = r.y+1; y < maxY; y++) {
+            addAndUnmask(new Point(r.x, y));
+        }
+
+        addIfNotMasked(new Point(maxX, maxY));
+        addIfNotMasked(new Point(r.x, maxY));
+        addIfNotMasked(new Point(maxX, r.y));
     }
 
     boolean contains(int x, int y) {
