@@ -33,8 +33,6 @@ public class Container extends AbstractCollection<IndexedRectangle> {
     }
 
     public boolean remove(IndexedRectangle r) {
-        if (this.width == r.x + r.width) this.width = 0;
-        if (this.height == r.y + r.height) this.height = 0;
         return rectangles.remove(r);
     }
 
@@ -86,7 +84,7 @@ public class Container extends AbstractCollection<IndexedRectangle> {
             return (contains(x - 1, y + 1) && contains(x, y + 1) && contains(x + 1, y + 1) &&
                     contains(x - 1, y) && contains(x + 1, y));
         }
-        return !hasEmptyNeighbour(x, y);
+        return !hasEmptyNeighbour(x, y) || (contains(x, y + 1) && contains(x + 1, y + 1) && contains(x + 1, y));
     }
 
     boolean isOccupied(Point p) {
@@ -145,10 +143,6 @@ public class Container extends AbstractCollection<IndexedRectangle> {
     }
 
     int getWidth() {
-        if (this.width != 0) {
-            return this.width;
-        }
-
         int maxWidth = 0;
 
         for (Rectangle r : this) {
@@ -234,17 +228,13 @@ public class Container extends AbstractCollection<IndexedRectangle> {
         private IntegerPlane plane;
         private Set<Point> boundingLine;
 
-        int height = 0;
-        int width = 0;
-
-        WithPlane() {
-            plane = new IntegerPlane();
+        WithPlane(Case c) {
+            if (c.isHeightFixed()) {
+                plane = new IntegerPlane(c.getHeight());
+            } else {
+                plane = new IntegerPlane();
+            }
             boundingLine = new HashSet<>();
-        }
-
-        WithPlane(int height) {
-            plane = new IntegerPlane(height);
-            boundingLine = new HashSet<>(height * height);
         }
 
         WithPlane(Collection<? extends IndexedRectangle> rectangles) {
@@ -309,17 +299,11 @@ public class Container extends AbstractCollection<IndexedRectangle> {
 
         @Override
         int getWidth() {
-            if (this.width != 0) {
-                return this.width;
-            }
             return plane.getWidth();
         }
 
         @Override
         int getHeight() {
-            if (this.height != 0) {
-                return this.height;
-            }
             return plane.getHeight();
         }
 
