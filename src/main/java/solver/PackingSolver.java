@@ -2,24 +2,30 @@ package solver;
 
 import java.io.FileInputStream;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PackingSolver {
+    public static long startTime;
+
     public static void main(String[] args) {
-        long start = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
 
         final Set<String> knownParams = new HashSet<>(Arrays.asList(
-                "debug", "file", "greedy", "stupid", "nfdh", "brute"
+                "debug", "file", "greedy", "stupid", "nfdh", "brute", "master"
         ));
-        final Map<Character, String> shorthand = new HashMap(knownParams.size());
+        final Map<Character, String> shorthand = new HashMap<>(knownParams.size());
         shorthand.put('d', "debug");
         shorthand.put('f', "file");
         shorthand.put('g', "greedy");
         shorthand.put('s', "stupid");
         shorthand.put('n', "nfdh");
+        shorthand.put('m', "master");
         shorthand.put('b', "brute");
-
 
         final Map<String, List<String>> params = new HashMap<>();
 
@@ -93,15 +99,17 @@ public class PackingSolver {
             p = new GreedyPacker();
         } else if (params.containsKey("stupid")) {
             p = new StupidPacker();
+        } else if (params.containsKey("master")) {
+            p = new MasterPacker();
         } else if (params.containsKey("nfdh")) {
             p = new NFDHPacker();
         } else if (params.containsKey("brute")) {
             p = new BrutePacker();
         }  else {
             // default
-            p = new GreedyPacker();
+            p = new MasterPacker();
         }
-
+        
         Solution s = null;
         try {
             s = new Solution(c, p);
@@ -110,7 +118,8 @@ public class PackingSolver {
             e.printStackTrace();
             System.exit(-1);
         }
+
         System.out.println(s);
-        log.info("Running time: " + (System.currentTimeMillis() - start) + "ms");
+        log.info("Running time: " + (System.currentTimeMillis() - startTime) + "ms");
     }
 }

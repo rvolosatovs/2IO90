@@ -62,4 +62,12 @@ public class Case {
         }
         return containerHeight;
     }
+
+    public int getSize(){
+        return dimensions.length;
+    }
+
+    public void setContainerHeight(int height) {
+        containerHeight = height;
+    }
 }

@@ -53,7 +53,12 @@ public abstract class PackerTest {
 
         Case c = new Case(containerHeight, true, dimensions);
 
-        Collection<IndexedRectangle> rectangles = newPacker().Pack(c);
+        Collection<IndexedRectangle> rectangles = null;
+        try {
+            rectangles = newPacker().Pack(c);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         System.out.println(rectangles);
         assertTrue(String.format("Input size: %d, got %d", c.getRectangles().size(), rectangles.size()), c.getRectangles().size() == rectangles.size());
         assertHeightLimitRespected(c, rectangles);
@@ -73,7 +78,14 @@ public abstract class PackerTest {
                         System.out.printf("Failed to parse case: %s", e.getMessage());
                         return;
                     }
-                    Collection<IndexedRectangle> rectangles = newPacker().Pack(c);
+                    Collection<IndexedRectangle> rectangles = null;
+                    try {
+                        rectangles = newPacker().Pack(c);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        fail("timeout");
+                    }
+
                     if (c.getRectangles().size() <= 25) {
                         System.out.println(rectangles);
                     }
@@ -109,7 +121,12 @@ public abstract class PackerTest {
     private void assertEqualOutputLength(Collection<? extends Dimension> dimensions) {
         Dimension[] dimensionArr = new Dimension[dimensions.size()];
         dimensions.toArray(dimensionArr);
-        Collection<IndexedRectangle> c = newPacker().Pack(new Case(true, dimensionArr));
+        Collection<IndexedRectangle> c = null;
+        try {
+            c = newPacker().Pack(new Case(true, dimensionArr));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         assertEquals("Output length:", dimensions.size(), c.size());
     }
 
