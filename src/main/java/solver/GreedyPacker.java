@@ -73,6 +73,9 @@ public class GreedyPacker implements Packer {
                 }
             }
 
+            containerHeight = oldHeight;
+            containerWidth = oldWidth;
+
             if (c.areRotationsAllowed()) {
                 boolean needsRotation = false;
 
@@ -113,6 +116,9 @@ public class GreedyPacker implements Packer {
             r.setLocation(minPoint);
             container.add(r);
             boundingLine.add(r);
+
+            containerHeight = Math.max(oldHeight, r.y+r.height);
+            containerWidth = Math.max(oldWidth, r.x+r.width);
         }
 
         return container;
