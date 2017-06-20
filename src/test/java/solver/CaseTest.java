@@ -42,9 +42,9 @@ public class CaseTest {
         class spec {
             boolean rotationsAllowed;
             boolean heightFixed;
-            int height;
+            long height;
 
-            spec(boolean rotationsAllowed, int height) {
+            spec(boolean rotationsAllowed, long height) {
                 this.rotationsAllowed = rotationsAllowed;
                 this.heightFixed = true;
                 this.height = height;
@@ -55,11 +55,15 @@ public class CaseTest {
             }
         }
 
+        long longHeight = Integer.MAX_VALUE;
+        longHeight += Integer.MAX_VALUE;
+
         spec[] specs = new spec[]{
                 new spec(true, 42),
                 new spec(false, 42),
                 new spec(true),
-                new spec(false)
+                new spec(false),
+                new spec(false, longHeight+1)
         };
 
         for (spec spec : specs) {
@@ -75,7 +79,7 @@ public class CaseTest {
             assertEquals("Fixed height", spec.heightFixed, c.isHeightFixed());
             assertEquals("Rotations", spec.rotationsAllowed, c.areRotationsAllowed());
             if (spec.heightFixed) {
-                assertEquals("Height", spec.height, c.getHeight());
+                assertEquals("Height", (int) Math.min(spec.height, Integer.MAX_VALUE), c.getHeight());
             } else {
                 try {
                     c.getHeight();
