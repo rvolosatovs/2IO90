@@ -63,7 +63,7 @@ public class CaseTest {
                 new spec(false, 42),
                 new spec(true),
                 new spec(false),
-                new spec(false, longHeight+1)
+                new spec(false, longHeight + 1)
         };
 
         for (spec spec : specs) {

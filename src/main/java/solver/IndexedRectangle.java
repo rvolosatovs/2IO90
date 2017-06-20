@@ -52,4 +52,9 @@ public class IndexedRectangle extends Rectangle {
     public String toString() {
         return String.format("i=%d %s", index, super.toString());
     }
+
+    @Override
+    public Object clone() {
+        return new IndexedRectangle(this);
+    }
 }
