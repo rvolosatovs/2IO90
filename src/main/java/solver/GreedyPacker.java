@@ -113,6 +113,10 @@ public class GreedyPacker implements Packer {
                 }
             }
 
+            if(minPoint == null) {
+                minPoint = new Point(containerWidth, 0);
+            }
+
             r.setLocation(minPoint);
             container.add(r);
             boundingLine.add(r);
