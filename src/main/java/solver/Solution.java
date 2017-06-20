@@ -25,7 +25,6 @@ public class Solution {
             NFDHPacker nfdhPacker = new NFDHPacker();
             this.rectangles = nfdhPacker.Pack(spec, e.getContainer(), e.getRectangles());
         }
-        Logger.getGlobal().info(this.rectangles.toString());
     }
 
     public String toString() {
